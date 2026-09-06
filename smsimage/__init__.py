@@ -16,13 +16,17 @@ Nothing is implemented yet. The interface below grows one module at a time, each
 one settled against the cartridges before it is written.
 """
 
+from . import dump as dump
 from . import errors as errors
+from .dump import BARE, STUBBED
 from .errors import Malformed, NoAuthority
 from .version import VERSION
 
 __version__ = VERSION
 
 __all__ = [
+    "BARE",
+    "STUBBED",
     "Malformed",
     "NoAuthority",
     "__version__",
