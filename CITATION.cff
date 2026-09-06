@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+title: sms-rom-image-python
+message: >-
+  If you use this work, or the header rules it was settled against, please cite it.
+type: software
+authors:
+  - given-names: Gustavo
+    family-names: Franco
+    alias: gufranco
+repository-code: https://github.com/gufranco/sms-rom-image-python
+url: https://github.com/gufranco/sms-rom-image-python
+abstract: >-
+  A model of the forms a Sega Master System, Game Gear and SG-1000 cartridge image is stored and shipped in: where the header sits and how it is found, what the header declares about region and size, and the checksum rule that holds them together. No manufacturer document for this format has been located, so every field is settled against the cartridges themselves and reported with the count that supports it.
+keywords:
+  - sega
+  - master-system
+  - game-gear
+  - sg-1000
+  - rom-image
+  - cartridge
+  - checksum
+  - hardware-model
+  - conformance
+license: MIT
+version: 0.0.0
