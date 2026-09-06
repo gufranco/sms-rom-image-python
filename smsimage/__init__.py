@@ -17,7 +17,7 @@ one settled against the cartridges before it is written.
 """
 
 from . import errors as errors
-from .errors import Malformed, NoAuthority, NoParts
+from .errors import Malformed, NoAuthority
 from .version import VERSION
 
 __version__ = VERSION
@@ -25,6 +25,5 @@ __version__ = VERSION
 __all__ = [
     "Malformed",
     "NoAuthority",
-    "NoParts",
     "__version__",
 ]

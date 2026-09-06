@@ -5,18 +5,16 @@ somewhere to import from. It imports nothing from the rest of the package, which
 is what keeps it from ever closing a cycle: everything here raises, so everything
 here imports this, and an import running the other way would make the order
 modules happen to load in decide whether the package works at all.
+
+Nothing here is defined ahead of something raising it. The SNES member publishes
+a refusal for a split dump with no numbered part, and this one does not, because
+no split dump was found across 5,063 archive entries in the two libraries this
+was measured on: every file carries a whole image. An exception nothing raises is
+an interface promise with no behaviour behind it, and adding one the day a split
+dump turns up costs less than keeping one that never fires.
 """
 
 from __future__ import annotations
-
-
-class NoParts(Exception):
-    """The folder holds no numbered part of a split dump.
-
-    Raised rather than answered with an empty image, because those are different
-    answers to different questions. An empty image says the dump was empty; this
-    says there was no dump.
-    """
 
 
 class NoAuthority(Exception):

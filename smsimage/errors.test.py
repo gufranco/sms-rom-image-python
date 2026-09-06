@@ -89,10 +89,6 @@ class NoCycleTest(unittest.TestCase):
 
 
 class RaisingTest(unittest.TestCase):
-    def test_a_caller_can_catch_a_dump_with_no_parts_by_name(self) -> None:
-        with self.assertRaises(errors.NoParts):
-            raise errors.NoParts("no numbered part here")
-
     def test_a_caller_can_catch_a_record_with_no_deciding_digest(self) -> None:
         with self.assertRaises(errors.NoAuthority):
             raise errors.NoAuthority("nothing decides")
