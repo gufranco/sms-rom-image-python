@@ -18,9 +18,11 @@ one settled against the cartridges before it is written.
 
 from . import dump as dump
 from . import errors as errors
+from . import header as header
 from . import identity as identity
 from .dump import BARE, STUBBED
 from .errors import Malformed, NoAuthority
+from .header import CANDIDATES, MAGIC, REGIONS, SIZES
 from .identity import AUTHORITATIVE
 from .version import VERSION
 
@@ -29,6 +31,10 @@ __version__ = VERSION
 __all__ = [
     "AUTHORITATIVE",
     "BARE",
+    "CANDIDATES",
+    "MAGIC",
+    "REGIONS",
+    "SIZES",
     "STUBBED",
     "Malformed",
     "NoAuthority",
