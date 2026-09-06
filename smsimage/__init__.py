@@ -16,10 +16,15 @@ Nothing is implemented yet. The interface below grows one module at a time, each
 one settled against the cartridges before it is written.
 """
 
+from . import errors as errors
+from .errors import Malformed, NoAuthority, NoParts
 from .version import VERSION
 
 __version__ = VERSION
 
 __all__ = [
+    "Malformed",
+    "NoAuthority",
+    "NoParts",
     "__version__",
 ]
