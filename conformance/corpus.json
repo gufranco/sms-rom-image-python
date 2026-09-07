@@ -1,0 +1,1298 @@
+[
+ {
+  "anchor": 32752,
+  "carried": true,
+  "declared": 262144,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 262144,
+  "count": 240
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 262144,
+  "form": "bare",
+  "region": "gg-international",
+  "size": 262144,
+  "count": 192
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 262144,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 262144,
+  "count": 172
+ },
+ {
+  "anchor": 32752,
+  "carried": true,
+  "declared": 131072,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 131072,
+  "count": 164
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 262144,
+  "form": "bare",
+  "region": "gg-international",
+  "size": 524288,
+  "count": 148
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 262144,
+  "form": "bare",
+  "region": "gg-export",
+  "size": 524288,
+  "count": 138
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 262144,
+  "form": "bare",
+  "region": "gg-japan",
+  "size": 524288,
+  "count": 131
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 262144,
+  "form": "bare",
+  "region": "gg-export",
+  "size": 262144,
+  "count": 113
+ },
+ {
+  "anchor": 32752,
+  "carried": true,
+  "declared": 32768,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 32768,
+  "count": 107
+ },
+ {
+  "anchor": 32752,
+  "carried": true,
+  "declared": 262144,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 524288,
+  "count": 90
+ },
+ {
+  "anchor": 32752,
+  "carried": true,
+  "declared": 32768,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 524288,
+  "count": 85
+ },
+ {
+  "anchor": null,
+  "carried": null,
+  "declared": null,
+  "form": "bare",
+  "region": null,
+  "size": 32768,
+  "count": 71
+ },
+ {
+  "anchor": 32752,
+  "carried": true,
+  "declared": 32768,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 262144,
+  "count": 64
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 131072,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 131072,
+  "count": 58
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 262144,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 524288,
+  "count": 58
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 131072,
+  "form": "bare",
+  "region": "gg-international",
+  "size": 131072,
+  "count": 50
+ },
+ {
+  "anchor": 32752,
+  "carried": true,
+  "declared": 32768,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 131072,
+  "count": 49
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 262144,
+  "form": "bare",
+  "region": "gg-japan",
+  "size": 262144,
+  "count": 49
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 131072,
+  "form": "bare",
+  "region": "gg-export",
+  "size": 131072,
+  "count": 49
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 131072,
+  "form": "bare",
+  "region": "gg-japan",
+  "size": 131072,
+  "count": 44
+ },
+ {
+  "anchor": 32752,
+  "carried": true,
+  "declared": 131072,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 262144,
+  "count": 39
+ },
+ {
+  "anchor": null,
+  "carried": null,
+  "declared": null,
+  "form": "bare",
+  "region": null,
+  "size": 131072,
+  "count": 36
+ },
+ {
+  "anchor": 32752,
+  "carried": true,
+  "declared": 32768,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 49152,
+  "count": 30
+ },
+ {
+  "anchor": null,
+  "carried": null,
+  "declared": null,
+  "form": "bare",
+  "region": null,
+  "size": 49152,
+  "count": 22
+ },
+ {
+  "anchor": null,
+  "carried": null,
+  "declared": null,
+  "form": "bare",
+  "region": null,
+  "size": 262144,
+  "count": 20
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 131072,
+  "form": "bare",
+  "region": null,
+  "size": 524288,
+  "count": 20
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 131072,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 262144,
+  "count": 19
+ },
+ {
+  "anchor": 32752,
+  "carried": true,
+  "declared": 131072,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 524288,
+  "count": 18
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 32768,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 32768,
+  "count": 18
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 131072,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 524288,
+  "count": 18
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 131072,
+  "form": "bare",
+  "region": "sms-japan",
+  "size": 131072,
+  "count": 14
+ },
+ {
+  "anchor": 32752,
+  "carried": true,
+  "declared": 524288,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 524288,
+  "count": 13
+ },
+ {
+  "anchor": 32752,
+  "carried": true,
+  "declared": 32768,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 65536,
+  "count": 12
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 131072,
+  "form": "bare",
+  "region": "gg-international",
+  "size": 262144,
+  "count": 10
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 262144,
+  "form": "bare",
+  "region": null,
+  "size": 524288,
+  "count": 9
+ },
+ {
+  "anchor": 32752,
+  "carried": true,
+  "declared": 131072,
+  "form": "bare",
+  "region": "sms-japan",
+  "size": 131072,
+  "count": 8
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 32768,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 262144,
+  "count": 8
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 32768,
+  "form": "bare",
+  "region": "gg-export",
+  "size": 32768,
+  "count": 8
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 262144,
+  "form": "stubbed",
+  "region": "sms-export",
+  "size": 262144,
+  "count": 8
+ },
+ {
+  "anchor": 32752,
+  "carried": true,
+  "declared": 32768,
+  "form": "bare",
+  "region": "gg-international",
+  "size": 1048576,
+  "count": 8
+ },
+ {
+  "anchor": null,
+  "carried": null,
+  "declared": null,
+  "form": "bare",
+  "region": null,
+  "size": 524288,
+  "count": 7
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 262144,
+  "form": "bare",
+  "region": "gg-international",
+  "size": 1048576,
+  "count": 7
+ },
+ {
+  "anchor": null,
+  "carried": null,
+  "declared": null,
+  "form": "bare",
+  "region": null,
+  "size": 65536,
+  "count": 6
+ },
+ {
+  "anchor": null,
+  "carried": null,
+  "declared": null,
+  "form": "bare",
+  "region": null,
+  "size": 8192,
+  "count": 6
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 262144,
+  "form": "bare",
+  "region": "gg-export",
+  "size": 1048576,
+  "count": 6
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 262144,
+  "form": "bare",
+  "region": "gg-japan",
+  "size": 1048576,
+  "count": 6
+ },
+ {
+  "anchor": null,
+  "carried": null,
+  "declared": null,
+  "form": "bare",
+  "region": null,
+  "size": 16384,
+  "count": 5
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 262144,
+  "form": "bare",
+  "region": null,
+  "size": 32768,
+  "count": 5
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 262144,
+  "form": "bare",
+  "region": "gg-export",
+  "size": 131072,
+  "count": 5
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 32768,
+  "form": "bare",
+  "region": "gg-japan",
+  "size": 131072,
+  "count": 5
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 32768,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 524288,
+  "count": 4
+ },
+ {
+  "anchor": 32752,
+  "carried": true,
+  "declared": 262144,
+  "form": "bare",
+  "region": "sms-japan",
+  "size": 262144,
+  "count": 4
+ },
+ {
+  "anchor": 32752,
+  "carried": true,
+  "declared": 262144,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 1048576,
+  "count": 4
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 262144,
+  "form": "bare",
+  "region": null,
+  "size": 262144,
+  "count": 4
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 262144,
+  "form": "bare",
+  "region": "gg-export",
+  "size": 523228,
+  "count": 4
+ },
+ {
+  "anchor": null,
+  "carried": null,
+  "declared": null,
+  "form": "bare",
+  "region": null,
+  "size": 1048576,
+  "count": 3
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 524288,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 524288,
+  "count": 3
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 32768,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 131072,
+  "count": 3
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 131072,
+  "form": "stubbed",
+  "region": "sms-export",
+  "size": 262144,
+  "count": 3
+ },
+ {
+  "anchor": 32752,
+  "carried": true,
+  "declared": 32768,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 81920,
+  "count": 3
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 131072,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 49152,
+  "count": 3
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 262144,
+  "form": "stubbed",
+  "region": "sms-export",
+  "size": 524288,
+  "count": 3
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 32768,
+  "form": "bare",
+  "region": "gg-japan",
+  "size": 32768,
+  "count": 3
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 262144,
+  "form": "bare",
+  "region": "gg-export",
+  "size": 524282,
+  "count": 3
+ },
+ {
+  "anchor": 32752,
+  "carried": true,
+  "declared": 65536,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 131072,
+  "count": 2
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 262144,
+  "form": "bare",
+  "region": "sms-japan",
+  "size": 262144,
+  "count": 2
+ },
+ {
+  "anchor": 8176,
+  "carried": false,
+  "declared": 8192,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 262144,
+  "count": 2
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 131072,
+  "form": "bare",
+  "region": null,
+  "size": 262144,
+  "count": 2
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 8192,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 262144,
+  "count": 2
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 262144,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 540672,
+  "count": 2
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 131072,
+  "form": "bare",
+  "region": "sms-japan",
+  "size": 262144,
+  "count": 2
+ },
+ {
+  "anchor": 8176,
+  "carried": true,
+  "declared": 8192,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 8192,
+  "count": 2
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 32768,
+  "form": "stubbed",
+  "region": "sms-export",
+  "size": 32768,
+  "count": 2
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 65536,
+  "form": "bare",
+  "region": "gg-international",
+  "size": 131072,
+  "count": 2
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 262144,
+  "form": "bare",
+  "region": "gg-international",
+  "size": 514486,
+  "count": 2
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 131072,
+  "form": "bare",
+  "region": "gg-export",
+  "size": 262144,
+  "count": 2
+ },
+ {
+  "anchor": 16368,
+  "carried": false,
+  "declared": 8192,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 524288,
+  "count": 2
+ },
+ {
+  "anchor": 32752,
+  "carried": true,
+  "declared": 262144,
+  "form": "bare",
+  "region": "gg-export",
+  "size": 262144,
+  "count": 2
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 262144,
+  "form": "bare",
+  "region": null,
+  "size": 65536,
+  "count": 2
+ },
+ {
+  "anchor": 32752,
+  "carried": true,
+  "declared": 262144,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 819200,
+  "count": 1
+ },
+ {
+  "anchor": null,
+  "carried": null,
+  "declared": null,
+  "form": "bare",
+  "region": null,
+  "size": 442368,
+  "count": 1
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 8192,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 131072,
+  "count": 1
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 65536,
+  "form": "bare",
+  "region": "sms-japan",
+  "size": 49152,
+  "count": 1
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 131072,
+  "form": "bare",
+  "region": null,
+  "size": 131072,
+  "count": 1
+ },
+ {
+  "anchor": 8176,
+  "carried": true,
+  "declared": 8192,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 131072,
+  "count": 1
+ },
+ {
+  "anchor": 32752,
+  "carried": true,
+  "declared": 32768,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 1048576,
+  "count": 1
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 32768,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 49152,
+  "count": 1
+ },
+ {
+  "anchor": 32752,
+  "carried": true,
+  "declared": 262144,
+  "form": "bare",
+  "region": "gg-international",
+  "size": 524288,
+  "count": 1
+ },
+ {
+  "anchor": 32752,
+  "carried": true,
+  "declared": 32768,
+  "form": "bare",
+  "region": "gg-international",
+  "size": 32768,
+  "count": 1
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 524288,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 1048576,
+  "count": 1
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 8192,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 524288,
+  "count": 1
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 262144,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 565248,
+  "count": 1
+ },
+ {
+  "anchor": null,
+  "carried": null,
+  "declared": null,
+  "form": "bare",
+  "region": null,
+  "size": 106496,
+  "count": 1
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 32768,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 65536,
+  "count": 1
+ },
+ {
+  "anchor": null,
+  "carried": null,
+  "declared": null,
+  "form": "bare",
+  "region": null,
+  "size": 147456,
+  "count": 1
+ },
+ {
+  "anchor": null,
+  "carried": null,
+  "declared": null,
+  "form": "bare",
+  "region": null,
+  "size": 44920,
+  "count": 1
+ },
+ {
+  "anchor": null,
+  "carried": null,
+  "declared": null,
+  "form": "bare",
+  "region": null,
+  "size": 3479,
+  "count": 1
+ },
+ {
+  "anchor": null,
+  "carried": null,
+  "declared": null,
+  "form": "bare",
+  "region": null,
+  "size": 7626,
+  "count": 1
+ },
+ {
+  "anchor": 16368,
+  "carried": true,
+  "declared": 16384,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 4136928,
+  "count": 1
+ },
+ {
+  "anchor": 32752,
+  "carried": true,
+  "declared": 32768,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 4194304,
+  "count": 1
+ },
+ {
+  "anchor": 32752,
+  "carried": true,
+  "declared": 32768,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 786432,
+  "count": 1
+ },
+ {
+  "anchor": 32752,
+  "carried": true,
+  "declared": 32768,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 335831,
+  "count": 1
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 262144,
+  "form": "bare",
+  "region": null,
+  "size": 786432,
+  "count": 1
+ },
+ {
+  "anchor": 32752,
+  "carried": true,
+  "declared": 32768,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 1142667,
+  "count": 1
+ },
+ {
+  "anchor": 32752,
+  "carried": true,
+  "declared": 32768,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 2097152,
+  "count": 1
+ },
+ {
+  "anchor": 32752,
+  "carried": true,
+  "declared": 32768,
+  "form": "bare",
+  "region": "gg-export",
+  "size": 32768,
+  "count": 1
+ },
+ {
+  "anchor": null,
+  "carried": null,
+  "declared": null,
+  "form": "bare",
+  "region": null,
+  "size": 81920,
+  "count": 1
+ },
+ {
+  "anchor": null,
+  "carried": null,
+  "declared": null,
+  "form": "bare",
+  "region": null,
+  "size": 31233,
+  "count": 1
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 131072,
+  "form": "bare",
+  "region": null,
+  "size": 32768,
+  "count": 1
+ },
+ {
+  "anchor": 16368,
+  "carried": true,
+  "declared": 16384,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 1702872,
+  "count": 1
+ },
+ {
+  "anchor": 16368,
+  "carried": true,
+  "declared": 16384,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 16384,
+  "count": 1
+ },
+ {
+  "anchor": null,
+  "carried": null,
+  "declared": null,
+  "form": "bare",
+  "region": null,
+  "size": 5836,
+  "count": 1
+ },
+ {
+  "anchor": null,
+  "carried": null,
+  "declared": null,
+  "form": "bare",
+  "region": null,
+  "size": 8628,
+  "count": 1
+ },
+ {
+  "anchor": 32752,
+  "carried": true,
+  "declared": 32768,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 49149,
+  "count": 1
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 1048576,
+  "form": "bare",
+  "region": "gg-japan",
+  "size": 65536,
+  "count": 1
+ },
+ {
+  "anchor": 32752,
+  "carried": true,
+  "declared": 32768,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 294912,
+  "count": 1
+ },
+ {
+  "anchor": 16368,
+  "carried": true,
+  "declared": 16384,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 32768,
+  "count": 1
+ },
+ {
+  "anchor": 16368,
+  "carried": true,
+  "declared": 16384,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 262144,
+  "count": 1
+ },
+ {
+  "anchor": null,
+  "carried": null,
+  "declared": null,
+  "form": "stubbed",
+  "region": null,
+  "size": 262144,
+  "count": 1
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 131072,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 195674,
+  "count": 1
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 131072,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 258486,
+  "count": 1
+ },
+ {
+  "anchor": 32752,
+  "carried": true,
+  "declared": 1048576,
+  "form": "bare",
+  "region": null,
+  "size": 32768,
+  "count": 1
+ },
+ {
+  "anchor": 32752,
+  "carried": null,
+  "declared": null,
+  "form": "bare",
+  "region": null,
+  "size": 32768,
+  "count": 1
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 32768,
+  "form": "bare",
+  "region": "gg-export",
+  "size": 262144,
+  "count": 1
+ },
+ {
+  "anchor": 32752,
+  "carried": null,
+  "declared": null,
+  "form": "bare",
+  "region": "gg-japan",
+  "size": 131072,
+  "count": 1
+ },
+ {
+  "anchor": 16368,
+  "carried": false,
+  "declared": 8192,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 262144,
+  "count": 1
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 262144,
+  "form": "bare",
+  "region": "gg-export",
+  "size": 524278,
+  "count": 1
+ },
+ {
+  "anchor": 32752,
+  "carried": null,
+  "declared": null,
+  "form": "bare",
+  "region": "sms-export",
+  "size": 524288,
+  "count": 1
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 262144,
+  "form": "bare",
+  "region": "gg-export",
+  "size": 514313,
+  "count": 1
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 262144,
+  "form": "bare",
+  "region": "gg-international",
+  "size": 514450,
+  "count": 1
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 262144,
+  "form": "bare",
+  "region": "gg-international",
+  "size": 514478,
+  "count": 1
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 262144,
+  "form": "bare",
+  "region": "gg-international",
+  "size": 514482,
+  "count": 1
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 262144,
+  "form": "bare",
+  "region": "gg-international",
+  "size": 514538,
+  "count": 1
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 262144,
+  "form": "bare",
+  "region": "gg-international",
+  "size": 514618,
+  "count": 1
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 262144,
+  "form": "bare",
+  "region": "gg-international",
+  "size": 523862,
+  "count": 1
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 131072,
+  "form": "bare",
+  "region": "gg-export",
+  "size": 524288,
+  "count": 1
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 262144,
+  "form": "bare",
+  "region": "gg-international",
+  "size": 376832,
+  "count": 1
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 32768,
+  "form": "bare",
+  "region": "gg-international",
+  "size": 1048576,
+  "count": 1
+ },
+ {
+  "anchor": 32752,
+  "carried": true,
+  "declared": 32768,
+  "form": "bare",
+  "region": "gg-international",
+  "size": 524288,
+  "count": 1
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 131072,
+  "form": "bare",
+  "region": null,
+  "size": 1048576,
+  "count": 1
+ },
+ {
+  "anchor": null,
+  "carried": null,
+  "declared": null,
+  "form": "bare",
+  "region": null,
+  "size": 50,
+  "count": 1
+ },
+ {
+  "anchor": 32752,
+  "carried": true,
+  "declared": 262144,
+  "form": "bare",
+  "region": null,
+  "size": 65536,
+  "count": 1
+ },
+ {
+  "anchor": 32752,
+  "carried": false,
+  "declared": 65536,
+  "form": "bare",
+  "region": "gg-international",
+  "size": 65536,
+  "count": 1
+ },
+ {
+  "anchor": null,
+  "carried": null,
+  "declared": null,
+  "form": "bare",
+  "region": null,
+  "size": 1024,
+  "count": 1
+ }
+]
