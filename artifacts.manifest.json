@@ -1,0 +1,195 @@
+{
+  "note": "The boot programs this package can be pointed at. None of them is here, none of them can be, and nothing in this repository says where to obtain one. What is here is enough for a reader who has a file to learn whether it is the file.",
+  "decidedBy": "sha256",
+  "why": "Size and CRC32 pre-filter and cross-reference against databases built before anybody keyed one on SHA-256. SHA-1 is here for the same reason. None of the three decides: a 32-bit checksum is an error code, and SHA-1 and MD5 are both collision-broken.",
+  "provenance": {
+    "read": "2026-09-08",
+    "from": "a library the author holds, read inside the archives it ships in",
+    "caveat": "These digests attest to the copies on one machine. They are not a claim that any of them is the canonical dump, and no database was consulted to confirm that."
+  },
+  "badDumpsNote": "Empty in every entry. No corrupt copy of any of these has been measured here, and declaring one nobody has seen would be an invention. An entry gains a bad dump when somebody supplies one and it is measured.",
+  "artifacts": {
+    "alex-kidd-in-miracle-world-bios-version-world-sega-ages": {
+      "name": "Alex Kidd in Miracle World (BIOS Version) (World) (Sega Ages)",
+      "machine": "master-system",
+      "accepted": [
+        {
+          "size": 131072,
+          "crc32": "025790ff",
+          "sha1": "c6cfecec5241951aee7dfeda20871ba45cb785fa",
+          "sha256": "aaf39841be10f9cd6908a95a7451c3a0c8ac77125eb412b7a41cad260c888ab5"
+        }
+      ],
+      "badDumps": []
+    },
+    "alex-kidd-in-miracle-world-korea-unl": {
+      "name": "Alex Kidd in Miracle World (Korea) (Unl)",
+      "machine": "master-system",
+      "accepted": [
+        {
+          "size": 131072,
+          "crc32": "9c5bad91",
+          "sha1": "2feafd8f1c40fdf1bd5668f8c5c02e5560945b17",
+          "sha256": "57abf3c00c82a8e042ebeb2bfe412adac9ba005e9009845236390de3ee645248"
+        }
+      ],
+      "badDumps": []
+    },
+    "alex-kidd-in-miracle-world-usa-europe": {
+      "name": "Alex Kidd in Miracle World (USA, Europe)",
+      "machine": "master-system",
+      "accepted": [
+        {
+          "size": 131072,
+          "crc32": "cf4a09ea",
+          "sha1": "3af7b66248d34eb26da40c92bf2fa4c73a46a051",
+          "sha256": "0c08e17b0ecc3967e1094f12841fdc97fdcbbf986e3bf9a06b35b69e7d95e4cd"
+        }
+      ],
+      "badDumps": []
+    },
+    "hang-on-safari-hunt-usa-europe-brazil-en-v2-4": {
+      "name": "Hang On & Safari Hunt (USA, Europe, Brazil) (En) (v2.4)",
+      "machine": "master-system",
+      "accepted": [
+        {
+          "size": 131072,
+          "crc32": "91e93385",
+          "sha1": "9e179392cd416af14024d8f31c981d9ee9a64517",
+          "sha256": "e9eb04ec80ded8658f765c4eca75cdbe23cbc7d8fed73f9c3db7a868dbf649ff"
+        }
+      ],
+      "badDumps": []
+    },
+    "hang-on-usa-europe-v3-4": {
+      "name": "Hang On (USA, Europe) (v3.4)",
+      "machine": "master-system",
+      "accepted": [
+        {
+          "size": 131072,
+          "crc32": "8edf7ac6",
+          "sha1": "51fd6d7990f62cd9d18c9ecfc62ed7936169107e",
+          "sha256": "1a73bc6e1a9973b98432774a1480b3ac1259027a97590d5e67d52745159abbbc"
+        }
+      ],
+      "badDumps": []
+    },
+    "missile-defense-3-d-usa-europe-v4-4": {
+      "name": "Missile Defense 3-D (USA, Europe) (v4.4)",
+      "machine": "master-system",
+      "accepted": [
+        {
+          "size": 131072,
+          "crc32": "e79bb689",
+          "sha1": "aa92ae576ca670b00855e278378d89e9f85e0351",
+          "sha256": "13c0639cc037167f53e6151dbdea013758c3d09a76b064a894bf15c39c0a3897"
+        }
+      ],
+      "badDumps": []
+    },
+    "sega-game-gear-usa-majesco": {
+      "name": "Sega Game Gear (USA) (Majesco)",
+      "machine": "game-gear",
+      "accepted": [
+        {
+          "size": 1024,
+          "crc32": "0ebea9d4",
+          "sha1": "914aa165e3d879f060be77870d345b60cfeb4ede",
+          "sha256": "8c8a21335038285cfa03dc076100c1f0bfadf3e4ff70796f11f3dfaaab60eee2"
+        }
+      ],
+      "badDumps": []
+    },
+    "sega-master-system-europe-v2-0": {
+      "name": "Sega Master System (Europe) (v2.0)",
+      "machine": "master-system",
+      "accepted": [
+        {
+          "size": 8192,
+          "crc32": "b3d854f8",
+          "sha1": "fc7eb9141f38c92bf98d9134816f64b45e811112",
+          "sha256": "1eb16fc06ceaf05651d7cfd69d1713e6ddccc4349a511f6fd17e037d71f9d85b"
+        }
+      ],
+      "badDumps": []
+    },
+    "sega-master-system-japan-v2-1": {
+      "name": "Sega Master System (Japan) (v2.1)",
+      "machine": "master-system",
+      "accepted": [
+        {
+          "size": 8192,
+          "crc32": "48d44a13",
+          "sha1": "a8c1b39a2e41137835eda6a5de6d46dd9fadbaf2",
+          "sha256": "67846e26764bd862f19179294347f7353a4166b62ac4198a5ec32933b7da486e"
+        }
+      ],
+      "badDumps": []
+    },
+    "sega-master-system-usa-europe-v1-3": {
+      "name": "Sega Master System (USA, Europe) (v1.3)",
+      "machine": "master-system",
+      "accepted": [
+        {
+          "size": 8192,
+          "crc32": "0072ed54",
+          "sha1": "c315672807d8ddb8d91443729405c766dd95cae7",
+          "sha256": "477617917a12a30f9f43844909dc2de6e6a617430f5c9a36306c86414a670d50"
+        }
+      ],
+      "badDumps": []
+    },
+    "sega-master-system-usa-m404-proto": {
+      "name": "Sega Master System (USA) (M404) (Proto)",
+      "machine": "master-system",
+      "accepted": [
+        {
+          "size": 8192,
+          "crc32": "1a15dfcc",
+          "sha1": "4a06c8e66261611dce0305217c42138b71331701",
+          "sha256": "2a4371fadb9da65037ccd622adb77fc4c6e9a993ed2034e0e08bc320b4e9b41f"
+        }
+      ],
+      "badDumps": []
+    },
+    "sega-master-system-usa-store-display-unit": {
+      "name": "Sega Master System (USA) (Store Display Unit)",
+      "machine": "master-system",
+      "accepted": [
+        {
+          "size": 16384,
+          "crc32": "ee2c29ba",
+          "sha1": "fc465122134d95363112eb51b9ab71db3576cefd",
+          "sha256": "6f4e6de10f1d07bda695c629c67457bb0248eeb8ffa0c61a2742b8529274de30"
+        }
+      ],
+      "badDumps": []
+    },
+    "sega-master-system-usa-v1-0-proto": {
+      "name": "Sega Master System (USA) (v1.0) (Proto)",
+      "machine": "master-system",
+      "accepted": [
+        {
+          "size": 8192,
+          "crc32": "72bec693",
+          "sha1": "29091ff60ef4c22b1ee17aa21e0e75bac6b36474",
+          "sha256": "cb01de3464797a77b52e82f5f9b05398540df8c1151d31128d49584028589062"
+        }
+      ],
+      "badDumps": []
+    },
+    "sonic-the-hedgehog-europe": {
+      "name": "Sonic The Hedgehog (Europe)",
+      "machine": "master-system",
+      "accepted": [
+        {
+          "size": 262144,
+          "crc32": "81c3476b",
+          "sha1": "6aca0e3dffe461ba1cb11a86cd4caf5b97e1b8df",
+          "sha256": "c51ec80b7a609c5ee3d203ceee2b602ae4dfb4479caf15dc1d030c40c0364e93"
+        }
+      ],
+      "badDumps": []
+    }
+  }
+}
