@@ -150,6 +150,7 @@ conformance/
   speed.py          the throughput floor
   package.py        the wheel audit
   source.py         the check that no documentation string remains
+  family.test.py    the family standard, held as tests
 ```
 
 ## Things that will bite you
