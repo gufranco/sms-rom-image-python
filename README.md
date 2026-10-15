@@ -4,7 +4,7 @@ A Sega Master System, Game Gear or SG-1000 cartridge image as a file: what the d
 
 [![CI](https://github.com/gufranco/sms-rom-image-python/actions/workflows/ci.yml/badge.svg)](https://github.com/gufranco/sms-rom-image-python/actions/workflows/ci.yml)
 
-**2,610** distinct images measured from **5,111** archive entries, the header read at `0x7FF0` on **2,408** of them, the stored checksum reproduced on **370** of **397** retail Master System cartridges, **14** boot programs declared by digest, **441** tests, **100%** statement and branch coverage, no dependencies
+**2,610** distinct images measured from **5,111** archive entries, the header read at `0x7FF0` on **2,408** of them, the stored checksum reproduced on **370** of **397** retail Master System cartridges, **14** boot programs declared by digest, **442** tests, **100%** statement and branch coverage, no dependencies
 
 ```python
 from smsimage import dump, header
@@ -151,7 +151,7 @@ None
 
 **The two bytes after the magic are not reserved.** The manual prints them as two spaces, `20 20`, and only 399 of the 2,421 headers carry them. `00 00` appears on 1,107 and `FF FF` on 525, with a long tail after that, so only the eight bytes `TMR SEGA` are looked for. `python3 -m conformance.divergences <library>` measures these.
 
-**A Game Gear cartridge usually stores no checksum.** Of the 1,084 that carry a header, 1,001 store the value zero and 43 reproduce the rule, because its boot path does not check one. `header.agrees` answers `False` for those, and that is a statement about the console rather than about the file.
+**A Game Gear cartridge usually stores no checksum.** Of the 1,105 distinct images in the Game Gear set that carry a header, 1,018 store the value zero and 44 reproduce the rule, as `python3 -m conformance.divergences` measures over that set alone, which is consistent with a boot path that never checks one; nobody has read that boot path yet, and [OPEN-QUESTIONS.md](OPEN-QUESTIONS.md) carries it. `header.agrees` answers `False` for those, and that is a statement about the console rather than about the file.
 
 The manual prints the size codes up to 256K, each with region nibble `0x4`. The other region nibbles and the 512K and 1M size codes are read the way the emulation community reads them, which no Sega document confirms. The distribution corroborates it: region `0x4` dominates the Master System images and `0x5` to `0x7` the Game Gear ones. 49 images carry a region nibble no reading accounts for and 3 a size nibble, and those resolve to nothing rather than to the nearest plausible value.
 
@@ -162,7 +162,7 @@ Sum every byte up to the header, then from just past the header to the size the 
 | Population | Reproduced |
 |:--|--:|
 | Retail Master System cartridges | 370 of 397 |
-| Every Master System image, modified ones included | 922 of 1,337 |
+| Every image in the Master System set with a header and a size the reading knows, modified ones included | 922 of 1,331 |
 | Every image with a header and a size the reading knows | 965 of 2,418 |
 
 A modified image disagrees for a reason that belongs to the modification: translations reproduce the rule 31% of the time and other modified images 19%. That is why the census reports agreement as an observation rather than gating on it.

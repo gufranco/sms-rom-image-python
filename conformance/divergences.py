@@ -56,11 +56,14 @@ def tally(images: Iterable[bytes]) -> dict[str, int]:
     held = list(images)
     tails = [carries_the_printed_tail(one) for one in held]
     rules = [document_rule_agrees(one) for one in held]
+    stored = [header.carried(one) for one in held]
     return {
         "anchored": sum(one is not None for one in tails),
         "withTheTwoSpaces": sum(one is True for one in tails),
         "judged": sum(one is not None for one in rules),
         "documentRuleAgrees": sum(one is True for one in rules),
+        "storesZero": sum(one == 0 for one in stored),
+        "packageRuleAgrees": sum(header.agrees(one) is True for one in held),
     }
 
 
@@ -75,6 +78,8 @@ def main(argv: list[str]) -> int:
         return 1
     print(f"the two printed spaces: {counted['withTheTwoSpaces']} of {counted['anchored']}")
     print(f"the manual's checksum rule: {counted['documentRuleAgrees']} of {counted['judged']}")
+    print(f"storing zero: {counted['storesZero']} of {counted['anchored']}")
+    print(f"the package's checksum rule: {counted['packageRuleAgrees']} of {counted['judged']}")
     for tail, count in tails(images)[:SHOWN]:
         print(f"after the magic: {tail} on {count}")
     return 0

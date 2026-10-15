@@ -301,8 +301,26 @@ class TallyTest(unittest.TestCase):
         # Assert
         self.assertEqual(
             found,
-            {"anchored": 2, "withTheTwoSpaces": 1, "judged": 2, "documentRuleAgrees": 0},
+            {
+                "anchored": 2,
+                "withTheTwoSpaces": 1,
+                "judged": 2,
+                "documentRuleAgrees": 0,
+                "storesZero": 2,
+                "packageRuleAgrees": 0,
+            },
         )
+
+    def test_a_stored_zero_and_an_agreeing_sum_are_counted_apart(self) -> None:
+        # Arrange
+        unsigned = image()
+        images = [image(stored=header.checksum(unsigned)), image(stored=0)]
+
+        # Act
+        found = divergences.tally(images)
+
+        # Assert
+        self.assertEqual((found["storesZero"], found["packageRuleAgrees"]), (1, 1))
 
     def test_the_same_image_listed_twice_is_counted_once(self) -> None:
         # Arrange
@@ -371,6 +389,8 @@ class MainTest(unittest.TestCase):
         self.assertIn("the two printed spaces: 1 of 1", said)
         self.assertIn("the manual's checksum rule: 0 of 1", said)
         self.assertIn("after the magic: 2020 on 1", said)
+        self.assertIn("storing zero: 1 of 1", said)
+        self.assertIn("the package's checksum rule: 0 of 1", said)
 
 
 if __name__ == "__main__":
