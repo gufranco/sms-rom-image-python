@@ -94,6 +94,7 @@ Then the ones outside the coverage step:
 python3 -m conformance.corpus
 python3 -m conformance.speed
 python3 -m conformance.documents
+python3 -m conformance.quotes
 ```
 
 And, with a library present, the two that walk it:
@@ -143,7 +144,8 @@ conformance/
   hardware.json     Sega's manual, pinned fact by fact
   divergences.json  every place a cartridge and the manual part
   divergences.py    measures what the corpus cannot hold
-  manual.py         the manual's text, for the quote checks
+  manual.py         the manual's text, laid flat for matching
+  quotes.py         every quote the records carry, found in the manual word for word
   links.py          the weekly check that every cited address still answers
   speed.py          the throughput floor
   package.py        the wheel audit

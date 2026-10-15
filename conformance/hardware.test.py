@@ -7,7 +7,6 @@ from typing import Any
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from conformance import manual  # noqa: E402
 from smsimage import header  # noqa: E402
 
 HELD: dict[str, Any] = json.loads((ROOT / "conformance" / "hardware.json").read_text())
@@ -216,48 +215,6 @@ class SizeCodeTest(unittest.TestCase):
 
         # Assert
         self.assertEqual(named, sorted(int(code) for code in sizes["value"]))
-
-
-def quotes_of(fact: dict[str, Any]) -> list[str]:
-    return [fact["quote"]] if "quote" in fact else list(fact["quotes"])
-
-
-class QuotesOfTest(unittest.TestCase):
-    def test_a_fact_with_one_quote_gives_that_quote(self) -> None:
-        # Arrange
-        fact = {"quote": "A software revision number byte."}
-
-        # Act
-        found = quotes_of(fact)
-
-        # Assert
-        self.assertEqual(found, ["A software revision number byte."])
-
-    def test_a_fact_with_a_numbered_set_gives_every_one(self) -> None:
-        # Arrange
-        fact = {"quotes": ["$4C 32K", "$4D 48K"]}
-
-        # Act
-        found = quotes_of(fact)
-
-        # Assert
-        self.assertEqual(found, ["$4C 32K", "$4D 48K"])
-
-
-MANUAL = manual.text()
-
-
-@unittest.skipUnless(MANUAL, "the manual or pdftotext is not on this machine")
-class QuotedTest(unittest.TestCase):  # pragma: no cover
-    def test_every_quote_is_in_the_manual_word_for_word(self) -> None:
-        # Arrange
-        quoted = [manual.flatten(one) for fact in FACTS.values() for one in quotes_of(fact)]
-
-        # Act
-        absent = [one for one in quoted if one not in MANUAL]
-
-        # Assert
-        self.assertEqual(absent, [])
 
 
 class NotStatedTest(unittest.TestCase):

@@ -11,14 +11,13 @@ from typing import Any
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from conformance import corpus, divergences, manual  # noqa: E402
+from conformance import corpus, divergences  # noqa: E402
 from smsimage import header  # noqa: E402
 
 HELD: dict[str, Any] = json.loads((ROOT / "conformance" / "divergences.json").read_text())
 
 ENTRIES: dict[str, Any] = {entry["id"]: entry for entry in HELD["divergences"]}
 
-MANUAL = manual.text()
 
 ANCHOR = header.CANDIDATES[0]
 
@@ -143,19 +142,6 @@ class MeasuredOnlyTest(unittest.TestCase):
             [command.startswith("python3 -m conformance.divergences") for command in commands],
             [True, True],
         )
-
-
-@unittest.skipUnless(MANUAL, "the manual or pdftotext is not on this machine")
-class QuotedTest(unittest.TestCase):  # pragma: no cover
-    def test_every_quote_is_in_the_manual_word_for_word(self) -> None:
-        # Arrange
-        quoted = [manual.flatten(entry["documentSays"]["quote"]) for entry in ENTRIES.values()]
-
-        # Act
-        absent = [one for one in quoted if one not in MANUAL]
-
-        # Assert
-        self.assertEqual(absent, [])
 
 
 class CorpusFigureTest(unittest.TestCase):

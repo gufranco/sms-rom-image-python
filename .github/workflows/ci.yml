@@ -135,3 +135,16 @@ jobs:
 
       - name: A 256K image must still be checked faster than the floor
         run: python -m conformance.speed
+
+  quotes:
+    name: Quotes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Every quote against the manual, where the manual is present
+        run: python -m conformance.quotes

@@ -73,11 +73,8 @@ jobs:
       - name: Bring the manual down and refuse any other file
         run: python -m conformance.documents
 
-      - name: The record against the manual
-        run: python conformance/hardware.test.py
-
-      - name: The divergences against the manual
-        run: python conformance/divergences.test.py
+      - name: Every quote against the manual it names
+        run: python -m conformance.quotes
 
       - name: The reader against the manual
         run: python conformance/manual.test.py
