@@ -222,6 +222,28 @@ def quotes_of(fact: dict[str, Any]) -> list[str]:
     return [fact["quote"]] if "quote" in fact else list(fact["quotes"])
 
 
+class QuotesOfTest(unittest.TestCase):
+    def test_a_fact_with_one_quote_gives_that_quote(self) -> None:
+        # Arrange
+        fact = {"quote": "A software revision number byte."}
+
+        # Act
+        found = quotes_of(fact)
+
+        # Assert
+        self.assertEqual(found, ["A software revision number byte."])
+
+    def test_a_fact_with_a_numbered_set_gives_every_one(self) -> None:
+        # Arrange
+        fact = {"quotes": ["$4C 32K", "$4D 48K"]}
+
+        # Act
+        found = quotes_of(fact)
+
+        # Assert
+        self.assertEqual(found, ["$4C 32K", "$4D 48K"])
+
+
 MANUAL = manual.text()
 
 
