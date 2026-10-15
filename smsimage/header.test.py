@@ -170,6 +170,86 @@ class ChecksumTest(unittest.TestCase):
 
         self.assertNotEqual(header.checksum(bytes(image)), before)
 
+    def test_an_eight_kilobyte_declaration_sums_only_below_the_smallest_header(self) -> None:
+        # Arrange
+        image = bytearray(sealed(131072, 0x7FF0, 0x4A))
+        before = header.checksum(bytes(image))
+        image[0x1FF0] ^= 0xFF
+
+        # Act
+        after = header.checksum(bytes(image))
+
+        # Assert
+        self.assertEqual(after, before)
+
+    def test_and_counts_the_last_byte_below_it(self) -> None:
+        # Arrange
+        image = bytearray(sealed(131072, 0x7FF0, 0x4A))
+        before = header.checksum(bytes(image))
+        image[0x1FEF] ^= 0xFF
+
+        # Act
+        after = header.checksum(bytes(image))
+
+        # Assert
+        self.assertNotEqual(after, before)
+
+    def test_a_forty_eight_kilobyte_declaration_sums_through_the_header(self) -> None:
+        # Arrange
+        image = bytearray(sealed(49152, 0x7FF0, 0x4D))
+        before = header.checksum(bytes(image))
+        image[0x7FFC] ^= 0xFF
+
+        # Act
+        after = header.checksum(bytes(image))
+
+        # Assert
+        self.assertNotEqual(after, before)
+
+    def test_and_stops_sixteen_bytes_short_of_its_end(self) -> None:
+        # Arrange
+        image = bytearray(sealed(49152, 0x7FF0, 0x4D))
+        before = header.checksum(bytes(image))
+        image[0xBFF0] ^= 0xFF
+
+        # Act
+        after = header.checksum(bytes(image))
+
+        # Assert
+        self.assertEqual(after, before)
+
+    def test_a_larger_declaration_adds_whole_banks_from_the_third_on(self) -> None:
+        # Arrange
+        image = bytearray(sealed(131072, 0x7FF0, 0x4E))
+        before = header.checksum(bytes(image))
+        image[0x10000] ^= 0xFF
+
+        # Act
+        after = header.checksum(bytes(image))
+
+        # Assert
+        self.assertEqual(after, before)
+
+    def test_every_size_the_reading_names_has_a_span_to_sum(self) -> None:
+        # Arrange
+        named = set(header.SIZES)
+
+        # Act
+        spanned = set(header.FIRST_SPAN)
+
+        # Assert
+        self.assertEqual(spanned, named)
+
+    def test_and_every_banked_size_is_one_the_reading_names(self) -> None:
+        # Arrange
+        named = set(header.SIZES)
+
+        # Act
+        banked = set(header.BANKS_FROM_THE_THIRD)
+
+        # Assert
+        self.assertLessEqual(banked, named)
+
     def test_it_stops_at_the_end_of_a_file_shorter_than_it_declares(self) -> None:
         image = sealed(32768, 0x7FF0, 0x4F)
 

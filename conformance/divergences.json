@@ -1,12 +1,12 @@
 {
-  "note": "Every place Sega's manual and the cartridge library disagree, and every place this package reads something the manual does not settle. Each entry names what the document says, what the cartridges do, which one this package follows, and what evidence would close the question.",
-  "authority": "hardware.json holds the ladder. Rung 1 is Sega's reference manual, rung 2 is a cartridge, rung 3 is nothing. The manual is an instruction to a licensee rather than a description of silicon, and a retyped one, so a genuine cartridge that disagrees with it is a fact about cartridges rather than an error.",
+  "note": "Every place Sega's manual and the cartridge library disagree, and every place this package reads something the manual does not settle. Each entry names what the document says, what the cartridges and the boot programs do, which one this package follows, and what evidence would close or reopen the question.",
+  "authority": "hardware.json holds the ladder. Rung 1 is Sega's reference manual, rung 2 is Sega's own boot programs and the cartridges, rung 3 is nothing. The manual is a retyped instruction to licensees, so where the boot program that actually reads the header disagrees with it, the boot program decides, and packageFollows names it as microcode.",
   "readOn": "2026-10-15",
   "divergences": [
     {
       "id": "checksum-coverage",
       "severity": "high",
-      "status": "open",
+      "status": "closed",
       "topic": "Which bytes the stored checksum is taken over.",
       "documentSays": {
         "rung": 1,
@@ -15,18 +15,18 @@
         "source": "Software Reference Manual for the SEGA Mark III Console, page 22"
       },
       "thisPackageDid": {
-        "claim": "Sums every byte up to the declared size except the whole sixteen-byte header.",
-        "why": "Leaving out only the two checksum bytes reproduces the stored value on no image at all, so the sentence cannot describe what licensees' tools actually wrote."
+        "claim": "Sums the span the export boot program's table gives the size code, then whole 16K banks from the third on for 64K and up.",
+        "why": "The v1.3 export boot program, read at 0x02EA, sums from address 0 for the table's span, 0x1FF0, 0x3FF0, 0x7FF0 or 0xBFF0, and then the banks its second table counts, and compares the result with the stored word at 0x011E. conformance/boot.py reads both tables out of that program and checks them against this package."
       },
       "measured": {
         "subjects": 2418,
         "note": "Distinct images that carry a header and declare a size this reading knows, walked by conformance/census.py over the Master System and Game Gear libraries.",
         "documentRule": "0 of 2418 agree",
-        "packageRule": "965 of 2418 agree",
+        "packageRule": "971 of 2418 agree",
         "measuredBy": "python3 -m conformance.divergences <library> for the document rule; the package rule is the corpus figure"
       },
-      "packageFollows": "cartridges",
-      "wouldCloseIt": "A rule that reproduces the stored checksum on the retail images the package rule misses, read from the export boot program that checks it rather than inferred from the images."
+      "packageFollows": "microcode",
+      "wouldReopenIt": "Another export boot program summing a different span, read the same way."
     },
     {
       "id": "opening-string-length",
@@ -41,7 +41,7 @@
       },
       "thisPackageDid": {
         "claim": "Looks for the first eight bytes, TMR SEGA, and nothing after them.",
-        "why": "Most headers in the library carry other bytes where the two spaces would be, so requiring them would refuse genuine cartridges."
+        "why": "The export boot program compares eight bytes at 0x02D0 and the Game Gear boot program eight at 0x0114, and most headers carry other bytes where the two spaces would be."
       },
       "measured": {
         "subjects": 2421,
@@ -49,13 +49,13 @@
         "withTheTwoSpaces": "399 of 2421",
         "measuredBy": "python3 -m conformance.divergences <library>"
       },
-      "packageFollows": "cartridges",
+      "packageFollows": "microcode",
       "wouldReopenIt": "A boot program that compares all ten bytes and refuses a cartridge without the two spaces."
     },
     {
       "id": "unprinted-region-codes",
       "severity": "medium",
-      "status": "open",
+      "status": "narrowed",
       "topic": "The region nibbles other than 4.",
       "documentSays": {
         "rung": 1,
@@ -65,7 +65,7 @@
       },
       "thisPackageDid": {
         "claim": "Reads 3 as a Japanese Master System and 5, 6 and 7 as the three Game Gear regions.",
-        "why": "These are the codes the library carries, and the Game Gear ones are on Game Gear cartridges only."
+        "why": "The export boot program checks the sum only on region 4 and fails every other, the Japanese boot program never looks for a header and the Game Gear's ignores the region, so no boot program names the other codes. They are named after the cartridges that carry them."
       },
       "measured": {
         "subjects": 2610,
@@ -75,12 +75,12 @@
         "ggInternational": "431 images, 11 of them reproducing their checksum"
       },
       "packageFollows": "cartridges",
-      "wouldCloseIt": "A Sega document for the Game Gear or for the Japanese Master System that prints the region codes."
+      "wouldCloseIt": "A Sega document for the Game Gear or the Japanese Master System that prints the region codes."
     },
     {
       "id": "unprinted-size-codes",
       "severity": "low",
-      "status": "open",
+      "status": "closed",
       "topic": "The size codes above 256K.",
       "documentSays": {
         "rung": 1,
@@ -90,15 +90,15 @@
       },
       "thisPackageDid": {
         "claim": "Reads a low nibble of 1 as 512K and 2 as 1M.",
-        "why": "Images that large exist, and reading the codes that way makes most of them reproduce their checksum."
+        "why": "The export boot program's bank table adds 30 banks for code 1 and 62 for code 2, which is 512K and 1M counted from address 0."
       },
       "measured": {
         "subjects": 19,
         "declared512K": "17 images, 13 of them reproducing their checksum",
         "declared1M": "2 images, 1 of them reproducing its checksum"
       },
-      "packageFollows": "cartridges",
-      "wouldCloseIt": "A Sega document printing the codes, or a boot program that decodes them."
+      "packageFollows": "microcode",
+      "wouldReopenIt": "An export boot program whose bank table counts those codes differently."
     }
   ]
 }

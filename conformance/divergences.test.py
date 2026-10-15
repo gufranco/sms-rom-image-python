@@ -64,7 +64,7 @@ def counted(text: str) -> int:
 class RecordTest(unittest.TestCase):
     def test_every_entry_says_which_way_this_package_went(self) -> None:
         # Arrange
-        allowed = {"document", "cartridges"}
+        allowed = {"document", "cartridges", "microcode"}
 
         # Act
         ways = {entry["packageFollows"] for entry in ENTRIES.values()}
@@ -72,9 +72,9 @@ class RecordTest(unittest.TestCase):
         # Assert
         self.assertLessEqual(ways, allowed)
 
-    def test_every_entry_is_open_or_closed(self) -> None:
+    def test_every_entry_is_open_narrowed_or_closed(self) -> None:
         # Arrange
-        allowed = {"open", "closed"}
+        allowed = {"open", "narrowed", "closed"}
 
         # Act
         statuses = {entry["status"] for entry in ENTRIES.values()}
@@ -90,7 +90,7 @@ class RecordTest(unittest.TestCase):
         silent = [
             entry["id"]
             for entry in entries
-            if entry["status"] == "open" and not entry.get("wouldCloseIt")
+            if entry["status"] in ("open", "narrowed") and not entry.get("wouldCloseIt")
         ]
 
         # Assert

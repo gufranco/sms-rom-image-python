@@ -614,15 +614,6 @@
   {
     "anchor": 32752,
     "carried": false,
-    "declared": 8192,
-    "form": "bare",
-    "region": "sms-export",
-    "size": 262144,
-    "count": 2
-  },
-  {
-    "anchor": 32752,
-    "carried": false,
     "declared": 262144,
     "form": "bare",
     "region": "sms-export",
@@ -685,7 +676,7 @@
   },
   {
     "anchor": 16368,
-    "carried": false,
+    "carried": true,
     "declared": 8192,
     "form": "bare",
     "region": "sms-export",
@@ -730,7 +721,7 @@
   },
   {
     "anchor": 32752,
-    "carried": false,
+    "carried": true,
     "declared": 8192,
     "form": "bare",
     "region": "sms-export",
@@ -762,6 +753,15 @@
     "form": "bare",
     "region": "sms-export",
     "size": 131072,
+    "count": 1
+  },
+  {
+    "anchor": 32752,
+    "carried": true,
+    "declared": 8192,
+    "form": "bare",
+    "region": "sms-export",
+    "size": 262144,
     "count": 1
   },
   {
@@ -812,6 +812,15 @@
   {
     "anchor": 32752,
     "carried": false,
+    "declared": 8192,
+    "form": "bare",
+    "region": "sms-export",
+    "size": 262144,
+    "count": 1
+  },
+  {
+    "anchor": 32752,
+    "carried": true,
     "declared": 8192,
     "form": "bare",
     "region": "sms-export",
@@ -1126,7 +1135,7 @@
   },
   {
     "anchor": 16368,
-    "carried": false,
+    "carried": true,
     "declared": 8192,
     "form": "bare",
     "region": "sms-export",

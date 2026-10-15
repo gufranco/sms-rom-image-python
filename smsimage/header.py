@@ -40,6 +40,30 @@ SIZES = {
 
 LOW_SIXTEEN_BITS = 0xFFFF
 
+FIRST_SPAN = {
+    0x0: 0x7FF0,
+    0x1: 0x7FF0,
+    0x2: 0x7FF0,
+    0xA: 0x1FF0,
+    0xB: 0x3FF0,
+    0xC: 0x7FF0,
+    0xD: 0xBFF0,
+    0xE: 0x7FF0,
+    0xF: 0x7FF0,
+}
+
+BANK = 0x4000
+
+THIRD_BANK = 2 * BANK
+
+BANKS_FROM_THE_THIRD = {
+    0x0: 14,
+    0x1: 30,
+    0x2: 62,
+    0xE: 2,
+    0xF: 6,
+}
+
 
 def _region_code(region_and_size: int) -> int:
     return region_and_size >> 4
@@ -81,13 +105,14 @@ def region_of(image: bytes) -> str | None:
 
 def checksum(image: bytes) -> int | None:
     anchor = anchor_of(image)
-    declared = declared_size(image)
-    if anchor is None or declared is None:
+    if anchor is None:
         return None
-    summed_until = min(len(image), declared)
-    before_the_header = sum(image[:anchor])
-    after_the_header = sum(image[anchor + LENGTH : summed_until])
-    return (before_the_header + after_the_header) & LOW_SIXTEEN_BITS
+    code = _size_code(image[anchor + REGION_AND_SIZE])
+    if code not in FIRST_SPAN:
+        return None
+    first = sum(image[: FIRST_SPAN[code]])
+    banked = sum(image[THIRD_BANK : THIRD_BANK + BANKS_FROM_THE_THIRD.get(code, 0) * BANK])
+    return (first + banked) & LOW_SIXTEEN_BITS
 
 
 def agrees(image: bytes) -> bool | None:

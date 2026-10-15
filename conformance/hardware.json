@@ -3,10 +3,10 @@
   "authority": {
     "order": [
       "hardware.json, for anything Sega stated: where the header sits, the string it opens with, where the checksum is kept, and the size codes",
-      "the cartridges themselves, for what a retail image actually contains, which is not always what the manual describes",
+      "Sega's boot programs, for what the code that reads a header actually checks, and the cartridges themselves, for what a retail image actually contains, which is not always what the manual describes",
       "nothing else"
     ],
-    "why": "The manual is a description for licensees, retyped by an unnamed hand, so a cartridge can disagree with it and still be genuine. Where a cartridge disagrees, the cartridge is the fact and the manual is the intent, and divergences.json records which is which.",
+    "why": "The manual is a description for licensees, retyped by an unnamed hand, so a cartridge can disagree with it and still be genuine, and the boot program that reads a header is the last word on what it checks. Where either disagrees with the manual, divergences.json records which way this package went.",
     "comparedAgainst": {
       "runner": "conformance/census.py",
       "what": "Every image in a real library, walked and measured, which is the artifact rather than a description of it."
@@ -45,14 +45,21 @@
       "governs": ["sms"]
     },
     "checksum": {
-      "value": { "first": 32762, "last": 32763, "order": "little" },
+      "value": {
+        "first": 32762,
+        "last": 32763,
+        "order": "little"
+      },
       "quote": "A 16-bit checksum for the ROM (low-hi order). $7FFA and $7FFB are not included in this checksum.",
       "manualPage": 22,
       "document": "referenceManual",
       "governs": ["sms"]
     },
     "serialNumber": {
-      "value": { "first": 32764, "last": 32765 },
+      "value": {
+        "first": 32764,
+        "last": 32765
+      },
       "quote": "A 16-bit serial number, assigned by Sega.",
       "manualPage": 22,
       "document": "referenceManual",
@@ -74,13 +81,29 @@
     },
     "sizeCodes": {
       "value": {
-        "74": { "bytes": 8192, "header": 8176 },
-        "75": { "bytes": 16384, "header": 16368 },
-        "76": { "bytes": 32768 },
-        "77": { "bytes": 49152 },
-        "78": { "bytes": 65536 },
-        "79": { "bytes": 131072 },
-        "64": { "bytes": 262144 }
+        "74": {
+          "bytes": 8192,
+          "header": 8176
+        },
+        "75": {
+          "bytes": 16384,
+          "header": 16368
+        },
+        "76": {
+          "bytes": 32768
+        },
+        "77": {
+          "bytes": 49152
+        },
+        "78": {
+          "bytes": 65536
+        },
+        "79": {
+          "bytes": 131072
+        },
+        "64": {
+          "bytes": 262144
+        }
       },
       "quotes": [
         "$4A 8K (header at $1FF0)",
@@ -98,8 +121,8 @@
   },
   "notStated": {
     "otherRegions": "Every size code the manual prints carries a high nibble of 4. The other region codes this package reads, 3 for a Japanese Master System and 5, 6 and 7 for the Game Gear, are not in it and rest on the census.",
-    "largerSizes": "The largest size the manual prints is 256K. Low nibbles 1 and 2, read here as 512K and 1M, are not in it and rest on the census.",
-    "whichBytesTheChecksumCovers": "The manual leaves only the two checksum bytes out of the sum. The library does not bear that out, and divergences.json carries the measurement.",
+    "largerSizes": "The largest size the manual prints is 256K. Low nibbles 1 and 2 are read as 512K and 1M because the export boot program's bank table counts 30 and 62 banks for them; divergences.json carries it.",
+    "whichBytesTheChecksumCovers": "The manual leaves only the two checksum bytes out of the sum, which reproduces no stored value in the library. The package follows the span table and bank table of the export boot program instead, and divergences.json carries both measurements.",
     "copierBlocks": "A copier block is added by hardware Sega did not sell. The manual does not acknowledge it.",
     "gameGear": "The manual describes the Mark III and says nothing about the Game Gear."
   }

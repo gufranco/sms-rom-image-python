@@ -1058,7 +1058,7 @@ distinct images from the Master System and Game Gear libraries.
 
 **The census is the oracle.** There is no published conformance suite for a file
 format. The census walks a library, gates on six properties, reports one
-observation, and writes a corpus of 144 combinations that holds no content. The
+observation, and writes a corpus of 145 combinations that holds no content. The
 observation is the only check that asks the artifact rather than the code: the
 stored checksum is reproduced on 370 of 393 retail Master System cartridges.
 

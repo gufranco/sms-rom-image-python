@@ -4,7 +4,7 @@ A Sega Master System, Game Gear or SG-1000 cartridge image as a file: what the d
 
 [![CI](https://github.com/gufranco/sms-rom-image-python/actions/workflows/ci.yml/badge.svg)](https://github.com/gufranco/sms-rom-image-python/actions/workflows/ci.yml)
 
-**2,610** distinct images measured from **5,111** archive entries, **0** property failures, the header read at `0x7FF0` on **2,408** of them, the stored checksum reproduced on **370** of **393** retail Master System cartridges, **14** boot programs declared by digest, **659** tests, **100%** statement and branch coverage, no dependencies
+**2,610** distinct images measured from **5,111** archive entries, **0** property failures, the header read at `0x7FF0` on **2,408** of them, the stored checksum reproduced on **370** of **393** retail Master System cartridges, **14** boot programs declared by digest, **677** tests, **100%** statement and branch coverage, no dependencies
 
 ```python
 from smsimage import dump, header
@@ -149,23 +149,23 @@ print(header.anchor_of(bytes(0x8000)))
 None
 ```
 
-**The two bytes after the magic are not reserved.** The manual prints them as two spaces, `20 20`, and only 399 of the 2,421 headers carry them. `00 00` appears on 1,107 and `FF FF` on 525, with a long tail after that, so only the eight bytes `TMR SEGA` are looked for. `python3 -m conformance.divergences <library>` measures these.
+**The two bytes after the magic are not reserved.** The manual prints them as two spaces, `20 20`, and only 399 of the 2,421 headers carry them. `00 00` appears on 1,107 and `FF FF` on 525, with a long tail after that. The export and Game Gear boot programs both compare eight bytes, `TMR SEGA`, and so does this package. `python3 -m conformance.divergences <library>` measures these.
 
-**A Game Gear cartridge usually stores no checksum.** Of the 1,105 distinct images in the Game Gear set that carry a header, 1,018 store the value zero and 44 reproduce the rule, as `python3 -m conformance.divergences` measures over that set alone, which is consistent with a boot path that never checks one; nobody has read that boot path yet, and [OPEN-QUESTIONS.md](OPEN-QUESTIONS.md) carries it. `header.agrees` answers `False` for those, and that is a statement about the console rather than about the file.
+**A Game Gear cartridge usually stores no checksum.** Of the 1,105 distinct images in the Game Gear set that carry a header, 1,018 store the value zero and 48 reproduce the rule, as `python3 -m conformance.divergences` measures over that set alone. The Game Gear boot program looks for `TMR SEGA` at the three addresses and checks nothing else, so nothing on that console ever read the stored value. `header.agrees` answers `False` for those, and that is a statement about the console rather than about the file.
 
-The manual prints the size codes up to 256K, each with region nibble `0x4`. The other region nibbles and the 512K and 1M size codes are read the way the emulation community reads them, which no Sega document confirms. The distribution corroborates it: region `0x4` dominates the Master System images and `0x5` to `0x7` the Game Gear ones. 49 images carry a region nibble no reading accounts for and 3 a size nibble, and those resolve to nothing rather than to the nearest plausible value.
+The manual prints the size codes up to 256K, each with region nibble `0x4`. The export boot program decodes nine size codes, 512K and 1M among them, and checks the sum only on region `0x4`. The other region nibbles are named the way the emulation community names them, which no Sega document confirms. The distribution corroborates it: region `0x4` dominates the Master System images and `0x5` to `0x7` the Game Gear ones. 49 images carry a region nibble no reading accounts for and 3 a size nibble, and those resolve to nothing rather than to the nearest plausible value.
 
 ## The checksum rule
 
-Sum every byte up to the header, then from just past the header to the size the header declares, and keep the low sixteen bits. The manual says to leave out only the two checksum bytes, and that reading reproduces the stored value on none of the 2,418 images.
+The rule is the one the export boot program runs, read out of the v1.3 program declared in the manifest. Each size code names a first span, `0x1FF0`, `0x3FF0`, `0x7FF0` or, for 48K, `0xBFF0`, and the bytes below it are summed; from 64K up, whole 16K banks from the third onward are added; the low sixteen bits are kept. `python3 -m conformance.boot <that program>` reads both tables, the eight-byte compare and the region gate out of it and checks them against this package. The manual says to leave out only the two checksum bytes, and that reading reproduces the stored value on none of the 2,418 images.
 
 | Population | Reproduced |
 |:--|--:|
 | Retail Master System cartridges, the four region folders of the Master System set, by `python3 -m conformance.categories` | 370 of 393 |
-| Every image in the Master System set with a header and a size the reading knows, modified ones included | 922 of 1,331 |
-| Every image with a header and a size the reading knows | 965 of 2,418 |
+| Every image in the Master System set with a header and a size the reading knows, modified ones included | 925 of 1,331 |
+| Every image with a header and a size the reading knows | 971 of 2,418 |
 
-A modified image disagrees for a reason that belongs to the modification: translations reproduce the rule 31% of the time and other modified images 19%. That is why the census reports agreement as an observation rather than gating on it.
+A modified image disagrees for a reason that belongs to the modification: translations reproduce the rule on 78 of 301 and hacks on 33 of 129, as `python3 -m conformance.categories` measures. That is why the census reports agreement as an observation rather than gating on it.
 
 ## The census, and why its output can ship
 

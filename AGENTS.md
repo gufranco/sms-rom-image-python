@@ -52,7 +52,7 @@ place they part.
 
 ## What is settled and what is not
 
-**Settled: every combination a real library contains.** 144 of them, replayed
+**Settled: every combination a real library contains.** 145 of them, replayed
 from [`conformance/corpus.json`](conformance/corpus.json) with no failures, over
 2,610 distinct images.
 
@@ -61,16 +61,20 @@ from [`conformance/corpus.json`](conformance/corpus.json) with no failures, over
 package's constants by
 [`conformance/hardware.test.py`](conformance/hardware.test.py).
 
-**Not settled: 5 things**, each in [OPEN-QUESTIONS.md](OPEN-QUESTIONS.md) with
+**Not settled: 2 things**, each in [OPEN-QUESTIONS.md](OPEN-QUESTIONS.md) with
 what would close it. Do not close one by argument.
 
 ## The manual's checksum sentence is not the rule
 
 The manual says the checksum covers the ROM with only `$7FFA` and `$7FFB` left
-out. Read that way it reproduces the stored value on 0 of 2,418 images. The
-package leaves out the whole sixteen-byte header and reproduces 965.
+out. Read that way it reproduces the stored value on 0 of 2,418 images. The rule
+here is the one the v1.3 export boot program runs: a first span the size code
+picks from its table, then whole 16K banks from the third on. It reproduces 971.
+A 48K declaration sums through the header and stops short of its own last
+sixteen bytes, because that is what the program's table says.
 
 **If you are about to change the checksum, run
+`python3 -m conformance.boot <the v1.3 program>` and
 `python3 -m conformance.divergences <library>` before and after.**
 
 ## Every gate, in the order to run them
@@ -138,7 +142,7 @@ smsimage/
   version.py     rewritten by the release job and by nothing else
 conformance/
   census.py         walks a library you own and checks six properties on all of it
-  corpus.json       144 combinations covering 2,610 distinct images
+  corpus.json       145 combinations covering 2,610 distinct images
   corpus.py         replays every combination against the package
   documents.json    the manual, by digest
   documents.py      brings it down and refuses any other file
@@ -146,6 +150,7 @@ conformance/
   divergences.json  every place a cartridge and the manual part
   divergences.py    measures what the corpus cannot hold
   categories.py     the same measurements per folder, and for the retail set
+  boot.py           the export boot program's tables, checked against the package
   manual.py         the manual's text, laid flat for matching
   quotes.py         every quote the records carry, found in the manual word for word
   links.py          the weekly check that every cited address still answers
