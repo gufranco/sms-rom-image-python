@@ -1,0 +1,12 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Why does my checksum differ from the one on the cartridge?
+    url: https://github.com/gufranco/sms-rom-image-python#the-checksum-rule
+    about: >-
+      Most Game Gear cartridges store no checksum, and modified images
+      rarely keep theirs. The README says which populations reproduce it.
+  - name: Where Sega's manual and the cartridges disagree
+    url: https://github.com/gufranco/sms-rom-image-python/blob/main/conformance/divergences.json
+    about: >-
+      Each disagreement is listed there with its measurement and what would
+      settle it.
