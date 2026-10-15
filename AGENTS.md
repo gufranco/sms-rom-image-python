@@ -102,6 +102,7 @@ And, with a library present, the two that walk it:
 ```bash
 python3 -m conformance.census <library> [library ...]
 python3 -m conformance.divergences <library> [library ...]
+python3 -m conformance.categories <the Master System set>
 ```
 
 Everything under [`conformance/`](conformance) runs as a module. Run as a
@@ -144,6 +145,7 @@ conformance/
   hardware.json     Sega's manual, pinned fact by fact
   divergences.json  every place a cartridge and the manual part
   divergences.py    measures what the corpus cannot hold
+  categories.py     the same measurements per folder, and for the retail set
   manual.py         the manual's text, laid flat for matching
   quotes.py         every quote the records carry, found in the manual word for word
   links.py          the weekly check that every cited address still answers

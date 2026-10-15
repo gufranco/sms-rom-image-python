@@ -1049,17 +1049,18 @@ the others do not also get.*
 
 ## The state of this repository
 
-**Measured, not documented.** No manufacturer document for this format has been
-located, so every fact here is second rung: read off 2,610 distinct images from
-the Master System and Game Gear libraries, with the count that supports it. The
-`documents` block will be empty rather than missing, because that absence is the
-most important thing this member has to say about its own standing.
+**Held to a retyped Sega manual, and measured where it is silent.** Sega's
+*Software Reference Manual for the SEGA Mark III Console* prints the header on
+its page 22; it is pinned by digest and quoted fact by fact in
+[`conformance/hardware.json`](conformance/hardware.json). Where it and the cartridges part, the cartridges
+win and [`conformance/divergences.json`](conformance/divergences.json) carries the measurement, read off 2,610
+distinct images from the Master System and Game Gear libraries.
 
 **The census is the oracle.** There is no published conformance suite for a file
 format. The census walks a library, gates on six properties, reports one
 observation, and writes a corpus of 144 combinations that holds no content. The
 observation is the only check that asks the artifact rather than the code: the
-stored checksum is reproduced on 370 of 397 retail Master System cartridges.
+stored checksum is reproduced on 370 of 393 retail Master System cartridges.
 
 **It takes no submodule.** An SMS header is found by searching three fixed
 offsets in the image itself, so this member stays installable from an index and

@@ -42,7 +42,7 @@ Source: Sega, *Software Reference Manual for the SEGA Mark III Console*, page 22
 
 **What the cartridges do.** Read that way, no image in the library reproduces its
 stored value: 0 of 2,418. Leaving out the whole sixteen-byte header and summing
-up to the declared size reproduces 965 of them, 370 of the 397 retail Master
+up to the declared size reproduces 965 of them, 370 of the 393 retail Master
 System cartridges among them.
 
 **What this project follows.** The cartridges.
@@ -51,7 +51,7 @@ System cartridges among them.
 applied.
 
 **What would settle or reopen it.** The checksum routine of an export boot
-program, which names the range it sums. The 27 retail cartridges the package rule
+program, which names the range it sums. The 23 retail cartridges the package rule
 misses are where to look first.
 
 ### The region codes other than 4.

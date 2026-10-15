@@ -4,7 +4,7 @@ A Sega Master System, Game Gear or SG-1000 cartridge image as a file: what the d
 
 [![CI](https://github.com/gufranco/sms-rom-image-python/actions/workflows/ci.yml/badge.svg)](https://github.com/gufranco/sms-rom-image-python/actions/workflows/ci.yml)
 
-**2,610** distinct images measured from **5,111** archive entries, **0** property failures, the header read at `0x7FF0` on **2,408** of them, the stored checksum reproduced on **370** of **397** retail Master System cartridges, **14** boot programs declared by digest, **651** tests, **100%** statement and branch coverage, no dependencies
+**2,610** distinct images measured from **5,111** archive entries, **0** property failures, the header read at `0x7FF0` on **2,408** of them, the stored checksum reproduced on **370** of **393** retail Master System cartridges, **14** boot programs declared by digest, **659** tests, **100%** statement and branch coverage, no dependencies
 
 ```python
 from smsimage import dump, header
@@ -161,7 +161,7 @@ Sum every byte up to the header, then from just past the header to the size the 
 
 | Population | Reproduced |
 |:--|--:|
-| Retail Master System cartridges | 370 of 397 |
+| Retail Master System cartridges, the four region folders of the Master System set, by `python3 -m conformance.categories` | 370 of 393 |
 | Every image in the Master System set with a header and a size the reading knows, modified ones included | 922 of 1,331 |
 | Every image with a header and a size the reading knows | 965 of 2,418 |
 
