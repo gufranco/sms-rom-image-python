@@ -5,7 +5,7 @@ style guide. It is the set of decisions that were expensive to reach, so that a
 repository starting today does not have to reach them again and a repository
 already running does not drift away from them quietly.
 
-The family is twenty one repositories. Where they differ from each other, the
+The family is twenty two repositories. Where they differ from each other, the
 difference is something the hardware forces rather than something nobody got
 round to.
 
@@ -27,6 +27,7 @@ round to.
 | [snes-mapper-python](https://github.com/gufranco/snes-mapper-python) | The cartridge memory map and its transfer engine | Board |
 | [snes-graphics-python](https://github.com/gufranco/snes-graphics-python) | The graphics formats: tiles, palettes, tilemaps, sprites and mode 7 | Format |
 | [snes-rom-image-python](https://github.com/gufranco/snes-rom-image-python) | The forms a cartridge image is stored and shipped in | Format |
+| [sms-rom-image-python](https://github.com/gufranco/sms-rom-image-python) | A Master System, Game Gear or SG-1000 cartridge image as a file | Format |
 | [snes-driver-python](https://github.com/gufranco/snes-driver-python) | What a cartridge says to its coprocessor, read out of the cartridge's own code | Tool |
 | [snes-dungeon-master-nochip](https://github.com/gufranco/snes-dungeon-master-nochip) | Dungeon Master with its graphics coprocessor designed out | Tool |
 | [snes-pilotwings-nochip](https://github.com/gufranco/snes-pilotwings-nochip) | Pilotwings with its mathematical coprocessor designed out | Tool |
@@ -185,6 +186,32 @@ checks the ones a test can reach.
 - [ ] Every required field in an issue form is actually required. `validations`
       indented one level too far is ignored in silence.
 - [ ] The test count the README advertises is the count there is.
+- [ ] The doctor is tested by running it the way the readme says to, as
+      `python3 <package>/doctor.py` in a subprocess started outside the
+      repository. Every other test imports it from a process that already has
+      the root on its path, so all of them pass whether a reader gets a report
+      or a traceback. One member passed its whole suite while the documented
+      invocation failed with `ModuleNotFoundError`, which is the exact failure
+      its doctor existed to prevent.
+- [ ] The release commits every file the version script stamps, and the
+      version module and the citation say the same version. Five members
+      stamped a citation and never committed it, and one named a path inside a
+      submodule instead of its own package, so fifteen of its releases
+      reported version `0.0.0`. `conformance/family.test.py` holds both.
+- [ ] The pipeline builds the wheel and audits it: every module present, no
+      test file shipped. `exclude-package-data` filters data files and a
+      `.test.py` file is collected as a module, so every installable member
+      shipped its tests while its configuration said otherwise. Nothing
+      noticed, because nothing built the package, which is also how one member
+      declared a readme that did not exist and could not be installed at all.
+- [ ] Every gate decides on its exit code, never on a phrase in its output. A
+      failing `ruff format --check` ends with `1 file would be reformatted, 58
+      files already formatted`, which contains the success phrase, and a
+      harness reading it that way reported eighteen broken members clean.
+- [ ] Gates run at the toolchain the pipeline pins, never at whatever
+      `python3` resolves to. A machine whose default interpreter moved on
+      reports every suite failing for want of a tool, which reads as broken
+      code.
 - [ ] A pinned corpus names a repository somebody can still push to. One pinned
       here named a repository that had been archived and subdivided, so the job
       watching it for corrections was watching something nobody could correct.
@@ -252,11 +279,19 @@ checks the ones a test can reach.
       compared, how much of it failed, the test count, the coverage, and what it
       costs to install. A count of what was compared with no result beside it is
       half a claim.
-- [ ] No comment in any source file that no tool reads. Reasoning goes in the
-      docstring, where it sits with the thing it explains and is read by anyone
-      who asks for help on it. A comment is the one part of a file nothing checks,
-      so it is the one part free to drift, and once it has drifted it misleads
-      every later reader rather than merely failing to help.
+- [ ] No comment in any source file that no tool reads, and a docstring counts
+      as one. A comment is the one part of a file nothing checks, so it is the
+      one part free to drift, and once it has drifted it misleads every later
+      reader rather than merely failing to help. Names, small functions,
+      named constants and types carry what a comment would have said. When
+      removing one would lose knowledge, the code changes until it no longer
+      needs it: rename, extract a function whose name states the rule, or
+      encode the contract in a type. Measurements belong in the record.
+- [ ] A test is three blocks in order, each opened by its bare marker,
+      `# Arrange`, `# Act`, `# Assert`, one blank line between them and none
+      anywhere else. Those three markers are the only comments a test carries.
+      A test with no setup still opens with an Arrange block that binds what
+      the act uses.
 - [ ] `noqa`, `type:`, `ruff:` and the rest stay, because a tool parses them and
       reports them when they go stale. Nothing else does.
 - [ ] Every test is named as a sentence about behaviour, continuing the one its
@@ -858,9 +893,9 @@ delete.
 |:------|:-----|
 | Language | Python only |
 | Dependencies | None at runtime. The standard library is the whole budget |
-| Comments | None in source. Docstrings carry the reasoning |
+| Comments | None in source, docstrings included. Tool directives and the three test markers are the only exceptions |
 | Test layout | `<module>.test.py` beside the module it covers |
-| Test shape | Arrange, blank line, one act, blank line, assert. No section labels |
+| Test shape | `# Arrange`, `# Act`, `# Assert`, each opening its block, one blank line between, one call in the act |
 | Coverage | 100% statements and branches, enforced |
 | Types | `mypy` at strict, plus every optional error class |
 | Lint and format | `ruff`, clean, no suppressions without a stated reason |
@@ -1014,25 +1049,21 @@ the others do not also get.*
 
 ## The state of this repository
 
-**Nothing is measured yet.** This member was created on 2026-09-06 and holds the
-family shape and nothing else. Every number this readme will eventually carry is
-absent rather than estimated, because a figure nobody ran is the one thing the
-standard above will not tolerate.
-
-**No manufacturer document is known to exist for this format.** Sega published a
-development manual for the cartridge header, and no copy of it has been located.
-Until one is, every fact here is second rung at best: read off the cartridges
-themselves, across the whole library, and recorded with the count that supports
-it. The `documents` block is empty rather than missing, because that absence is
-the most important thing this member has to say about its own standing.
+**Measured, not documented.** No manufacturer document for this format has been
+located, so every fact here is second rung: read off 2,610 distinct images from
+the Master System and Game Gear libraries, with the count that supports it. The
+`documents` block will be empty rather than missing, because that absence is the
+most important thing this member has to say about its own standing.
 
 **The census is the oracle.** There is no published conformance suite for a file
-format, so what holds this member honest is the library: every image walked,
-properties gated, observations reported, and the corpus replayed by a suite that
-runs on a machine holding no cartridges at all.
+format. The census walks a library, gates on six properties, reports one
+observation, and writes a corpus of 144 combinations that holds no content. The
+observation is the only check that asks the artifact rather than the code: the
+stored checksum is reproduced on 370 of 397 retail Master System cartridges.
 
-**It takes no submodule.** Its SNES counterpart consumes the mapper because a
-SNES header's location is decided by the memory map. An SMS header is found by
-searching fixed offsets in the image itself, so this one stays installable and
-its readme carries no source-archive warning. That claim is a fact to establish
-rather than an assumption, and it is open until the record settles it.
+**It takes no submodule.** An SMS header is found by searching three fixed
+offsets in the image itself, so this member stays installable from an index and
+a source archive of it runs.
+
+**The library is not on every machine.** The census needs cartridges nobody may
+ship, so it runs only where they are, and the suite replays the corpus instead.
