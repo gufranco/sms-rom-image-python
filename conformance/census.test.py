@@ -300,6 +300,18 @@ class TakeTest(unittest.TestCase):
         self.assertEqual(len(taken["corpus"]), 2)
 
 
+class RenderTest(unittest.TestCase):
+    def test_the_committed_corpus_is_written_back_byte_for_byte(self) -> None:
+        # Arrange
+        committed = census.CORPUS.read_text()
+
+        # Act
+        written = census.rendered(json.loads(committed))
+
+        # Assert
+        self.assertEqual(written, committed)
+
+
 class ReportTest(unittest.TestCase):
     def run_over(self, *paths: Path) -> tuple[int, str, Path]:
         into = Path(tempfile.mkdtemp()) / "corpus.json"

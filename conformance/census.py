@@ -31,6 +31,8 @@ OBSERVATIONS = ("carried",)
 
 CORPUS = Path(__file__).resolve().parent / "corpus.json"
 
+CORPUS_INDENT = 2
+
 
 def images_in(where: Path) -> Iterator[bytes]:
     if where.is_dir():
@@ -121,6 +123,10 @@ def take(paths: list[Path]) -> Mapping[str, Any]:
     }
 
 
+def rendered(corpus: list[Mapping[str, Any]]) -> str:
+    return json.dumps(corpus, indent=CORPUS_INDENT) + "\n"
+
+
 def main(argv: list[str], into: Path = CORPUS) -> int:
     if not argv:
         print("usage: python3 -m conformance.census <path> [path ...]")
@@ -161,7 +167,7 @@ def main(argv: list[str], into: Path = CORPUS) -> int:
     print()
     print(f"distinct combinations: {len(taken['corpus'])}")
 
-    into.write_text(json.dumps(taken["corpus"], indent=1) + "\n")
+    into.write_text(rendered(taken["corpus"]))
     print(f"corpus written, {len(taken['corpus'])} combinations, no content and no title")
     return 1 if taken["broken"] or absent else 0
 
