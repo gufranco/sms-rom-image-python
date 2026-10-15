@@ -122,3 +122,16 @@ jobs:
 
       - name: Every module ships and no test does
         run: python -m conformance.package dist/smsimage-*.whl
+
+  speed:
+    name: Throughput
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: A 256K image must still be checked faster than the floor
+        run: python -m conformance.speed
