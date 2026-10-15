@@ -4,7 +4,7 @@ A Sega Master System, Game Gear or SG-1000 cartridge image as a file: what the d
 
 [![CI](https://github.com/gufranco/sms-rom-image-python/actions/workflows/ci.yml/badge.svg)](https://github.com/gufranco/sms-rom-image-python/actions/workflows/ci.yml)
 
-**2,610** distinct images measured from **5,111** archive entries, the header read at `0x7FF0` on **2,408** of them, the stored checksum reproduced on **370** of **397** retail Master System cartridges, **14** boot programs declared by digest, **401** tests, **100%** statement and branch coverage, no dependencies
+**2,610** distinct images measured from **5,111** archive entries, the header read at `0x7FF0` on **2,408** of them, the stored checksum reproduced on **370** of **397** retail Master System cartridges, **14** boot programs declared by digest, **429** tests, **100%** statement and branch coverage, no dependencies
 
 ```python
 from smsimage import dump, header
@@ -218,6 +218,14 @@ Coverage is gated at 100% of statements and branches. Every worked example in th
 | [`FAMILY.md`](FAMILY.md) | The standard every member of the family is built to |
 
 Releases are cut by semantic-release from Conventional Commit subjects. See [`CONTRIBUTING.md`](CONTRIBUTING.md).
+
+## References
+
+| Document | Read for | Identity |
+|:--|:--|:--|
+| *Software Reference Manual for the SEGA Mark III Console*, Sega, undated, page 22, retyped by an unnamed hand, at https://segaretro.org/images/d/d6/SoftwareReferenceManualForSegaMarkIIIEU.pdf | The header layout, the opening string, the checksum bytes and the size codes | SHA-256 `166f09331ba9df055f7a352f10c6a7843911470bc72d9347eda4a0de86e8cfce`, 184,840 bytes |
+
+`python3 -m conformance.documents` brings it down into `docs/` and refuses any file whose digest differs; it is never carried here. Every address in this readme is asked weekly whether it still answers.
 
 ## Citing this
 
