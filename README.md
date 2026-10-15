@@ -4,7 +4,7 @@ A Sega Master System, Game Gear or SG-1000 cartridge image as a file: what the d
 
 [![CI](https://github.com/gufranco/sms-rom-image-python/actions/workflows/ci.yml/badge.svg)](https://github.com/gufranco/sms-rom-image-python/actions/workflows/ci.yml)
 
-**2,610** distinct images measured from **5,111** archive entries, the header read at `0x7FF0` on **2,408** of them, the stored checksum reproduced on **370** of **397** retail Master System cartridges, **14** boot programs declared by digest, **316** tests, **100%** statement and branch coverage, no dependencies
+**2,610** distinct images measured from **5,111** archive entries, the header read at `0x7FF0` on **2,408** of them, the stored checksum reproduced on **370** of **397** retail Master System cartridges, **14** boot programs declared by digest, **401** tests, **100%** statement and branch coverage, no dependencies
 
 ```python
 from smsimage import dump, header
@@ -110,7 +110,7 @@ The fifth answer is a known bad dump, declared separately in a manifest so a cor
 
 ## What a real library actually contains
 
-No manufacturer document for this format has been located. Every figure below was measured across the Master System and Game Gear libraries the census was run on, keyed on the SHA-256 of the image bytes so a count is a count of images rather than of filenames.
+Sega's *Software Reference Manual for the SEGA Mark III Console* prints the header on its page 22, and [`conformance/hardware.json`](conformance/hardware.json) holds every fact it states with the sentence it came from. It is a retyped copy whose typist is not recorded, and where it and the cartridges disagree the cartridges win; [`conformance/divergences.json`](conformance/divergences.json) carries each disagreement with its measurement. Every figure below was measured across the Master System and Game Gear libraries the census was run on, keyed on the SHA-256 of the image bytes so a count is a count of images rather than of filenames.
 
 | Measurement | Count |
 |:--|--:|
@@ -149,15 +149,15 @@ print(header.anchor_of(bytes(0x8000)))
 None
 ```
 
-**The two bytes after the magic are not reserved.** `00 00` appears on 1,104 images, `FF FF` on 520 and `20 20` on 395, with a long tail after that.
+**The two bytes after the magic are not reserved.** The manual prints them as two spaces, `20 20`, and only 399 of the 2,421 headers carry them. `00 00` appears on 1,107 and `FF FF` on 525, with a long tail after that, so only the eight bytes `TMR SEGA` are looked for. `python3 -m conformance.divergences <library>` measures these.
 
 **A Game Gear cartridge usually stores no checksum.** Of the 1,084 that carry a header, 1,001 store the value zero and 43 reproduce the rule, because its boot path does not check one. `header.agrees` answers `False` for those, and that is a statement about the console rather than about the file.
 
-The region and size nibbles are read the way the emulation community reads them, which no manufacturer document has confirmed here. The distribution corroborates it: region `0x4` dominates the Master System images and `0x5` to `0x7` the Game Gear ones. 49 images carry a region nibble no reading accounts for and 3 a size nibble, and those resolve to nothing rather than to the nearest plausible value.
+The manual prints the size codes up to 256K, each with region nibble `0x4`. The other region nibbles and the 512K and 1M size codes are read the way the emulation community reads them, which no Sega document confirms. The distribution corroborates it: region `0x4` dominates the Master System images and `0x5` to `0x7` the Game Gear ones. 49 images carry a region nibble no reading accounts for and 3 a size nibble, and those resolve to nothing rather than to the nearest plausible value.
 
 ## The checksum rule
 
-Sum every byte up to the header, then from just past the header to the size the header declares, and keep the low sixteen bits.
+Sum every byte up to the header, then from just past the header to the size the header declares, and keep the low sixteen bits. The manual says to leave out only the two checksum bytes, and that reading reproduces the stored value on none of the 2,418 images.
 
 | Population | Reproduced |
 |:--|--:|

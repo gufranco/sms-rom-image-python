@@ -1,0 +1,29 @@
+{
+  "note": "Every document this package is held to, by identity rather than by name. conformance/documents.py brings each one down again and refuses anything whose digest does not match.",
+  "authority": {
+    "1": "A manufacturer document. What the maker of the hardware printed about it.",
+    "2": "A recording taken off real hardware. Nothing here occupies that rung.",
+    "3": "Independent research, for what no manufacturer printed."
+  },
+  "whyNotCarriedHere": "This is Sega's document, not this project's, and this repository is public. What is carried is the identity, which is what makes a copy checkable.",
+  "readOn": "2026-10-15",
+  "partsWithNoDocument": {
+    "gg-header": "No Game Gear document has been located. The manual pinned here describes the Mark III and prints region nibble 4 alone, so every Game Gear region code this package reads, 5, 6 and 7, rests on the census over the Game Gear library rather than on anything Sega printed."
+  },
+  "documents": [
+    {
+      "file": "manufacturer/SoftwareReferenceManualForSegaMarkIIIEU.pdf",
+      "rung": 1,
+      "publisher": "Sega, by its own page footer, Sega Mk3 Hardware Reference Manual (Rev1)",
+      "title": "Software Reference Manual for the SEGA Mark III Console",
+      "date": "undated",
+      "retrievedFrom": "https://segaretro.org/images/d/d6/SoftwareReferenceManualForSegaMarkIIIEU.pdf",
+      "covers": ["the cartridge header"],
+      "settles": "Where the header sits, the string it opens with, which two bytes hold the checksum and in which order, and the size codes Sega printed for each cartridge size.",
+      "sha256": "166f09331ba9df055f7a352f10c6a7843911470bc72d9347eda4a0de86e8cfce",
+      "bytes": 184840,
+      "pages": 45,
+      "provenance": "A retyped text, not a scan: the PDF was produced by Ghostscript and carries typing errors. Its footer names Sega, and nobody records who retyped it or from which printing. Where it and the cartridges disagree, the cartridges are the fact, and divergences.json says which way each disagreement goes."
+    }
+  ]
+}

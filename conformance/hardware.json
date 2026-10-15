@@ -1,0 +1,106 @@
+{
+  "note": "What Sega printed about the cartridge header, fact by fact, with the sentence each one was read from. Where the cartridges do something else, divergences.json says so and says which one this package follows.",
+  "authority": {
+    "order": [
+      "hardware.json, for anything Sega stated: where the header sits, the string it opens with, where the checksum is kept, and the size codes",
+      "the cartridges themselves, for what a retail image actually contains, which is not always what the manual describes",
+      "nothing else"
+    ],
+    "why": "The manual is a description for licensees, retyped by an unnamed hand, so a cartridge can disagree with it and still be genuine. Where a cartridge disagrees, the cartridge is the fact and the manual is the intent, and divergences.json records which is which.",
+    "comparedAgainst": {
+      "runner": "conformance/census.py",
+      "what": "Every image in a real library, walked and measured, which is the artifact rather than a description of it."
+    }
+  },
+  "part": "Master System cartridge header",
+  "verified": true,
+  "documents": {
+    "referenceManual": {
+      "publisher": "Sega, by its own page footer",
+      "title": "Software Reference Manual for the SEGA Mark III Console",
+      "section": "The Cartridge Header",
+      "readOn": "2026-10-15",
+      "retrievedFrom": "https://segaretro.org/images/d/d6/SoftwareReferenceManualForSegaMarkIIIEU.pdf",
+      "sha256": "166f09331ba9df055f7a352f10c6a7843911470bc72d9347eda4a0de86e8cfce",
+      "bytes": 184840,
+      "pages": 45,
+      "headerPages": [22],
+      "note": "A retyped text with a clean text layer, so every quote below was read from it directly. The page numbers are the ones its own footers print.",
+      "file": "SoftwareReferenceManualForSegaMarkIIIEU.pdf"
+    }
+  },
+  "facts": {
+    "headerAddress": {
+      "value": 32752,
+      "quote": "The header format is as follows (addresses shown for 32 KByte and larger cartridges):",
+      "manualPage": 22,
+      "document": "referenceManual",
+      "governs": ["sms"]
+    },
+    "openingString": {
+      "value": [84, 77, 82, 32, 83, 69, 71, 65, 32, 32],
+      "quote": "The string, \"TMR SEGA \" [54,4D,52,20,53,45,47,41,20,20]",
+      "manualPage": 22,
+      "document": "referenceManual",
+      "governs": ["sms"]
+    },
+    "checksum": {
+      "value": { "first": 32762, "last": 32763, "order": "little" },
+      "quote": "A 16-bit checksum for the ROM (low-hi order). $7FFA and $7FFB are not included in this checksum.",
+      "manualPage": 22,
+      "document": "referenceManual",
+      "governs": ["sms"]
+    },
+    "serialNumber": {
+      "value": { "first": 32764, "last": 32765 },
+      "quote": "A 16-bit serial number, assigned by Sega.",
+      "manualPage": 22,
+      "document": "referenceManual",
+      "governs": ["sms"]
+    },
+    "revision": {
+      "value": 32766,
+      "quote": "A software revision number byte.",
+      "manualPage": 22,
+      "document": "referenceManual",
+      "governs": ["sms"]
+    },
+    "sizeCodeAddress": {
+      "value": 32767,
+      "quote": "ROM Size code:",
+      "manualPage": 22,
+      "document": "referenceManual",
+      "governs": ["sms"]
+    },
+    "sizeCodes": {
+      "value": {
+        "74": { "bytes": 8192, "header": 8176 },
+        "75": { "bytes": 16384, "header": 16368 },
+        "76": { "bytes": 32768 },
+        "77": { "bytes": 49152 },
+        "78": { "bytes": 65536 },
+        "79": { "bytes": 131072 },
+        "64": { "bytes": 262144 }
+      },
+      "quotes": [
+        "$4A 8K (header at $1FF0)",
+        "$4B 16K (header at $3FF0)",
+        "$4C 32K",
+        "$4D 48K",
+        "$4E 64K",
+        "$4F 128K (1M)",
+        "$40 256K (2M)"
+      ],
+      "manualPage": 22,
+      "document": "referenceManual",
+      "governs": ["sms"]
+    }
+  },
+  "notStated": {
+    "otherRegions": "Every size code the manual prints carries a high nibble of 4. The other region codes this package reads, 3 for a Japanese Master System and 5, 6 and 7 for the Game Gear, are not in it and rest on the census.",
+    "largerSizes": "The largest size the manual prints is 256K. Low nibbles 1 and 2, read here as 512K and 1M, are not in it and rest on the census.",
+    "whichBytesTheChecksumCovers": "The manual leaves only the two checksum bytes out of the sum. The library does not bear that out, and divergences.json carries the measurement.",
+    "copierBlocks": "A copier block is added by hardware Sega did not sell. The manual does not acknowledge it.",
+    "gameGear": "The manual describes the Mark III and says nothing about the Game Gear."
+  }
+}
