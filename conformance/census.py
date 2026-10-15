@@ -1,40 +1,3 @@
-"""Take a census of a cartridge library you own, and check this package on all of it.
-
-A header is sixteen bytes in which the cartridge describes how it is built: where
-it sits, which region it declares, how much ROM it carries, and a checksum it
-computed over itself. Those are facts about a physical object. They are not
-authored, they carry none of the game, and a count of how many cartridges share a
-combination is a measurement rather than a copy.
-
-So this reads those bytes from every image in a library and writes down the
-distinct combinations it found. It records no title, because a title is the one
-header field that is a name rather than a measurement, and the corpus it produces
-holds nothing from which any part of any cartridge could be reconstructed.
-
-Everything is keyed on the digest of the image bytes. A library organised by
-series lists the same image several times, and in the one this was built against
-5,111 archive entries were 2,610 distinct images. Counting filenames would have
-put nearly half of every figure out.
-
-**Properties gate. Observations report.** A property must hold on every image,
-whatever it is, and a failure is a defect in this package. An observation is
-measured and printed without gating, because the thing it measures is a statement
-about the cartridge as much as about the code.
-
-The one that matters is `carried`: whether the checksum this package computes is
-the one the cartridge already stored. It is the only check here that asks the
-artifact rather than asking the code whether it agrees with itself, and it is
-therefore the only one a rule wrong the same way every time cannot pass. Making it
-a property would turn every modified image into a failure and drown the handful of
-retail cartridges that genuinely disagree: translations reproduce it on 67 of 214
-and modified images on 8 of 43, while retail Master System cartridges reach 370 of
-397.
-
-An image whose header cannot be found is counted as carrying none rather than
-guessed at. 189 in that library carry none, only 18 of them too short to hold one,
-and inventing a header for the rest would put fiction into a corpus of facts.
-"""
-
 import collections
 import hashlib
 import json
@@ -63,24 +26,13 @@ PROPERTIES = (
     AGREEMENT_FOLLOWS_A_CHECKSUM,
     MEASUREMENT_IS_STABLE,
 )
-"""What must hold on every image, whatever it is. A failure here is a defect.
-
-One that was here and is not any more: that a stripped image is a whole number
-of kilobytes. A file is classified stubbed only when its length is a multiple of
-1,024 plus 512, so removing 512 always leaves a multiple of 1,024. No input can
-break it. A property nothing can violate is a line in a report rather than a
-check, and the test that tried to break it is what showed that.
-"""
 
 OBSERVATIONS = ("carried",)
-"""What is measured and reported without gating the verdict."""
 
 CORPUS = Path(__file__).resolve().parent / "corpus.json"
-"""Where the combinations are written, so a suite can replay them with no library."""
 
 
 def images_in(where: Path) -> Iterator[bytes]:
-    """Every cartridge image under a directory, or inside an archive."""
     if where.is_dir():
         for path in sorted(where.rglob("*")):
             if path.is_file() and path.suffix.lower() in SUFFIXES:
@@ -99,7 +51,6 @@ def images_in(where: Path) -> Iterator[bytes]:
 
 
 def broken_properties(raw: bytes) -> list[str]:
-    """Every property this image breaks, named. Empty is the expected answer."""
     broken = []
     image = dump.strip_copier_stub(raw)
 
@@ -127,7 +78,6 @@ def broken_properties(raw: bytes) -> list[str]:
 
 
 def observe(raw: bytes) -> Mapping[str, Any]:
-    """What this image is, in the fields a corpus of facts may hold."""
     image = dump.strip_copier_stub(raw)
     return {
         "form": dump.form(raw),
@@ -140,7 +90,6 @@ def observe(raw: bytes) -> Mapping[str, Any]:
 
 
 def take(paths: list[Path]) -> Mapping[str, Any]:
-    """Walk every path, and report what was found rather than whether it passed."""
     seen: set[str] = set()
     listings = 0
     broken: collections.Counter[str] = collections.Counter()

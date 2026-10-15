@@ -1,31 +1,3 @@
-"""What a project expects a reader to supply, and which wrong a wrong file is.
-
-This package reads files it cannot ship. A boot program, a cartridge library, a
-corpus: every one of them is absent on somebody's machine, and the difference
-between a useful refusal and a useless one is whether it says which kind of wrong
-happened.
-
-Five answers, and the four unhappy ones are the reason this module exists:
-
-- **accepted**, the deciding digest matches something the project declared.
-- **a known bad dump**, declared separately so a corrupt file is diagnosed as
-  corrupt rather than as the wrong file. A reader who knows their dump is short
-  looks for a better one; a reader told only that it does not match goes looking
-  for the wrong thing.
-- **the right length, the wrong content**, which is a modified or patched file
-  rather than a different one, and says to check what modified it.
-- **a length nothing declares**, which is a different file entirely.
-- **undeclared**, the project never said anything about this artifact.
-
-The deciding digest is SHA-256 and only SHA-256. The other values are published
-so a reader can find the row in a database built before anybody keyed one on it,
-and a manifest that declares them without the deciding one is refused at read
-time rather than silently graded on whichever weaker value is present.
-
-Nothing here says where to obtain anything. A tool that fetches on a reader's
-behalf is a tool that decides for them what they are allowed to be given.
-"""
-
 from __future__ import annotations
 
 import json
@@ -43,12 +15,9 @@ WRONG_SIZE = "a length nothing declares"
 UNDECLARED = "undeclared"
 
 VERDICTS = (ACCEPTED, BAD_DUMP, WRONG_CONTENT, WRONG_SIZE, UNDECLARED)
-"""Every answer a match can give, in the order a reader meets them."""
 
 
 class Match:
-    """What a supplied file turned out to be."""
-
     __slots__ = ("found", "key", "verdict", "why")
 
     def __init__(
@@ -68,8 +37,6 @@ class Match:
 
 
 class Manifest:
-    """What a project declares about the files a reader has to supply."""
-
     __slots__ = ("_artifacts",)
 
     def __init__(self, document: Any) -> None:
@@ -98,17 +65,14 @@ class Manifest:
 
     @property
     def keys(self) -> tuple[str, ...]:
-        """Every artifact this project declares, by the key it declares it under."""
         return tuple(self._artifacts)
 
     def name(self, key: str) -> str:
-        """What a reader would call this artifact, or its key when unnamed."""
         entry = self._artifacts.get(key, {})
         named = entry.get("name")
         return str(named) if named else key
 
     def match(self, key: str, data: bytes) -> Match:
-        """Which of the five this file is, for the artifact declared under that key."""
         found = measure(data)
         entry = self._artifacts.get(key)
         if entry is None:
@@ -132,5 +96,4 @@ class Manifest:
 
 
 def read(path: Path | str) -> Manifest:
-    """The manifest a project ships, read from the file it ships it in."""
     return Manifest(json.loads(Path(path).read_text()))

@@ -1,28 +1,3 @@
-"""That every worked example in the readme still does what it says.
-
-A readme example is a promise a reader tests by pasting it, so an example that
-has stopped working is worse than an absent one: it is the first thing a new
-reader runs and the first impression they get. Nothing else in the suite touches
-these lines, because they live in prose rather than in a module, which is exactly
-why they rot quietly.
-
-Each example runs in a fresh interpreter rather than in this one. An example that
-only works because a test already imported something is not an example a reader
-can paste, and running it here in-process would hide that.
-
-An example that cannot run at all here is reported as skipped rather than as
-broken, and only when the member itself says why. Two members model a part that
-runs a program their repository is not allowed to carry, so on a machine without
-one every example that builds a part refuses. That refusal is the package working
-correctly, and counting it as a broken example would make a bare checkout look
-like a defect while hiding real ones behind it.
-
-What decides is the member's own `why_not`, which is the same sentence its doctor
-prints. A member that publishes none skips nothing, and on a machine that has the
-files nothing is skipped either, so the check keeps its teeth exactly where it
-had them.
-"""
-
 from __future__ import annotations
 
 import contextlib
@@ -41,11 +16,6 @@ README = ROOT / "README.md"
 
 
 def packages() -> list[str]:
-    """The importable package in this repository, which is the member itself.
-
-    The conformance directory is one too and is not the member, so it is left
-    out by name rather than by position.
-    """
     return sorted(
         found.name
         for found in ROOT.iterdir()
@@ -54,16 +24,6 @@ def packages() -> list[str]:
 
 
 def cannot_run_here(named: list[str] | None = None) -> str | None:
-    """Why this member cannot build its part on this machine, or nothing.
-
-    Read off the package rather than guessed from a traceback, so the sentence
-    an example is excused by is the sentence the member itself publishes.
-
-    The names are a parameter so this can be driven against a member that
-    publishes a reason from a member that does not, and the other way round.
-    Nine of the sixteen publish nothing, and a branch only two of them reach is
-    a branch nobody has seen work.
-    """
     if str(ROOT) not in sys.path:
         sys.path.insert(0, str(ROOT))
     for name in packages() if named is None else named:
@@ -75,12 +35,6 @@ def cannot_run_here(named: list[str] | None = None) -> str | None:
 
 
 def excused(failure: str, reason: str | None = None) -> bool:
-    """Whether that failure is the member saying it has no file to run.
-
-    Matched on a run of the member's own sentence rather than on an exception
-    name, because the name differs per member and the sentence is the thing the
-    member publishes for exactly this purpose.
-    """
     said = cannot_run_here() if reason is None else reason
     return bool(said) and str(said)[:40] in failure
 
@@ -96,12 +50,6 @@ def blocks(text: str | None = None) -> list[tuple[str, str]]:
 
 
 def examples(text: str | None = None) -> list[tuple[str, str | None]]:
-    """Each python block, paired with the output block that follows it.
-
-    `text` is here so the collectors below can be driven against a readme that
-    is deliberately wrong. A checker nothing has ever seen fail is a checker
-    nobody knows the failure path of.
-    """
     found = blocks(text)
     paired: list[tuple[str, str | None]] = []
     for index, (lang, body) in enumerate(found):
@@ -124,12 +72,6 @@ def ran(source: str) -> subprocess.CompletedProcess[str]:
 
 
 def broken(found: list[tuple[str, str | None]], reason: str | None = None) -> list[str]:
-    """The last line of the traceback of every example that will not run.
-
-    A process can exit non-zero and print nothing, so the reason falls back to
-    the exit code rather than indexing an empty list. A checker that raises
-    while collecting a fault reports neither that fault nor any after it.
-    """
     failed = []
     reason = cannot_run_here() if reason is None else reason
     for source, _ in found:
@@ -146,7 +88,6 @@ def broken(found: list[tuple[str, str | None]], reason: str | None = None) -> li
 def mismatched(
     found: list[tuple[str, str | None]], reason: str | None = None
 ) -> list[tuple[str, str]]:
-    """What the readme claims each example prints, beside what it printed."""
     wrong = []
     reason = cannot_run_here() if reason is None else reason
     for source, expected in found:
@@ -221,22 +162,6 @@ class WorkedExampleTest(unittest.TestCase):
 
 
 class CheckerTest(unittest.TestCase):
-    """That the collectors above report a fault rather than sailing past one.
-
-    They are the only thing standing between a rotted example and a reader, so a
-    run in which they have never been seen to fail says nothing about them. Each
-    is driven against a readme crafted here rather than inherited from whichever
-    readme this member has: on a member whose every example needs a file it may
-    not ship, no example succeeds on a runner, and the arc that reports success
-    would otherwise be covered on one machine and not on another.
-
-    Two mismatching examples with the failure first is the only arrangement in
-    which continuing after a failure is observable, so that case carries two. The
-    excuse a member publishes is driven against stand-in modules, because most
-    members publish none and a branch only two of them reach is a branch nobody
-    has seen work.
-    """
-
     def test_an_example_that_runs_is_not_reported(self) -> None:
         # Arrange
         readme = "```python\nprint(1)\n```\n"

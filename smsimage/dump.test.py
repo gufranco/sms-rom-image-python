@@ -21,7 +21,7 @@ class FormTest(unittest.TestCase):
         self.assertEqual(found, dump.BARE)
 
     def test_a_whole_number_of_kilobytes_plus_the_stub_is_stubbed(self) -> None:
-        found = dump.form(synthetic(32768 + dump.STUB))
+        found = dump.form(synthetic(32768 + dump.COPIER_BLOCK))
 
         self.assertEqual(found, dump.STUBBED)
 
@@ -41,7 +41,7 @@ class FormTest(unittest.TestCase):
         self.assertEqual(found, dump.BARE)
 
     def test_a_lone_stub_with_no_image_behind_it_is_bare(self) -> None:
-        found = dump.form(synthetic(dump.STUB))
+        found = dump.form(synthetic(dump.COPIER_BLOCK))
 
         self.assertEqual(found, dump.BARE)
 
@@ -49,7 +49,7 @@ class FormTest(unittest.TestCase):
 class StripTest(unittest.TestCase):
     def test_stripping_a_stubbed_image_leaves_the_bytes_behind_it(self) -> None:
         image = synthetic(32768, seed=3)
-        stubbed = synthetic(dump.STUB, seed=200) + image
+        stubbed = synthetic(dump.COPIER_BLOCK, seed=200) + image
 
         found = dump.strip_copier_stub(stubbed)
 
@@ -63,7 +63,7 @@ class StripTest(unittest.TestCase):
         self.assertEqual(found, image)
 
     def test_stripping_twice_changes_nothing_the_second_time(self) -> None:
-        stubbed = synthetic(dump.STUB, seed=9) + synthetic(32768)
+        stubbed = synthetic(dump.COPIER_BLOCK, seed=9) + synthetic(32768)
 
         once = dump.strip_copier_stub(stubbed)
         twice = dump.strip_copier_stub(once)
@@ -86,7 +86,7 @@ class ReadTest(unittest.TestCase):
         image = synthetic(16384, seed=5)
         with tempfile.TemporaryDirectory() as where:
             path = Path(where) / "stubbed.sms"
-            path.write_bytes(synthetic(dump.STUB, seed=77) + image)
+            path.write_bytes(synthetic(dump.COPIER_BLOCK, seed=77) + image)
 
             found = dump.read(path)
 
@@ -108,10 +108,10 @@ class SurfaceTest(unittest.TestCase):
         self.assertNotEqual(dump.BARE, dump.STUBBED)
 
     def test_the_stub_is_the_size_the_copiers_wrote(self) -> None:
-        self.assertEqual(dump.STUB, 512)
+        self.assertEqual(dump.COPIER_BLOCK, 512)
 
     def test_the_rule_is_stated_in_terms_of_a_kilobyte(self) -> None:
-        self.assertEqual(dump.STUB * 2, dump.ALIGNMENT)
+        self.assertEqual(dump.COPIER_BLOCK * 2, dump.CARTRIDGE_UNIT)
 
 
 if __name__ == "__main__":

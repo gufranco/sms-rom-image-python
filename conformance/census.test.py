@@ -52,15 +52,6 @@ def with_header(length: int, at: int, region_and_size: int = 0x4C) -> bytes:
 
 
 class PropertyTest(unittest.TestCase):
-    """Each property, held on real shapes and then made to fire.
-
-    None of these can fail against the current implementation: they are
-    invariants between two functions that presently agree by construction. That
-    makes them regression guards rather than checks, and a regression guard
-    nobody has seen fire is not known to guard anything. So each one is driven
-    by replacing one side of the pair it holds together.
-    """
-
     def test_a_sealed_image_holds_every_property(self) -> None:
         broken = census.broken_properties(with_header(32768, 0x7FF0))
 

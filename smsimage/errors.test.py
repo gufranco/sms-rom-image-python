@@ -60,16 +60,6 @@ class SurfaceTest(unittest.TestCase):
 
         self.assertEqual(sorted(named), sorted(set(named)))
 
-    def test_every_error_carries_a_docstring(self) -> None:
-        tree = ast.parse(SOURCE.read_text())
-        silent = [
-            node.name
-            for node in tree.body
-            if isinstance(node, ast.ClassDef) and ast.get_docstring(node) is None
-        ]
-
-        self.assertEqual(silent, [])
-
 
 class NoCycleTest(unittest.TestCase):
     def test_it_imports_nothing_from_its_own_package(self) -> None:

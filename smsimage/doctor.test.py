@@ -125,6 +125,18 @@ class DrivingTest(unittest.TestCase):
     def test_it_reads_a_dump_it_built_here(self) -> None:
         self.assertTrue(doctor._reading().ok)
 
+    def test_the_dump_it_reads_carries_a_whole_copier_block(self) -> None:
+        # Arrange
+        image = doctor._synthetic()
+
+        # Act
+        found = doctor._reading()
+
+        # Assert
+        self.assertIn(
+            f"a {len(image) + 512} byte dump read back to {len(image)} bytes", found.detail
+        )
+
     def test_a_reader_that_refuses_is_reported_by_what_it_threw(self) -> None:
         found = doctor._reading(broken)
 
@@ -302,18 +314,6 @@ class ShippedTest(unittest.TestCase):
 
 
 class AsDocumentedTest(unittest.TestCase):
-    """That the invocation the file documents actually works.
-
-    Every other test here imports the doctor from a process that already has the
-    repository root on its path, so all of them pass whether or not a reader
-    following the docstring gets a report or a traceback. Its SNES counterpart
-    passes its whole suite and fails this one.
-
-    Run from somewhere else, so a root that is only on the path because the
-    working directory happens to be the repository does not stand in for one the
-    file put there itself.
-    """
-
     def test_running_it_as_a_file_prints_a_report(self) -> None:
         with tempfile.TemporaryDirectory() as elsewhere:
             finished = subprocess.run(
@@ -339,9 +339,14 @@ class AsDocumentedTest(unittest.TestCase):
 
         self.assertNotIn("Traceback", finished.stdout + finished.stderr)
 
-    def test_the_docstring_names_the_invocation_that_works(self) -> None:
-        said = SOURCE.read_text()
+    def test_the_readme_names_the_invocation_that_works(self) -> None:
+        # Arrange
+        readme = ROOT / "README.md"
 
+        # Act
+        said = readme.read_text()
+
+        # Assert
         self.assertIn("python3 smsimage/doctor.py", said)
 
 

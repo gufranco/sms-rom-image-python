@@ -1,36 +1,3 @@
-"""Look at this machine and say what is actually here, so a report can be believed.
-
-What goes wrong with this package is rarely a defect in it. It is a corpus that
-is not beside the package, a manifest somebody hand-edited, or a census pointed
-at a directory that holds nothing it reads. All three look the same from outside:
-the run is green and it proved less than the reader thinks.
-
-Two rules shape this, and they are the whole point.
-
-Nothing is hidden. A check that fails says what it saw, and a check that itself
-throws is caught and reported as what it threw, named by its type. An absent
-library is reported as absent rather than as a failure, because a fresh checkout
-has none and that is the normal state, and it is never reported as nothing at
-all. A corpus that holds no combinations is told apart from a corpus that is not
-there, because a reader who fetched nothing and a reader whose fetch produced an
-empty file need different advice.
-
-Nothing is imported from the package at the top of this file. This member takes
-no submodule, so it does not have the failure its SNES counterpart guards
-against, and the rule holds anyway: every import that can fail happens inside the
-finding that needs it, where its failure is the report rather than the end of it.
-The version is read out of the file beside this one rather than imported, for the
-same reason. Run it as
-
-    python3 smsimage/doctor.py
-
-so that nothing has to load the package before the first line is printed.
-
-Nothing is inferred. Every line is something looked at on this machine just now,
-including a header found and a checksum reproduced on an image assembled here
-rather than a claim that the reader imports.
-"""
-
 from __future__ import annotations
 
 import json
@@ -45,11 +12,6 @@ if TYPE_CHECKING:  # pragma: no cover
 
 
 def _version(where: Path | None = None) -> str:
-    """The package version, read out of the file beside this one.
-
-    Read rather than imported. Importing it would go through the package, and the
-    package is what fails on the machine this exists to diagnose.
-    """
     found = re.search(
         r"""VERSION\s*[:=][^"']*["']([^"']+)["']""",
         (where or Path(__file__).resolve().parent / "version.py").read_text(),
@@ -63,23 +25,6 @@ ROOT = Path(__file__).resolve().parent.parent
 
 
 def _reachable(root: Path = ROOT, path: list[str] | None = None) -> bool:
-    """Put the repository root where an import can find the package.
-
-    Running this as a file puts the directory holding it on the path, which is the
-    package's own directory rather than the one above it, so `import smsimage` finds
-    nothing. This has to happen before any finding reaches for the package, and it
-    happens here rather than inside a finding because every finding needs it.
-
-    Its SNES counterpart does the same thing inside one finding, several dozen lines
-    after a module-level import of the package, so running it the way its own
-    docstring instructs fails with a traceback naming a module the reader has never
-    heard of. That is the exact failure the docstring says the file exists to
-    prevent, and it is invisible to the tests, which import the doctor from a
-    process that already has the root on the path.
-
-        Answers whether it had to add it, so a caller can tell an already-reachable
-        root from one this put there.
-    """
     where = sys.path if path is None else path
     if str(root) in where:
         return False
@@ -96,16 +41,10 @@ MANIFEST = ROOT / "artifacts.manifest.json"
 OLDEST_PYTHON = (3, 12)
 
 ANCHOR = 0x7FF0
-"""Where the synthetic image built below puts its header."""
 
 REGION_AND_SIZE = 0x4C
-"""An exported Master System cartridge of thirty two kilobytes."""
 
 IMAGE_BYTES = 0x8000
-"""Small enough to build in memory, and the size the byte above declares."""
-
-STUB_BYTES = 512
-"""What a copier writes in front of an image, for the reading check."""
 
 CHECKS = (
     "python",
@@ -118,12 +57,9 @@ CHECKS = (
     "corpus",
     "library",
 )
-"""What is looked at, in the order a reader wants it."""
 
 
 class Finding:
-    """One thing that was looked at, and what was there."""
-
     __slots__ = ("advice", "detail", "name", "ok")
 
     def __init__(self, name: str, ok: bool, detail: str, advice: str | None = None) -> None:
@@ -134,12 +70,10 @@ class Finding:
 
     @property
     def line(self) -> str:
-        """The one-line form, which is what a reader scans."""
         return f"  {'ok  ' if self.ok else '   !'}  {self.name}: {self.detail}"
 
     @property
     def report(self) -> str:
-        """The same, with what to do about it when there is something to do."""
         if self.ok or not self.advice:
             return self.line
         return f"{self.line}\n         {self.advice}"
@@ -150,12 +84,10 @@ class Finding:
 
 
 def _threw(name: str, error: BaseException, advice: str | None = None) -> Finding:
-    """A check that threw, reported as what it threw rather than as a traceback."""
     return Finding(name, False, f"{type(error).__name__}: {error}", advice)
 
 
 def _synthetic(_: object = None) -> bytes:
-    """An image built here, with a header and a checksum that matches it."""
     from smsimage import header
 
     image = bytearray((index * 11 + 5) & 0xFF for index in range(IMAGE_BYTES))
@@ -180,7 +112,6 @@ def _python() -> Finding:
 
 
 def _load() -> Any:
-    """The package, imported here rather than at the top of the file."""
     import smsimage
 
     return smsimage
@@ -195,13 +126,11 @@ def _package(load: Callable[[], Any] = _load) -> Finding:
 
 
 def _reading(build: Callable[[], bytes] = _synthetic) -> Finding:
-    """A copier block removed from an image assembled here, rather than a claim."""
     try:
         from smsimage import dump
 
         image = build()
-        stubbed = bytes(range(STUB_BYTES % 256)) * (STUB_BYTES // (STUB_BYTES % 256 or 1))
-        stubbed = (stubbed + bytes(STUB_BYTES))[:STUB_BYTES] + image
+        stubbed = bytes(dump.COPIER_BLOCK) + image
         back = dump.strip_copier_stub(stubbed)
         again = dump.strip_copier_stub(back)
     except Exception as error:
@@ -216,7 +145,6 @@ def _reading(build: Callable[[], bytes] = _synthetic) -> Finding:
 
 
 def _anchoring(build: Callable[[], bytes] = _synthetic) -> Finding:
-    """A header found in an image assembled here."""
     try:
         from smsimage import header
 
@@ -239,7 +167,6 @@ def _anchoring(build: Callable[[], bytes] = _synthetic) -> Finding:
 
 
 def _checksumming(build: Callable[[], bytes] = _synthetic) -> Finding:
-    """A checksum reproduced on an image sealed here."""
     try:
         from smsimage import header
 
@@ -261,7 +188,6 @@ def _checksumming(build: Callable[[], bytes] = _synthetic) -> Finding:
 
 
 def _measuring(build: Callable[[], bytes] = _synthetic) -> Finding:
-    """Every published value for an image assembled here, and which one decides."""
     try:
         from smsimage import identity
 
@@ -281,7 +207,6 @@ def _measuring(build: Callable[[], bytes] = _synthetic) -> Finding:
 
 
 def _artifacts(path: Path | str = MANIFEST) -> Finding:
-    """The manifest this repository ships, read rather than assumed."""
     where = Path(path)
     if not where.is_file():
         return Finding(
@@ -303,7 +228,6 @@ def _artifacts(path: Path | str = MANIFEST) -> Finding:
 
 
 def _corpus(path: Path | str = CORPUS) -> Finding:
-    """The corpus the suite replays, told apart from one that is missing."""
     where = Path(path)
     if not where.is_file():
         return Finding(
@@ -334,7 +258,6 @@ def _corpus(path: Path | str = CORPUS) -> Finding:
 
 
 def _library() -> Finding:
-    """Where cartridges are looked for, which is nowhere until a caller says."""
     return Finding(
         "library",
         True,
@@ -346,7 +269,6 @@ def examine(
     corpus: Path | str = CORPUS,
     artifacts: Path | str = MANIFEST,
 ) -> list[Finding]:
-    """Everything worth looking at on this machine, in the order a reader wants it."""
     return [
         _python(),
         _package(),
@@ -361,7 +283,6 @@ def examine(
 
 
 def report(found: Sequence[Finding]) -> list[str]:
-    """The lines a person pastes into an issue."""
     from smsimage import environment
 
     unwell = [one for one in found if not one.ok]
