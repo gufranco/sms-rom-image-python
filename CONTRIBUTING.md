@@ -7,19 +7,22 @@ run that shows it, and a claim that cannot be checked is not ready.
 
 ## Before you open a pull request
 
-Run every gate, and read the output rather than the exit code:
+Run every gate. The exit code decides; the output says what was found:
 
 ```bash
 uvx ruff@0.16.3 format --check .
 uvx ruff@0.16.3 check .
-mypy
+uvx --python 3.12 mypy==1.14.1
 pnpm install --frozen-lockfile && pnpm run format:check
-python3 -m coverage erase
-for f in $(find . -name '*.test.py' | sort); do
-  python3 -m coverage run -a "$f" || echo "FAILED $f"
+cov=(uvx --python 3.12 --from coverage==7.6.10 coverage)
+"${cov[@]}" erase
+for f in $(find smsimage conformance -name '*.test.py' | sort); do
+  "${cov[@]}" run -a "$f" || echo "FAILED $f"
 done
-python3 -m coverage report
+"${cov[@]}" report
 ```
+
+Run them at the versions the pipeline pins rather than whatever `python3` resolves to. A machine whose default interpreter moved on reports every suite as failing for want of a tool, which reads as broken code. The search is limited to the two source directories so a stale `build/` copy of the package is never collected.
 
 There is no submodule. A plain clone runs as it stands, and the download-zip link
 on the repository page produces a checkout that works.

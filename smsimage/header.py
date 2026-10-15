@@ -19,10 +19,11 @@ here settles which one the console's own boot program would read, so `anchors_in
 reports every match and a caller who cares can see the ambiguity rather than
 having it hidden.
 
-**Searching for the magic anywhere is wrong.** 141 images carry it outside the
-candidates, 27 of them with no header at a candidate at all, at positions like
-`0x81F0` and at bank boundaries, which is what a multi-cart or an overdump looks
-like. Only the three candidates are searched.
+**Searching for the magic anywhere is wrong.** Read as raw files, 141 images
+carry it outside the candidates. 16 of those are copier-blocked images whose
+header sits at `0x81F0` until the block is removed; the rest sit at bank
+boundaries, which is what a multi-cart or an overdump looks like. Only the three
+candidates are searched.
 
 **The two bytes the reading calls reserved are not reserved.** `00 00` appears on
 1,104 images, `FF FF` on 520 and `20 20` on 395, with a long tail after that. They
