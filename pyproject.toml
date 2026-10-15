@@ -44,9 +44,6 @@ packages = ["smsimage"]
 [tool.setuptools.dynamic]
 version = { attr = "smsimage.version.VERSION" }
 
-[tool.setuptools.exclude-package-data]
-smsimage = ["*.test.py"]
-
 [tool.ruff]
 target-version = "py312"
 line-length = 100
