@@ -109,6 +109,9 @@ jobs:
           exit "${status}"
         shell: bash
 
+      - name: Replay the corpus
+        run: python -m conformance.corpus
+
       - name: Coverage must be total
         run: python -m coverage report
 

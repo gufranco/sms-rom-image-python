@@ -4,7 +4,7 @@ A Sega Master System, Game Gear or SG-1000 cartridge image as a file: what the d
 
 [![CI](https://github.com/gufranco/sms-rom-image-python/actions/workflows/ci.yml/badge.svg)](https://github.com/gufranco/sms-rom-image-python/actions/workflows/ci.yml)
 
-**2,610** distinct images measured from **5,111** archive entries, the header found at `0x7FF0` on **2,406** of them, the stored checksum reproduced on **370** of **397** retail Master System cartridges, **14** boot programs declared by digest, **300** tests, **100%** statement and branch coverage, no dependencies
+**2,610** distinct images measured from **5,111** archive entries, the header read at `0x7FF0` on **2,408** of them, the stored checksum reproduced on **370** of **397** retail Master System cartridges, **14** boot programs declared by digest, **315** tests, **100%** statement and branch coverage, no dependencies
 
 ```python
 from smsimage import dump, header
@@ -117,9 +117,9 @@ No manufacturer document for this format has been located. Every figure below wa
 | Archive entries read | 5,111 |
 | Distinct images | 2,610 |
 | Duplicate listings of an image already seen | 2,501 |
-| Header at `0x7FF0` | 2,406 |
+| Header at `0x7FF0` only | 2,406 |
 | Header at `0x3FF0` / `0x1FF0` | 8 / 5 |
-| Header at both `0x3FF0` and `0x7FF0` | 2 |
+| Header at both `0x3FF0` and `0x7FF0`, read at `0x7FF0` | 2 |
 | No header at any candidate offset | 189 |
 | Carrying a 512-byte copier block | 17 |
 
