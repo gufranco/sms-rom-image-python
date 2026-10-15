@@ -1,0 +1,83 @@
+name: Weekly
+
+on:
+  schedule:
+    - cron: "17 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: weekly-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ahead:
+    name: On Python ${{ matrix.python }}, newest tools
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.12", "3.14"]
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python }}
+          allow-prereleases: true
+
+      - name: Install the newest tools
+        run: |
+          python -m pip install --disable-pip-version-check \
+            --upgrade ruff mypy coverage
+
+      - name: Formatting, as the newest formatter sees it
+        run: ruff format --check .
+
+      - name: Lint, with whatever rules were added since
+        run: ruff check --output-format=github .
+
+      - name: Types, as the newest checker sees them
+        run: mypy
+
+      - name: Every test module, under coverage
+        run: |
+          python -m coverage erase
+          status=0
+          for module in smsimage/*.test.py conformance/*.test.py; do
+            echo "::group::${module}"
+            python -m coverage run -a "${module}" || status=1
+            echo "::endgroup::"
+          done
+          exit "${status}"
+        shell: bash
+
+      - name: Coverage must still be total
+        run: python -m coverage report
+
+  quotes:
+    name: Every quote against the manual it names
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Install the text extractor
+        run: sudo apt-get install --yes --no-install-recommends poppler-utils
+
+      - name: Bring the manual down and refuse any other file
+        run: python -m conformance.documents
+
+      - name: The record against the manual
+        run: python conformance/hardware.test.py
+
+      - name: The divergences against the manual
+        run: python conformance/divergences.test.py
+
+      - name: The reader against the manual
+        run: python conformance/manual.test.py
