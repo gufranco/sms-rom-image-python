@@ -1998,6 +1998,46 @@ class TranslatedTest(unittest.TestCase):
         self.assertEqual(links, ["LICENSE"])
 
 
+ANCHOR = re.compile(r'<a id="([^"]+)"></a>')
+
+
+def slug(title: str) -> str:
+    lowered = re.sub(r"[`*_\[\]()]", "", title).strip().lower()
+    return re.sub(r"[^\w\- ]", "", lowered).replace(" ", "-")
+
+
+def landings(text: str) -> set[str]:
+    unfenced = FENCE.sub("", text)
+    titled = {slug(title) for title in re.findall(r"^#{1,6} (.+)$", unfenced, re.M)}
+    return titled | set(ANCHOR.findall(unfenced))
+
+
+def in_page_links(text: str) -> set[str]:
+    return set(re.findall(r"\]\(#([^)\s]+)\)", FENCE.sub("", text)))
+
+
+class InPageLinkTest(unittest.TestCase):
+    def test_every_in_page_link_in_every_readme_lands(self) -> None:
+        # Arrange
+        held = {name: (ROOT / name).read_text() for name in READMES if (ROOT / name).is_file()}
+
+        # Act
+        stray = {name: sorted(in_page_links(text) - landings(text)) for name, text in held.items()}
+
+        # Assert
+        self.assertEqual({name: links for name, links in stray.items() if links}, {})
+
+    def test_a_translated_heading_lands_through_an_anchor(self) -> None:
+        # Arrange
+        text = '<a id="models"></a>\n\n## モデル\n\nSee [the models](#models).\n'
+
+        # Act
+        stray = in_page_links(text) - landings(text)
+
+        # Assert
+        self.assertEqual(stray, set())
+
+
 class WrittenTheSameWayTest(unittest.TestCase):
     def readme(self) -> str:
         return (ROOT / "README.md").read_text()
