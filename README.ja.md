@@ -2,7 +2,7 @@
 
 セガ・マスターシステム、ゲームギア、SG-1000のカートリッジイメージをファイルとして読み取ります。セガのMark IIIリファレンスマニュアルが記述している部分はそれに従い、記述していない部分は輸出版ブートプログラムと2,610本の実在のイメージに従います。
 
-[English](README.md) &nbsp;|&nbsp; 日本語 &nbsp;|&nbsp; [简体中文](README.zh-Hans.md) &nbsp;|&nbsp; [繁體中文（香港）](README.zh-HK.md)
+[English](README.md) | 日本語 | [简体中文](README.zh-Hans.md) | [繁體中文（香港）](README.zh-HK.md)
 
 [![CI](https://github.com/gufranco/sms-rom-image-python/actions/workflows/ci.yml/badge.svg)](https://github.com/gufranco/sms-rom-image-python/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/gufranco/sms-rom-image-python)](https://github.com/gufranco/sms-rom-image-python/releases)
