@@ -35,14 +35,22 @@
       "quote": "The header format is as follows (addresses shown for 32 KByte and larger cartridges):",
       "manualPage": 22,
       "document": "referenceManual",
-      "governs": ["sms"]
+      "governs": ["sms"],
+      "heldBy": [
+        "conformance/hardware.test.py::PlacementTest.test_the_header_is_looked_for_first_where_the_manual_puts_it",
+        "conformance/hardware.test.py::ReadingTest.test_a_header_opened_at_the_printed_address_is_found_there"
+      ]
     },
     "openingString": {
       "value": [84, 77, 82, 32, 83, 69, 71, 65, 32, 32],
       "quote": "The string, \"TMR SEGA \" [54,4D,52,20,53,45,47,41,20,20]",
       "manualPage": 22,
       "document": "referenceManual",
-      "governs": ["sms"]
+      "governs": ["sms"],
+      "heldBy": [
+        "conformance/hardware.test.py::OpeningStringTest.test_the_string_looked_for_is_how_the_printed_one_begins",
+        "conformance/hardware.test.py::ReadingTest.test_an_image_carrying_the_printed_string_has_a_header"
+      ]
     },
     "checksum": {
       "value": {
@@ -53,7 +61,12 @@
       "quote": "A 16-bit checksum for the ROM (low-hi order). $7FFA and $7FFB are not included in this checksum.",
       "manualPage": 22,
       "document": "referenceManual",
-      "governs": ["sms"]
+      "governs": ["sms"],
+      "heldBy": [
+        "conformance/hardware.test.py::PlacementTest.test_the_checksum_sits_at_the_two_bytes_the_manual_names",
+        "conformance/hardware.test.py::PlacementTest.test_and_is_read_low_byte_first",
+        "conformance/hardware.test.py::ReadingTest.test_the_carried_checksum_is_the_two_printed_bytes_low_byte_first"
+      ]
     },
     "serialNumber": {
       "value": {
@@ -63,21 +76,31 @@
       "quote": "A 16-bit serial number, assigned by Sega.",
       "manualPage": 22,
       "document": "referenceManual",
-      "governs": ["sms"]
+      "governs": ["sms"],
+      "heldBy": [
+        "conformance/hardware.test.py::ReadingTest.test_a_serial_number_moves_nothing_the_header_is_read_as"
+      ]
     },
     "revision": {
       "value": 32766,
       "quote": "A software revision number byte.",
       "manualPage": 22,
       "document": "referenceManual",
-      "governs": ["sms"]
+      "governs": ["sms"],
+      "heldBy": [
+        "conformance/hardware.test.py::ReadingTest.test_a_revision_moves_nothing_the_header_is_read_as"
+      ]
     },
     "sizeCodeAddress": {
       "value": 32767,
       "quote": "ROM Size code:",
       "manualPage": 22,
       "document": "referenceManual",
-      "governs": ["sms"]
+      "governs": ["sms"],
+      "heldBy": [
+        "conformance/hardware.test.py::PlacementTest.test_the_size_code_is_read_from_the_byte_the_manual_names",
+        "conformance/hardware.test.py::ReadingTest.test_the_size_is_read_from_the_printed_byte"
+      ]
     },
     "sizeCodes": {
       "value": {
@@ -116,7 +139,12 @@
       ],
       "manualPage": 22,
       "document": "referenceManual",
-      "governs": ["sms"]
+      "governs": ["sms"],
+      "heldBy": [
+        "conformance/hardware.test.py::SizeCodeTest.test_every_printed_code_reads_as_the_size_the_manual_gives_it",
+        "conformance/hardware.test.py::ReadingTest.test_every_printed_size_code_declares_the_printed_size",
+        "conformance/hardware.test.py::ReadingTest.test_a_small_cartridge_header_is_found_where_its_size_code_puts_it"
+      ]
     }
   },
   "notStated": {

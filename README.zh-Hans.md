@@ -8,7 +8,7 @@
 [![Release](https://img.shields.io/github/v/release/gufranco/sms-rom-image-python)](https://github.com/gufranco/sms-rom-image-python/releases)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-从 **5,111** 个归档条目中测量出 **2,610** 个不同镜像，属性失败 **0** 次，其中 **2,408** 个在 `0x7FF0` 读到文件头，**393** 个零售版 Master System 卡带中有 **370** 个复现了存储的校验和，**14** 个启动程序按摘要声明，**689** 个测试，**100%** 语句和分支覆盖率，无依赖
+从 **5,111** 个归档条目中测量出 **2,610** 个不同镜像，属性失败 **0** 次，其中 **2,408** 个在 `0x7FF0` 读到文件头，**393** 个零售版 Master System 卡带中有 **370** 个复现了存储的校验和，**14** 个启动程序按摘要声明，**713** 个测试，**100%** 语句和分支覆盖率，无依赖
 
 ```python
 from smsimage import dump, header

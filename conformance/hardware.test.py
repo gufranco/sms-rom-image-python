@@ -20,6 +20,30 @@ def relative(address: int) -> int:
     return address - LARGEST_ANCHOR
 
 
+IMAGE_BYTES = 0x8000
+
+FILLED = 0xFF
+
+
+def stamped(address: int, data: bytes) -> dict[int, int]:
+    return {address + offset: byte for offset, byte in enumerate(data)}
+
+
+def an_image(writes: dict[int, int]) -> bytes:
+    image = bytearray(IMAGE_BYTES)
+    for where, byte in writes.items():
+        image[where] = byte
+    return bytes(image)
+
+
+def a_header() -> dict[int, int]:
+    return stamped(FACTS["headerAddress"]["value"], header.MAGIC)
+
+
+def read_as(image: bytes) -> tuple[int | None, int | None]:
+    return header.carried(image), header.declared_size(image)
+
+
 class DocumentTest(unittest.TestCase):
     def test_every_fact_names_a_document_the_record_declares(self) -> None:
         # Arrange
@@ -215,6 +239,100 @@ class SizeCodeTest(unittest.TestCase):
 
         # Assert
         self.assertEqual(named, sorted(int(code) for code in sizes["value"]))
+
+
+class ReadingTest(unittest.TestCase):
+    def test_a_header_opened_at_the_printed_address_is_found_there(self) -> None:
+        # Arrange
+        printed = FACTS["headerAddress"]["value"]
+        image = an_image(stamped(printed, header.MAGIC))
+
+        # Act
+        found = header.anchor_of(image)
+
+        # Assert
+        self.assertEqual(found, printed)
+
+    def test_an_image_carrying_the_printed_string_has_a_header(self) -> None:
+        # Arrange
+        printed = bytes(FACTS["openingString"]["value"])
+        image = an_image(stamped(LARGEST_ANCHOR, printed))
+
+        # Act
+        found = header.anchor_of(image)
+
+        # Assert
+        self.assertEqual(found, LARGEST_ANCHOR)
+
+    def test_the_carried_checksum_is_the_two_printed_bytes_low_byte_first(self) -> None:
+        # Arrange
+        printed = FACTS["checksum"]["value"]
+        image = an_image({**a_header(), printed["first"]: 0x34, printed["last"]: 0x12})
+
+        # Act
+        carried = header.carried(image)
+
+        # Assert
+        self.assertEqual(carried, int.from_bytes(bytes([0x34, 0x12]), printed["order"]))
+
+    def test_the_size_is_read_from_the_printed_byte(self) -> None:
+        # Arrange
+        printed = FACTS["sizeCodeAddress"]["value"]
+        image = an_image({**a_header(), printed: 77})
+
+        # Act
+        size = header.declared_size(image)
+
+        # Assert
+        self.assertEqual(size, FACTS["sizeCodes"]["value"]["77"]["bytes"])
+
+    def test_every_printed_size_code_declares_the_printed_size(self) -> None:
+        # Arrange
+        printed = FACTS["sizeCodes"]["value"]
+        where = FACTS["sizeCodeAddress"]["value"]
+
+        # Act
+        read = {
+            code: header.declared_size(an_image({**a_header(), where: int(code)}))
+            for code in printed
+        }
+
+        # Assert
+        self.assertEqual(read, {code: one["bytes"] for code, one in printed.items()})
+
+    def test_a_small_cartridge_header_is_found_where_its_size_code_puts_it(self) -> None:
+        # Arrange
+        printed = [one["header"] for one in FACTS["sizeCodes"]["value"].values() if "header" in one]
+
+        # Act
+        found = [header.anchor_of(an_image(stamped(where, header.MAGIC))) for where in printed]
+
+        # Assert
+        self.assertEqual(found, printed)
+
+    def test_a_serial_number_moves_nothing_the_header_is_read_as(self) -> None:
+        # Arrange
+        printed = FACTS["serialNumber"]["value"]
+        code = {FACTS["sizeCodeAddress"]["value"]: 76}
+        image = an_image({**a_header(), **code, printed["first"]: FILLED, printed["last"]: FILLED})
+
+        # Act
+        read = read_as(image)
+
+        # Assert
+        self.assertEqual(read, (0, FACTS["sizeCodes"]["value"]["76"]["bytes"]))
+
+    def test_a_revision_moves_nothing_the_header_is_read_as(self) -> None:
+        # Arrange
+        printed = FACTS["revision"]["value"]
+        code = {FACTS["sizeCodeAddress"]["value"]: 76}
+        image = an_image({**a_header(), **code, printed: FILLED})
+
+        # Act
+        read = read_as(image)
+
+        # Assert
+        self.assertEqual(read, (0, FACTS["sizeCodes"]["value"]["76"]["bytes"]))
 
 
 class NotStatedTest(unittest.TestCase):
