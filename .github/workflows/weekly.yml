@@ -15,7 +15,7 @@ concurrency:
 jobs:
   ahead:
     name: On Python ${{ matrix.python }}, newest tools
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     strategy:
       fail-fast: false
       matrix:
@@ -59,7 +59,7 @@ jobs:
 
   quotes:
     name: Every quote against the manual it names
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@v7
 
