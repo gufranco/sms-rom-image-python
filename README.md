@@ -8,7 +8,7 @@ English | [日本語](README.ja.md) | [简体中文](README.zh-Hans.md) | [繁�
 [![Release](https://img.shields.io/github/v/release/gufranco/sms-rom-image-python)](https://github.com/gufranco/sms-rom-image-python/releases)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-**2,610** distinct images measured from **5,111** archive entries, **0** property failures, the header read at `0x7FF0` on **2,408** of them, the stored checksum reproduced on **370** of **393** retail Master System cartridges, **14** boot programs declared by digest, **713** tests, **100%** statement and branch coverage, no dependencies
+**2,610** distinct images measured from **5,111** archive entries, **0** property failures, the header read at `0x7FF0` on **2,408** of them, the stored checksum reproduced on **370** of **393** retail Master System cartridges, **14** boot programs declared by digest, **741** tests, **100%** statement and branch coverage, no dependencies
 
 ```python
 from smsimage import dump, header
@@ -413,9 +413,9 @@ The boot programs a reader may need are declared in [`artifacts.manifest.json`](
 ```bash
 uvx ruff@0.16.3 format --check .
 uvx ruff@0.16.3 check .
-uvx --python 3.12 mypy==1.14.1
+uvx --python 3.12 --with types-setuptools==84.0.0.20260812 mypy==1.14.1
 pnpm install --frozen-lockfile && pnpm run format:check
-cov=(uvx --python 3.12 --from coverage==7.6.10 coverage)
+cov=(uvx --python 3.12 --from coverage==7.6.10 --with setuptools==84.0.0 coverage)
 "${cov[@]}" erase
 for f in $(find smsimage conformance -name '*.test.py' | sort); do
   "${cov[@]}" run -a "$f" || echo "FAILED $f"

@@ -19,7 +19,13 @@ HELD: dict[str, Any] = json.loads((ROOT / "conformance" / "divergences.json").re
 ENTRIES: dict[str, Any] = {entry["id"]: entry for entry in HELD["divergences"]}
 
 
-ANCHOR = header.CANDIDATES[0]
+ANCHOR = 0x7FF0
+
+MAGIC = b"TMR SEGA"
+
+REGION_AND_SIZE = 0x0F
+
+CHECKSUM = 0x0A
 
 THIRTY_TWO_K = 0x8000
 
@@ -27,18 +33,16 @@ THIRTY_TWO_K = 0x8000
 def image(tail: bytes = b"  ", stored: int | None = None) -> bytes:
     held = bytearray(THIRTY_TWO_K)
     held[0] = 0x11
-    held[ANCHOR : ANCHOR + len(header.MAGIC)] = header.MAGIC
-    held[ANCHOR + len(header.MAGIC) : ANCHOR + len(header.MAGIC) + len(tail)] = tail
-    held[ANCHOR + header.REGION_AND_SIZE] = 0x4C
+    held[ANCHOR : ANCHOR + len(MAGIC)] = MAGIC
+    held[ANCHOR + len(MAGIC) : ANCHOR + len(MAGIC) + len(tail)] = tail
+    held[ANCHOR + REGION_AND_SIZE] = 0x4C
     if stored is not None:
-        held[ANCHOR + header.CHECKSUM.start : ANCHOR + header.CHECKSUM.stop] = stored.to_bytes(
-            2, "little"
-        )
+        held[ANCHOR + CHECKSUM : ANCHOR + CHECKSUM + 2] = stored.to_bytes(2, "little")
     return bytes(held)
 
 
 def manual_sum(held: bytes) -> int:
-    checksum_bytes = held[ANCHOR + header.CHECKSUM.start : ANCHOR + header.CHECKSUM.stop]
+    checksum_bytes = held[ANCHOR + CHECKSUM : ANCHOR + CHECKSUM + 2]
     return (sum(held) - sum(checksum_bytes)) & 0xFFFF
 
 
@@ -169,10 +173,10 @@ class CorpusFigureTest(unittest.TestCase):
         # Arrange
         measured = ENTRIES["unprinted-region-codes"]["measured"]
         names = {
-            "smsJapan": header.SMS_JAPAN,
-            "ggJapan": header.GG_JAPAN,
-            "ggExport": header.GG_EXPORT,
-            "ggInternational": header.GG_INTERNATIONAL,
+            "smsJapan": "sms-japan",
+            "ggJapan": "gg-japan",
+            "ggExport": "gg-export",
+            "ggInternational": "gg-international",
         }
 
         # Act
@@ -187,7 +191,7 @@ class CorpusFigureTest(unittest.TestCase):
     def test_every_size_count_is_the_corpus_count(self) -> None:
         # Arrange
         measured = ENTRIES["unprinted-size-codes"]["measured"]
-        sizes = {"declared512K": header.SIZES[0x1], "declared1M": header.SIZES[0x2]}
+        sizes = {"declared512K": 0x80000, "declared1M": 0x100000}
 
         # Act
         found = {
@@ -257,7 +261,7 @@ class DocumentRuleTest(unittest.TestCase):
     def test_a_declared_size_shorter_than_the_header_sums_without_leaving_bytes_out(self) -> None:
         # Arrange
         held = bytearray(image(stored=0x11))
-        held[ANCHOR + header.REGION_AND_SIZE] = 0x4B
+        held[ANCHOR + REGION_AND_SIZE] = 0x4B
 
         # Act
         found = divergences.document_rule_agrees(bytes(held))

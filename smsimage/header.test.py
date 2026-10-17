@@ -6,7 +6,14 @@ sys.path.insert(0, str(ROOT))
 
 import unittest  # noqa: E402
 
+import smsimage  # noqa: E402
 from smsimage import header  # noqa: E402
+
+MAGIC = b"TMR SEGA"
+
+REGION_AND_SIZE = 0x0F
+
+CHECKSUM = 0x0A
 
 
 def blank(length: int) -> bytearray:
@@ -15,11 +22,9 @@ def blank(length: int) -> bytearray:
 
 def planted(length: int, at: int, region_and_size: int = 0x4C) -> bytearray:
     image = blank(length)
-    image[at : at + len(header.MAGIC)] = header.MAGIC
-    image[at + 0x08 : at + 0x0A] = b"\x00\x00"
-    image[at + 0x0A : at + 0x0C] = b"\x00\x00"
-    image[at + 0x0C : at + 0x0F] = b"\x00\x00\x00"
-    image[at + header.REGION_AND_SIZE] = region_and_size
+    image[at : at + len(MAGIC)] = MAGIC
+    image[at + 0x08 : at + REGION_AND_SIZE] = bytes(REGION_AND_SIZE - 0x08)
+    image[at + REGION_AND_SIZE] = region_and_size
     return image
 
 
@@ -27,290 +32,358 @@ def sealed(length: int, at: int, region_and_size: int = 0x4C) -> bytes:
     image = planted(length, at, region_and_size)
     computed = header.checksum(bytes(image))
     assert computed is not None
-    image[at + 0x0A : at + 0x0C] = computed.to_bytes(2, "little")
+    image[at + CHECKSUM : at + CHECKSUM + 2] = computed.to_bytes(2, "little")
+    return bytes(image)
+
+
+def flipped(image: bytes, where: int) -> bytes:
+    return image[:where] + bytes([image[where] ^ 0xFF]) + image[where + 1 :]
+
+
+def with_magic_at(image: bytearray, where: int) -> bytes:
+    image[where : where + len(MAGIC)] = MAGIC
     return bytes(image)
 
 
 class AnchorTest(unittest.TestCase):
     def test_it_finds_a_header_at_the_usual_offset(self) -> None:
-        found = header.anchor_of(bytes(planted(32768, 0x7FF0)))
+        # Arrange
+        image = bytes(planted(32768, 0x7FF0))
 
+        # Act
+        found = header.anchor_of(image)
+
+        # Assert
         self.assertEqual(found, 0x7FF0)
 
     def test_it_finds_a_header_at_the_middle_offset(self) -> None:
-        found = header.anchor_of(bytes(planted(16384, 0x3FF0)))
+        # Arrange
+        image = bytes(planted(16384, 0x3FF0))
 
+        # Act
+        found = header.anchor_of(image)
+
+        # Assert
         self.assertEqual(found, 0x3FF0)
 
     def test_it_finds_a_header_at_the_smallest_offset(self) -> None:
-        found = header.anchor_of(bytes(planted(8192, 0x1FF0)))
+        # Arrange
+        image = bytes(planted(8192, 0x1FF0))
 
+        # Act
+        found = header.anchor_of(image)
+
+        # Assert
         self.assertEqual(found, 0x1FF0)
 
     def test_an_image_with_no_header_anywhere_has_no_anchor(self) -> None:
-        found = header.anchor_of(bytes(blank(32768)))
+        # Arrange
+        image = bytes(blank(32768))
 
+        # Act
+        found = header.anchor_of(image)
+
+        # Assert
         self.assertIsNone(found)
 
     def test_an_image_too_short_to_hold_one_has_no_anchor(self) -> None:
-        found = header.anchor_of(bytes(blank(50)))
+        # Arrange
+        image = bytes(blank(50))
 
+        # Act
+        found = header.anchor_of(image)
+
+        # Assert
         self.assertIsNone(found)
 
     def test_the_magic_elsewhere_in_the_image_is_not_a_header(self) -> None:
-        image = blank(65536)
-        image[0x81F0 : 0x81F0 + len(header.MAGIC)] = header.MAGIC
+        # Arrange
+        image = with_magic_at(blank(65536), 0x81F0)
 
-        found = header.anchor_of(bytes(image))
+        # Act
+        found = header.anchor_of(image)
 
+        # Assert
         self.assertIsNone(found)
 
     def test_the_largest_candidate_wins_when_two_match(self) -> None:
-        image = planted(262144, 0x7FF0)
-        image[0x3FF0 : 0x3FF0 + len(header.MAGIC)] = header.MAGIC
+        # Arrange
+        image = with_magic_at(planted(262144, 0x7FF0), 0x3FF0)
 
-        found = header.anchor_of(bytes(image))
+        # Act
+        found = header.anchor_of(image)
 
+        # Assert
         self.assertEqual(found, 0x7FF0)
 
     def test_every_candidate_that_matches_is_reported_as_well(self) -> None:
-        image = planted(262144, 0x7FF0)
-        image[0x3FF0 : 0x3FF0 + len(header.MAGIC)] = header.MAGIC
+        # Arrange
+        image = with_magic_at(planted(262144, 0x7FF0), 0x3FF0)
 
-        found = header.anchors_in(bytes(image))
+        # Act
+        found = header.anchors_in(image)
 
+        # Assert
         self.assertEqual(found, (0x7FF0, 0x3FF0))
 
-    def test_an_image_with_no_header_reports_no_candidates(self) -> None:
-        found = header.anchors_in(bytes(blank(32768)))
+    def test_all_three_candidates_are_reported_largest_first(self) -> None:
+        # Arrange
+        image = with_magic_at(bytearray(with_magic_at(planted(32768, 0x1FF0), 0x7FF0)), 0x3FF0)
 
+        # Act
+        found = header.anchors_in(image)
+
+        # Assert
+        self.assertEqual(found, (0x7FF0, 0x3FF0, 0x1FF0))
+
+    def test_an_image_with_no_header_reports_no_candidates(self) -> None:
+        # Arrange
+        image = bytes(blank(32768))
+
+        # Act
+        found = header.anchors_in(image)
+
+        # Assert
         self.assertEqual(found, ())
 
-    def test_the_candidates_are_searched_largest_first(self) -> None:
-        self.assertEqual(header.CANDIDATES, (0x7FF0, 0x3FF0, 0x1FF0))
+    def test_eight_bytes_decide_and_the_two_after_them_do_not(self) -> None:
+        # Arrange
+        image = planted(32768, 0x7FF0)
+        image[0x7FF8:0x7FFA] = b"\xff\xff"
+
+        # Act
+        found = header.anchor_of(bytes(image))
+
+        # Assert
+        self.assertEqual(found, 0x7FF0)
+
+    def test_a_magic_short_of_its_last_byte_is_not_a_header(self) -> None:
+        # Arrange
+        image = planted(32768, 0x7FF0)
+        image[0x7FF7] = 0x00
+
+        # Act
+        found = header.anchor_of(bytes(image))
+
+        # Assert
+        self.assertIsNone(found)
 
 
 class DeclaredTest(unittest.TestCase):
     def test_it_reads_the_size_the_header_declares(self) -> None:
-        found = header.declared_size(bytes(planted(32768, 0x7FF0, 0x4C)))
+        # Arrange
+        image = bytes(planted(32768, 0x7FF0, 0x4C))
 
+        # Act
+        found = header.declared_size(image)
+
+        # Assert
         self.assertEqual(found, 32768)
 
-    def test_a_size_nibble_outside_the_reading_declares_nothing(self) -> None:
-        found = header.declared_size(bytes(planted(32768, 0x7FF0, 0x43)))
+    def test_every_size_nibble_reads_as_the_size_the_readme_gives_it(self) -> None:
+        # Arrange
+        nibbles = (0xA, 0xB, 0xC, 0xD, 0xE, 0xF, 0x0, 0x1, 0x2)
 
+        # Act
+        found = [header.declared_size(bytes(planted(32768, 0x7FF0, 0x40 | one))) for one in nibbles]
+
+        # Assert
+        self.assertEqual(
+            found,
+            [8192, 16384, 32768, 49152, 65536, 131072, 262144, 524288, 1048576],
+        )
+
+    def test_a_size_nibble_outside_the_reading_declares_nothing(self) -> None:
+        # Arrange
+        image = bytes(planted(32768, 0x7FF0, 0x43))
+
+        # Act
+        found = header.declared_size(image)
+
+        # Assert
         self.assertIsNone(found)
 
     def test_an_image_with_no_header_declares_nothing(self) -> None:
-        found = header.declared_size(bytes(blank(32768)))
+        # Arrange
+        image = bytes(blank(32768))
 
+        # Act
+        found = header.declared_size(image)
+
+        # Assert
         self.assertIsNone(found)
 
     def test_it_reads_the_region_the_header_declares(self) -> None:
-        found = header.region_of(bytes(planted(32768, 0x7FF0, 0x4C)))
+        # Arrange
+        image = bytes(planted(32768, 0x7FF0, 0x4C))
 
-        self.assertEqual(found, header.SMS_EXPORT)
+        # Act
+        found = header.region_of(image)
+
+        # Assert
+        self.assertEqual(found, "sms-export")
+
+    def test_every_region_nibble_reads_as_the_name_the_readme_gives_it(self) -> None:
+        # Arrange
+        nibbles = (0x3, 0x4, 0x5, 0x6, 0x7)
+
+        # Act
+        found = [header.region_of(bytes(planted(32768, 0x7FF0, one << 4 | 0xC))) for one in nibbles]
+
+        # Assert
+        self.assertEqual(
+            found, ["sms-japan", "sms-export", "gg-japan", "gg-export", "gg-international"]
+        )
 
     def test_a_region_nibble_outside_the_reading_names_nothing(self) -> None:
-        found = header.region_of(bytes(planted(32768, 0x7FF0, 0x0C)))
+        # Arrange
+        image = bytes(planted(32768, 0x7FF0, 0x0C))
 
+        # Act
+        found = header.region_of(image)
+
+        # Assert
         self.assertIsNone(found)
 
     def test_an_image_with_no_header_names_no_region(self) -> None:
-        found = header.region_of(bytes(blank(32768)))
+        # Arrange
+        image = bytes(blank(32768))
 
+        # Act
+        found = header.region_of(image)
+
+        # Assert
         self.assertIsNone(found)
+
+    def test_the_byte_read_is_the_last_of_sixteen_from_the_anchor(self) -> None:
+        # Arrange
+        image = planted(32768, 0x7FF0, 0x4C)
+        image[0x7FFE] = 0x6B
+
+        # Act
+        found = (header.region_of(bytes(image)), header.declared_size(bytes(image)))
+
+        # Assert
+        self.assertEqual(found, ("sms-export", 32768))
 
 
 class CarriedTest(unittest.TestCase):
     def test_it_reads_the_value_the_cartridge_stored(self) -> None:
+        # Arrange
         image = planted(32768, 0x7FF0)
-        image[0x7FF0 + 0x0A : 0x7FF0 + 0x0C] = b"\x34\x12"
+        image[0x7FFA:0x7FFC] = b"\x34\x12"
 
+        # Act
         found = header.carried(bytes(image))
 
+        # Assert
         self.assertEqual(found, 0x1234)
 
     def test_an_image_with_no_header_carries_nothing(self) -> None:
-        found = header.carried(bytes(blank(32768)))
-
-        self.assertIsNone(found)
-
-
-class ChecksumTest(unittest.TestCase):
-    def test_it_reproduces_the_value_on_an_image_that_was_sealed(self) -> None:
-        image = sealed(32768, 0x7FF0)
-
-        self.assertEqual(header.checksum(image), header.carried(image))
-
-    def test_it_ignores_the_header_itself(self) -> None:
-        image = bytearray(sealed(32768, 0x7FF0))
-        image[0x7FF0 + 0x0C] ^= 0xFF
-
-        self.assertEqual(header.checksum(bytes(image)), header.carried(bytes(image)))
-
-    def test_a_byte_changed_outside_the_header_changes_it(self) -> None:
-        image = bytearray(sealed(32768, 0x7FF0))
-        before = header.checksum(bytes(image))
-        image[0x0100] ^= 0xFF
-
-        self.assertNotEqual(header.checksum(bytes(image)), before)
-
-    def test_it_covers_only_as_far_as_the_declared_size(self) -> None:
-        image = bytearray(sealed(65536, 0x7FF0, 0x4C))
-        before = header.checksum(bytes(image))
-        image[0xC000] ^= 0xFF
-
-        self.assertEqual(header.checksum(bytes(image)), before)
-
-    def test_it_covers_the_bytes_past_the_header_up_to_that_size(self) -> None:
-        image = bytearray(sealed(65536, 0x7FF0, 0x4E))
-        before = header.checksum(bytes(image))
-        image[0xC000] ^= 0xFF
-
-        self.assertNotEqual(header.checksum(bytes(image)), before)
-
-    def test_an_eight_kilobyte_declaration_sums_only_below_the_smallest_header(self) -> None:
         # Arrange
-        image = bytearray(sealed(131072, 0x7FF0, 0x4A))
-        before = header.checksum(bytes(image))
-        image[0x1FF0] ^= 0xFF
+        image = bytes(blank(32768))
 
         # Act
-        after = header.checksum(bytes(image))
+        found = header.carried(image)
 
         # Assert
-        self.assertEqual(after, before)
-
-    def test_and_counts_the_last_byte_below_it(self) -> None:
-        # Arrange
-        image = bytearray(sealed(131072, 0x7FF0, 0x4A))
-        before = header.checksum(bytes(image))
-        image[0x1FEF] ^= 0xFF
-
-        # Act
-        after = header.checksum(bytes(image))
-
-        # Assert
-        self.assertNotEqual(after, before)
-
-    def test_a_forty_eight_kilobyte_declaration_sums_through_the_header(self) -> None:
-        # Arrange
-        image = bytearray(sealed(49152, 0x7FF0, 0x4D))
-        before = header.checksum(bytes(image))
-        image[0x7FFC] ^= 0xFF
-
-        # Act
-        after = header.checksum(bytes(image))
-
-        # Assert
-        self.assertNotEqual(after, before)
-
-    def test_and_stops_sixteen_bytes_short_of_its_end(self) -> None:
-        # Arrange
-        image = bytearray(sealed(49152, 0x7FF0, 0x4D))
-        before = header.checksum(bytes(image))
-        image[0xBFF0] ^= 0xFF
-
-        # Act
-        after = header.checksum(bytes(image))
-
-        # Assert
-        self.assertEqual(after, before)
-
-    def test_a_larger_declaration_adds_whole_banks_from_the_third_on(self) -> None:
-        # Arrange
-        image = bytearray(sealed(131072, 0x7FF0, 0x4E))
-        before = header.checksum(bytes(image))
-        image[0x10000] ^= 0xFF
-
-        # Act
-        after = header.checksum(bytes(image))
-
-        # Assert
-        self.assertEqual(after, before)
-
-    def test_every_size_the_reading_names_has_a_span_to_sum(self) -> None:
-        # Arrange
-        named = set(header.SIZES)
-
-        # Act
-        spanned = set(header.FIRST_SPAN)
-
-        # Assert
-        self.assertEqual(spanned, named)
-
-    def test_and_every_banked_size_is_one_the_reading_names(self) -> None:
-        # Arrange
-        named = set(header.SIZES)
-
-        # Act
-        banked = set(header.BANKS_FROM_THE_THIRD)
-
-        # Assert
-        self.assertLessEqual(banked, named)
-
-    def test_it_stops_at_the_end_of_a_file_shorter_than_it_declares(self) -> None:
-        image = sealed(32768, 0x7FF0, 0x4F)
-
-        self.assertIsNotNone(header.checksum(image))
-
-    def test_it_stays_inside_sixteen_bits(self) -> None:
-        image = bytes([0xFF] * 0x7FF0) + bytes(planted(0x8000, 0x7FF0))[0x7FF0:]
-
-        found = header.checksum(image)
-
-        assert found is not None
-        self.assertLessEqual(found, 0xFFFF)
-
-    def test_an_image_with_no_header_has_no_checksum(self) -> None:
-        found = header.checksum(bytes(blank(32768)))
-
-        self.assertIsNone(found)
-
-    def test_an_image_declaring_a_size_outside_the_reading_has_none(self) -> None:
-        found = header.checksum(bytes(planted(32768, 0x7FF0, 0x43)))
-
         self.assertIsNone(found)
 
 
 class AgreesTest(unittest.TestCase):
     def test_a_sealed_image_agrees_with_itself(self) -> None:
-        self.assertTrue(header.agrees(sealed(32768, 0x7FF0)))
+        # Arrange
+        image = sealed(32768, 0x7FF0)
+
+        # Act
+        found = header.agrees(image)
+
+        # Assert
+        self.assertTrue(found)
 
     def test_an_image_whose_content_moved_does_not(self) -> None:
-        image = bytearray(sealed(32768, 0x7FF0))
-        image[0x0200] ^= 0xFF
+        # Arrange
+        image = flipped(sealed(32768, 0x7FF0), 0x0200)
 
-        self.assertFalse(header.agrees(bytes(image)))
+        # Act
+        found = header.agrees(image)
+
+        # Assert
+        self.assertFalse(found)
 
     def test_an_image_with_no_header_does_not_agree_or_disagree(self) -> None:
-        self.assertIsNone(header.agrees(bytes(blank(32768))))
+        # Arrange
+        image = bytes(blank(32768))
+
+        # Act
+        found = header.agrees(image)
+
+        # Assert
+        self.assertIsNone(found)
+
+    def test_an_image_declaring_an_unknown_size_does_not_either(self) -> None:
+        # Arrange
+        image = bytes(planted(32768, 0x7FF0, 0x43))
+
+        # Act
+        found = header.agrees(image)
+
+        # Assert
+        self.assertIsNone(found)
 
 
-class SurfaceTest(unittest.TestCase):
-    def test_the_header_is_sixteen_bytes(self) -> None:
-        self.assertEqual(header.LENGTH, 0x10)
+class PublishedTablesTest(unittest.TestCase):
+    def test_the_candidates_are_searched_largest_first(self) -> None:
+        # Arrange
+        published = smsimage.CANDIDATES
 
-    def test_every_size_the_reading_names_is_a_whole_kilobyte(self) -> None:
-        odd = [one for one in header.SIZES.values() if one % 1024]
+        # Act
+        found = tuple(published)
 
-        self.assertEqual(odd, [])
+        # Assert
+        self.assertEqual(found, (0x7FF0, 0x3FF0, 0x1FF0))
 
-    def test_every_size_nibble_fits_in_a_nibble(self) -> None:
-        wide = [one for one in header.SIZES if one > 0x0F]
+    def test_the_magic_is_the_eight_bytes_the_readme_prints(self) -> None:
+        # Arrange
+        published = smsimage.MAGIC
 
-        self.assertEqual(wide, [])
+        # Act
+        found = bytes(published)
 
-    def test_every_region_nibble_fits_in_a_nibble(self) -> None:
-        wide = [one for one in header.REGIONS if one > 0x0F]
+        # Assert
+        self.assertEqual(found, MAGIC)
 
-        self.assertEqual(wide, [])
+    def test_the_region_table_is_the_one_the_readme_prints(self) -> None:
+        # Arrange
+        published = smsimage.REGIONS
 
-    def test_each_region_is_named_once(self) -> None:
-        named = list(header.REGIONS.values())
+        # Act
+        found = dict(published)
 
-        self.assertEqual(sorted(named), sorted(set(named)))
+        # Assert
+        self.assertEqual(
+            found,
+            {
+                0x3: "sms-japan",
+                0x4: "sms-export",
+                0x5: "gg-japan",
+                0x6: "gg-export",
+                0x7: "gg-international",
+            },
+        )
+
+    def test_the_size_table_is_the_one_the_readme_prints(self) -> None:
+        # Arrange
+        published = smsimage.SIZES
+
+        # Act
+        found = {code: size // 1024 for code, size in published.items()}
+
+        # Assert
+        self.assertEqual(
+            found,
+            {0xA: 8, 0xB: 16, 0xC: 32, 0xD: 48, 0xE: 64, 0xF: 128, 0x0: 256, 0x1: 512, 0x2: 1024},
+        )
 
 
 if __name__ == "__main__":

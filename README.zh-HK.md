@@ -8,7 +8,7 @@
 [![Release](https://img.shields.io/github/v/release/gufranco/sms-rom-image-python)](https://github.com/gufranco/sms-rom-image-python/releases)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-**2,610** 個不同的映像檔，量度自 **5,111** 個壓縮檔項目，**0** 個屬性失敗，其中 **2,408** 個在 `0x7FF0` 讀到檔頭，**393** 個零售版 Master System 卡帶中有 **370** 個重現了儲存的校驗和，**14** 個開機程式以摘要值聲明，**713** 個測試，**100%** 語句及分支覆蓋率，沒有依賴項
+**2,610** 個不同的映像檔，量度自 **5,111** 個壓縮檔項目，**0** 個屬性失敗，其中 **2,408** 個在 `0x7FF0` 讀到檔頭，**393** 個零售版 Master System 卡帶中有 **370** 個重現了儲存的校驗和，**14** 個開機程式以摘要值聲明，**741** 個測試，**100%** 語句及分支覆蓋率，沒有依賴項
 
 ```python
 from smsimage import dump, header
@@ -413,9 +413,9 @@ python3 -m conformance.census /path/to/library.zip /path/to/another
 ```bash
 uvx ruff@0.16.3 format --check .
 uvx ruff@0.16.3 check .
-uvx --python 3.12 mypy==1.14.1
+uvx --python 3.12 --with types-setuptools==84.0.0.20260812 mypy==1.14.1
 pnpm install --frozen-lockfile && pnpm run format:check
-cov=(uvx --python 3.12 --from coverage==7.6.10 coverage)
+cov=(uvx --python 3.12 --from coverage==7.6.10 --with setuptools==84.0.0 coverage)
 "${cov[@]}" erase
 for f in $(find smsimage conformance -name '*.test.py' | sort); do
   "${cov[@]}" run -a "$f" || echo "FAILED $f"

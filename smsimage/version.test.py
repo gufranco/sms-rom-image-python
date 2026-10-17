@@ -7,56 +7,106 @@ sys.path.insert(0, str(ROOT))
 import unittest  # noqa: E402
 
 import smsimage  # noqa: E402
-from smsimage import version  # noqa: E402
+
+VERSION_FILE = ROOT / "smsimage" / "version.py"
+
+
+def stamped() -> str:
+    line = next(
+        one for one in VERSION_FILE.read_text().splitlines() if one.startswith("VERSION = ")
+    )
+    return line.split('"')[1]
 
 
 class VersionTest(unittest.TestCase):
     def test_the_version_is_three_numbers(self) -> None:
-        parts = version.VERSION.split(".")
+        # Arrange
+        held = smsimage.__version__
 
+        # Act
+        parts = held.split(".")
+
+        # Assert
         self.assertEqual(len(parts), 3)
         self.assertTrue(all(part.isdigit() for part in parts))
 
     def test_the_package_reports_the_same_version(self) -> None:
-        self.assertEqual(smsimage.__version__, version.VERSION)
+        # Arrange
+        held = stamped()
+
+        # Act
+        reported = smsimage.__version__
+
+        # Assert
+        self.assertEqual(reported, held)
 
 
 class SurfaceTest(unittest.TestCase):
     def test_everything_it_declares_is_reachable(self) -> None:
-        missing = [name for name in smsimage.__all__ if not hasattr(smsimage, name)]
+        # Arrange
+        declared = smsimage.__all__
 
+        # Act
+        missing = [name for name in declared if not hasattr(smsimage, name)]
+
+        # Assert
         self.assertEqual(missing, [])
 
 
 class ReleaseWiringTest(unittest.TestCase):
     def test_the_release_job_rewrites_the_file_the_package_reads(self) -> None:
+        # Arrange
+        wanted = "smsimage/version.py"
+
+        # Act
         assets = (ROOT / ".releaserc.json").read_text()
 
-        self.assertIn("smsimage/version.py", assets)
+        # Assert
+        self.assertIn(wanted, assets)
 
     def test_the_release_job_commits_the_citation_it_stamps(self) -> None:
+        # Arrange
+        wanted = "CITATION.cff"
+
+        # Act
         assets = (ROOT / ".releaserc.json").read_text()
 
-        self.assertIn("CITATION.cff", assets)
+        # Assert
+        self.assertIn(wanted, assets)
 
     def test_the_script_that_rewrites_it_points_at_the_same_file(self) -> None:
+        # Arrange
+        wanted = "smsimage/version.py"
+
+        # Act
         script = (ROOT / "scripts" / "set-version.sh").read_text()
 
-        self.assertIn("smsimage/version.py", script)
+        # Assert
+        self.assertIn(wanted, script)
 
     def test_the_script_also_stamps_the_citation(self) -> None:
+        # Arrange
+        wanted = "CITATION.cff"
+
+        # Act
         script = (ROOT / "scripts" / "set-version.sh").read_text()
 
-        self.assertIn("CITATION.cff", script)
+        # Assert
+        self.assertIn(wanted, script)
 
     def test_the_citation_carries_the_version_the_package_reports(self) -> None:
+        # Arrange
+        citation = (ROOT / "CITATION.cff").read_text()
+
+        # Act
         cited = [
             line.removeprefix("version: ").strip()
-            for line in (ROOT / "CITATION.cff").read_text().splitlines()
+            for line in citation.splitlines()
             if line.startswith("version: ")
         ]
 
-        self.assertEqual(cited, [version.VERSION])
+        # Assert
+        self.assertEqual(cited, [smsimage.__version__])
 
 
 if __name__ == "__main__":

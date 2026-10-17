@@ -73,7 +73,7 @@ class TimedTest(unittest.TestCase):
 class SubjectTest(unittest.TestCase):
     def test_the_image_timed_is_the_largest_the_manual_prints_a_code_for(self) -> None:
         # Arrange
-        largest = header.SIZES[0x0]
+        largest = 0x40000
 
         # Act
         size = len(speed.IMAGE)
@@ -86,10 +86,10 @@ class SubjectTest(unittest.TestCase):
         image = speed.IMAGE
 
         # Act
-        computed = header.checksum(image)
+        computed = (header.declared_size(image), header.checksum(image) is None)
 
         # Assert
-        self.assertIsNotNone(computed)
+        self.assertEqual(computed, (0x40000, False))
 
     def test_the_floor_sits_well_under_what_was_measured(self) -> None:
         # Arrange

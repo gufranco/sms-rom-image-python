@@ -11,7 +11,7 @@ if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import Callable, Sequence
 
 
-def _version(where: Path | None = None) -> str:
+def installed_version(where: Path | None = None) -> str:
     found = re.search(
         r"""VERSION\s*[:=][^"']*["']([^"']+)["']""",
         (where or Path(__file__).resolve().parent / "version.py").read_text(),
@@ -19,12 +19,12 @@ def _version(where: Path | None = None) -> str:
     return found.group(1) if found else "unknown"
 
 
-VERSION = _version()
+VERSION = installed_version()
 
 ROOT = Path(__file__).resolve().parent.parent
 
 
-def _reachable(root: Path = ROOT, path: list[str] | None = None) -> bool:
+def reachable(root: Path = ROOT, path: list[str] | None = None) -> bool:
     where = sys.path if path is None else path
     if str(root) in where:
         return False
@@ -32,7 +32,7 @@ def _reachable(root: Path = ROOT, path: list[str] | None = None) -> bool:
     return True
 
 
-_reachable()
+reachable()
 
 CORPUS = ROOT / "conformance" / "corpus.json"
 
@@ -87,21 +87,21 @@ def _threw(name: str, error: BaseException, advice: str | None = None) -> Findin
     return Finding(name, False, f"{type(error).__name__}: {error}", advice)
 
 
-def _synthetic(_: object = None) -> bytes:
+def sealed_image(summed: Callable[[bytes], int | None] | None = None) -> bytes:
     from smsimage import header
 
     image = bytearray((index * 11 + 5) & 0xFF for index in range(IMAGE_BYTES))
     image[ANCHOR : ANCHOR + len(header.MAGIC)] = header.MAGIC
     image[ANCHOR + 0x08 : ANCHOR + header.LENGTH] = bytes(8)
     image[ANCHOR + header.REGION_AND_SIZE] = REGION_AND_SIZE
-    computed = header.checksum(bytes(image))
+    computed = (summed or header.checksum)(bytes(image))
     if computed is None:
         raise ValueError("the reader found no checksum in an image built with a header")
     image[ANCHOR + 0x0A : ANCHOR + 0x0C] = computed.to_bytes(2, "little")
     return bytes(image)
 
 
-def _python() -> Finding:
+def check_python() -> Finding:
     running = sys.version_info[:2]
     return Finding(
         "python",
@@ -117,7 +117,7 @@ def _load() -> Any:
     return smsimage
 
 
-def _package(load: Callable[[], Any] = _load) -> Finding:
+def check_package(load: Callable[[], Any] = _load) -> Finding:
     try:
         loaded = load()
     except Exception as error:
@@ -125,7 +125,7 @@ def _package(load: Callable[[], Any] = _load) -> Finding:
     return Finding("package", True, f"smsimage {loaded.__version__} imported from {ROOT}")
 
 
-def _reading(build: Callable[[], bytes] = _synthetic) -> Finding:
+def check_reading(build: Callable[[], bytes] = sealed_image) -> Finding:
     try:
         from smsimage import dump
 
@@ -144,7 +144,7 @@ def _reading(build: Callable[[], bytes] = _synthetic) -> Finding:
     )
 
 
-def _anchoring(build: Callable[[], bytes] = _synthetic) -> Finding:
+def check_anchoring(build: Callable[[], bytes] = sealed_image) -> Finding:
     try:
         from smsimage import header
 
@@ -166,7 +166,7 @@ def _anchoring(build: Callable[[], bytes] = _synthetic) -> Finding:
     )
 
 
-def _checksumming(build: Callable[[], bytes] = _synthetic) -> Finding:
+def check_checksumming(build: Callable[[], bytes] = sealed_image) -> Finding:
     try:
         from smsimage import header
 
@@ -187,7 +187,7 @@ def _checksumming(build: Callable[[], bytes] = _synthetic) -> Finding:
     )
 
 
-def _measuring(build: Callable[[], bytes] = _synthetic) -> Finding:
+def check_measuring(build: Callable[[], bytes] = sealed_image) -> Finding:
     try:
         from smsimage import identity
 
@@ -206,7 +206,7 @@ def _measuring(build: Callable[[], bytes] = _synthetic) -> Finding:
     )
 
 
-def _artifacts(path: Path | str = MANIFEST) -> Finding:
+def check_artifacts(path: Path | str = MANIFEST) -> Finding:
     where = Path(path)
     if not where.is_file():
         return Finding(
@@ -227,7 +227,7 @@ def _artifacts(path: Path | str = MANIFEST) -> Finding:
     )
 
 
-def _corpus(path: Path | str = CORPUS) -> Finding:
+def check_corpus(path: Path | str = CORPUS) -> Finding:
     where = Path(path)
     if not where.is_file():
         return Finding(
@@ -257,7 +257,7 @@ def _corpus(path: Path | str = CORPUS) -> Finding:
     )
 
 
-def _library() -> Finding:
+def check_library() -> Finding:
     return Finding(
         "library",
         True,
@@ -270,15 +270,15 @@ def examine(
     artifacts: Path | str = MANIFEST,
 ) -> list[Finding]:
     return [
-        _python(),
-        _package(),
-        _reading(),
-        _anchoring(),
-        _checksumming(),
-        _measuring(),
-        _artifacts(artifacts),
-        _corpus(corpus),
-        _library(),
+        check_python(),
+        check_package(),
+        check_reading(),
+        check_anchoring(),
+        check_checksumming(),
+        check_measuring(),
+        check_artifacts(artifacts),
+        check_corpus(corpus),
+        check_library(),
     ]
 
 

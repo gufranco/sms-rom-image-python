@@ -12,7 +12,13 @@ sys.path.insert(0, str(ROOT))
 from conformance import categories  # noqa: E402
 from smsimage import header  # noqa: E402
 
-ANCHOR = header.CANDIDATES[0]
+ANCHOR = 0x7FF0
+
+MAGIC = b"TMR SEGA"
+
+REGION_AND_SIZE = 0x0F
+
+CHECKSUM = 0x0A
 
 THIRTY_TWO_K = 0x8000
 
@@ -20,13 +26,11 @@ THIRTY_TWO_K = 0x8000
 def image(first: int, sealed: bool) -> bytes:
     held = bytearray(THIRTY_TWO_K)
     held[0] = first
-    held[ANCHOR : ANCHOR + len(header.MAGIC)] = header.MAGIC
-    held[ANCHOR + header.REGION_AND_SIZE] = 0x4C
+    held[ANCHOR : ANCHOR + len(MAGIC)] = MAGIC
+    held[ANCHOR + REGION_AND_SIZE] = 0x4C
     if sealed:
         stored = header.checksum(bytes(held)) or 0
-        held[ANCHOR + header.CHECKSUM.start : ANCHOR + header.CHECKSUM.stop] = stored.to_bytes(
-            2, "little"
-        )
+        held[ANCHOR + CHECKSUM : ANCHOR + CHECKSUM + 2] = stored.to_bytes(2, "little")
     return bytes(held)
 
 

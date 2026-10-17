@@ -7,7 +7,7 @@ from collections.abc import Iterator, Mapping
 from pathlib import Path
 from typing import Any
 
-from smsimage import dump, header, identity
+import smsimage
 
 SUFFIXES = (".sms", ".gg", ".sg")
 
@@ -52,46 +52,49 @@ def images_in(where: Path) -> Iterator[bytes]:
         yield where.read_bytes()
 
 
-def broken_properties(raw: bytes) -> list[str]:
+def broken_properties(raw: bytes, package: Any = smsimage) -> list[str]:
     broken = []
-    image = dump.strip_copier_stub(raw)
+    image = package.dump.strip_copier_stub(raw)
 
-    if dump.strip_copier_stub(image) != image:
+    if package.dump.strip_copier_stub(image) != image:
         broken.append(IDEMPOTENT_STRIP)
 
-    anchor = header.anchor_of(image)
-    if anchor is not None and anchor not in header.CANDIDATES:
+    anchor = package.header.anchor_of(image)
+    if anchor is not None and anchor not in package.header.CANDIDATES:
         broken.append(ANCHOR_IS_A_CANDIDATE)
 
-    if anchor is not None and image[anchor : anchor + len(header.MAGIC)] != header.MAGIC:
+    if (
+        anchor is not None
+        and image[anchor : anchor + len(package.header.MAGIC)] != package.header.MAGIC
+    ):
         broken.append(MAGIC_AT_THE_ANCHOR)
 
-    computed = header.checksum(image)
+    computed = package.header.checksum(image)
     if computed is not None and not 0 <= computed <= 0xFFFF:
         broken.append(CHECKSUM_IN_RANGE)
 
-    if (computed is None) != (header.agrees(image) is None):
+    if (computed is None) != (package.header.agrees(image) is None):
         broken.append(AGREEMENT_FOLLOWS_A_CHECKSUM)
 
-    if identity.measure(image) != identity.measure(image):
+    if package.identity.measure(image) != package.identity.measure(image):
         broken.append(MEASUREMENT_IS_STABLE)
 
     return broken
 
 
 def observe(raw: bytes) -> Mapping[str, Any]:
-    image = dump.strip_copier_stub(raw)
+    image = smsimage.dump.strip_copier_stub(raw)
     return {
-        "form": dump.form(raw),
+        "form": smsimage.dump.form(raw),
         "size": len(image),
-        "anchor": header.anchor_of(image),
-        "region": header.region_of(image),
-        "declared": header.declared_size(image),
-        "carried": header.agrees(image),
+        "anchor": smsimage.header.anchor_of(image),
+        "region": smsimage.header.region_of(image),
+        "declared": smsimage.header.declared_size(image),
+        "carried": smsimage.header.agrees(image),
     }
 
 
-def take(paths: list[Path]) -> Mapping[str, Any]:
+def take(paths: list[Path], package: Any = smsimage) -> Mapping[str, Any]:
     seen: set[str] = set()
     listings = 0
     broken: collections.Counter[str] = collections.Counter()
@@ -104,7 +107,7 @@ def take(paths: list[Path]) -> Mapping[str, Any]:
             if digest in seen:
                 continue
             seen.add(digest)
-            for name in broken_properties(raw):
+            for name in broken_properties(raw, package):
                 broken[name] += 1
             found = observe(raw)
             combinations[tuple(found[key] for key in sorted(found))] += 1
@@ -127,7 +130,7 @@ def rendered(corpus: list[Mapping[str, Any]]) -> str:
     return json.dumps(corpus, indent=CORPUS_INDENT) + "\n"
 
 
-def main(argv: list[str], into: Path = CORPUS) -> int:
+def main(argv: list[str], into: Path = CORPUS, package: Any = smsimage) -> int:
     if not argv:
         print("usage: python3 -m conformance.census <path> [path ...]")
         return 2
@@ -137,7 +140,7 @@ def main(argv: list[str], into: Path = CORPUS) -> int:
     for one in absent:
         print(f"absent: {one}")
 
-    taken = take([one for one in paths if one.exists()])
+    taken = take([one for one in paths if one.exists()], package)
 
     print(f"archive entries and files read: {taken['listings']}")
     print(f"distinct images:                {taken['distinct']}")

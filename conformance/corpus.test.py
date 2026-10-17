@@ -9,15 +9,14 @@ import io  # noqa: E402
 import unittest  # noqa: E402
 
 from conformance import corpus  # noqa: E402
-from smsimage import dump, header  # noqa: E402
 
 
 def combination(**fields: object) -> dict[str, object]:
     base: dict[str, object] = {
-        "form": dump.BARE,
+        "form": "bare",
         "size": 32768,
         "anchor": 0x7FF0,
-        "region": header.SMS_EXPORT,
+        "region": "sms-export",
         "declared": 32768,
         "carried": True,
         "count": 1,

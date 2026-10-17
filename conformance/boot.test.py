@@ -9,19 +9,35 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
+import smsimage  # noqa: E402
 from conformance import boot  # noqa: E402
-from smsimage import header  # noqa: E402
+
+FIRST_SPAN = {
+    0xA: 0x1FF0,
+    0xB: 0x3FF0,
+    0xC: 0x7FF0,
+    0xD: 0xBFF0,
+    0xE: 0x7FF0,
+    0xF: 0x7FF0,
+    0x0: 0x7FF0,
+    0x1: 0x7FF0,
+    0x2: 0x7FF0,
+}
+
+BANKS_FROM_THE_THIRD = {0xE: 2, 0xF: 6, 0x0: 14, 0x1: 30, 0x2: 62}
+
+COMPARED = 8
 
 
 def a_boot_program(**changed: bytes) -> bytes:
     held = bytearray(0x2000)
     held[boot.FIRST_SPAN_AT : boot.FIRST_SPAN_AT + len(boot.CODES)] = bytes(
-        header.FIRST_SPAN[code] >> 8 for code in boot.CODES
+        FIRST_SPAN[code] >> 8 for code in boot.CODES
     )
     held[boot.BANKS_AT : boot.BANKS_AT + len(boot.BANKED_CODES)] = bytes(
-        header.BANKS_FROM_THE_THIRD[code] for code in boot.BANKED_CODES
+        BANKS_FROM_THE_THIRD[code] for code in boot.BANKED_CODES
     )
-    held[boot.COMPARED_AT] = len(header.MAGIC)
+    held[boot.COMPARED_AT] = COMPARED
     held[boot.REGION_GATE_AT] = boot.EXPORT_REGION << 4
     for name, value in changed.items():
         at = getattr(boot, name)
@@ -89,7 +105,7 @@ class ReadingTest(unittest.TestCase):
 
     def test_every_code_the_reading_names_is_read_from_the_program(self) -> None:
         # Arrange
-        named = set(header.FIRST_SPAN)
+        named = set(smsimage.SIZES)
 
         # Act
         read = set(boot.CODES)

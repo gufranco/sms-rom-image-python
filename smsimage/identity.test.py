@@ -4,111 +4,215 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-import hashlib  # noqa: E402
 import unittest  # noqa: E402
-import zlib  # noqa: E402
+from typing import Any  # noqa: E402
 
-from smsimage import errors, identity  # noqa: E402
+import smsimage  # noqa: E402
+from smsimage import identity  # noqa: E402
+
+ABC = b"abc"
+
+ABC_CRC32 = "352441c2"
+
+ABC_MD5 = "900150983cd24fb0d6963f7d28e17f72"
+
+ABC_SHA1 = "a9993e364706816aba3e25717850c26c9cd0d89d"
+
+ABC_SHA256 = "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+
+EMPTY_SHA256 = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
 
 IMAGE = bytes((index * 31 + 7) & 0xFF for index in range(32768))
 
 
 class MeasureTest(unittest.TestCase):
     def test_it_reports_the_length_in_bytes(self) -> None:
-        found = identity.measure(IMAGE)
+        # Arrange
+        data = IMAGE
 
+        # Act
+        found = identity.measure(data)
+
+        # Assert
         self.assertEqual(found["size"], 32768)
 
     def test_it_reports_the_checksum_the_databases_key_on(self) -> None:
-        found = identity.measure(IMAGE)
+        # Arrange
+        data = ABC
 
-        self.assertEqual(found["crc32"], f"{zlib.crc32(IMAGE):08x}")
+        # Act
+        found = identity.measure(data)
+
+        # Assert
+        self.assertEqual(found["crc32"], ABC_CRC32)
 
     def test_it_reports_the_two_digests_the_databases_still_carry(self) -> None:
-        found = identity.measure(IMAGE)
+        # Arrange
+        data = ABC
 
-        self.assertEqual(found["md5"], hashlib.md5(IMAGE).hexdigest())
-        self.assertEqual(found["sha1"], hashlib.sha1(IMAGE).hexdigest())
+        # Act
+        found = identity.measure(data)
+
+        # Assert
+        self.assertEqual((found["md5"], found["sha1"]), (ABC_MD5, ABC_SHA1))
 
     def test_it_reports_the_digest_that_decides(self) -> None:
-        found = identity.measure(IMAGE)
+        # Arrange
+        data = ABC
 
-        self.assertEqual(found["sha256"], hashlib.sha256(IMAGE).hexdigest())
+        # Act
+        found = identity.measure(data)
+
+        # Assert
+        self.assertEqual(found["sha256"], ABC_SHA256)
 
     def test_it_reports_every_value_and_no_others(self) -> None:
-        found = identity.measure(IMAGE)
+        # Arrange
+        data = IMAGE
 
+        # Act
+        found = identity.measure(data)
+
+        # Assert
         self.assertEqual(sorted(found), ["crc32", "md5", "sha1", "sha256", "size"])
 
     def test_an_empty_image_is_measured_rather_than_refused(self) -> None:
-        found = identity.measure(b"")
+        # Arrange
+        data = b""
 
-        self.assertEqual(found["size"], 0)
-        self.assertEqual(found["sha256"], hashlib.sha256(b"").hexdigest())
+        # Act
+        found = identity.measure(data)
+
+        # Assert
+        self.assertEqual((found["size"], found["sha256"]), (0, EMPTY_SHA256))
 
     def test_two_images_of_one_length_are_told_apart(self) -> None:
-        other = bytes(32768)
+        # Arrange
+        other = identity.measure(bytes(32768))
 
-        self.assertNotEqual(identity.measure(IMAGE), identity.measure(other))
+        # Act
+        found = identity.measure(IMAGE)
+
+        # Assert
+        self.assertNotEqual(found, other)
 
 
 class AuthorityTest(unittest.TestCase):
     def test_one_value_decides_and_it_is_named(self) -> None:
-        self.assertEqual(identity.AUTHORITATIVE, "sha256")
+        # Arrange
+        published = smsimage.AUTHORITATIVE
+
+        # Act
+        named = str(published)
+
+        # Assert
+        self.assertEqual(named, "sha256")
 
     def test_the_deciding_value_is_one_of_the_values_measured(self) -> None:
-        self.assertIn(identity.AUTHORITATIVE, identity.measure(IMAGE))
+        # Arrange
+        deciding = smsimage.AUTHORITATIVE
 
-    def test_the_weaker_values_are_named_as_what_they_are_for(self) -> None:
-        self.assertEqual(sorted(identity.CROSS_REFERENCE), ["crc32", "md5", "sha1", "size"])
+        # Act
+        found = identity.measure(IMAGE)
+
+        # Assert
+        self.assertIn(deciding, found)
+
+    def test_the_weaker_values_never_decide(self) -> None:
+        # Arrange
+        found = identity.measure(IMAGE)
+        weaker = [key for key in found if key != "sha256"]
+
+        # Act
+        verdicts = [
+            identity.agrees(found, {**found, key: "something else", "sha256": "0" * 64})
+            for key in weaker
+        ]
+
+        # Assert
+        self.assertEqual(
+            (sorted(weaker), verdicts), (["crc32", "md5", "sha1", "size"], [False] * 4)
+        )
 
 
 class AgreesTest(unittest.TestCase):
     def test_a_matching_deciding_value_agrees(self) -> None:
+        # Arrange
         found = identity.measure(IMAGE)
 
-        self.assertTrue(identity.agrees(found, {"sha256": found["sha256"]}))
+        # Act
+        agreed = identity.agrees(found, {"sha256": found["sha256"]})
+
+        # Assert
+        self.assertTrue(agreed)
 
     def test_a_different_deciding_value_disagrees(self) -> None:
+        # Arrange
         found = identity.measure(IMAGE)
 
-        self.assertFalse(identity.agrees(found, {"sha256": "0" * 64}))
+        # Act
+        agreed = identity.agrees(found, {"sha256": "0" * 64})
+
+        # Assert
+        self.assertFalse(agreed)
 
     def test_it_decides_on_that_value_alone_even_when_the_others_match(self) -> None:
+        # Arrange
         found = identity.measure(IMAGE)
-        expected = dict(found)
-        expected["sha256"] = "0" * 64
+        expected = {**found, "sha256": "0" * 64}
 
-        self.assertFalse(identity.agrees(found, expected))
+        # Act
+        agreed = identity.agrees(found, expected)
+
+        # Assert
+        self.assertFalse(agreed)
 
     def test_it_decides_on_that_value_alone_even_when_the_others_differ(self) -> None:
+        # Arrange
         found = identity.measure(IMAGE)
         expected = {"sha256": found["sha256"], "crc32": "deadbeef", "size": 1}
 
-        self.assertTrue(identity.agrees(found, expected))
+        # Act
+        agreed = identity.agrees(found, expected)
+
+        # Assert
+        self.assertTrue(agreed)
 
     def test_it_compares_the_value_without_regard_to_case(self) -> None:
-        found = identity.measure(IMAGE)
+        # Arrange
+        found = identity.measure(ABC)
 
-        self.assertTrue(identity.agrees(found, {"sha256": found["sha256"].upper()}))
+        # Act
+        agreed = identity.agrees(found, {"sha256": ABC_SHA256.upper()})
+
+        # Assert
+        self.assertTrue(agreed)
 
     def test_a_record_carrying_no_deciding_value_is_refused(self) -> None:
+        # Arrange
         found = identity.measure(IMAGE)
 
-        with self.assertRaises(errors.NoAuthority):
-            identity.agrees(found, {"crc32": found["crc32"], "size": found["size"]})
+        def attempt() -> Any:
+            return identity.agrees(found, {"crc32": found["crc32"], "size": 32768})
 
-    def test_the_refusal_names_what_was_missing(self) -> None:
-        found = identity.measure(IMAGE)
+        # Act
+        with self.assertRaises(smsimage.NoAuthority) as caught:
+            attempt()
 
-        with self.assertRaises(errors.NoAuthority) as caught:
-            identity.agrees(found, {"crc32": found["crc32"]})
-
-        self.assertIn("sha256", str(caught.exception))
+        # Assert
+        self.assertEqual(str(caught.exception), "nothing decides: no sha256 to compare")
 
     def test_a_measurement_carrying_no_deciding_value_is_refused_too(self) -> None:
-        with self.assertRaises(errors.NoAuthority):
-            identity.agrees({"crc32": "deadbeef"}, {"sha256": "0" * 64})
+        # Arrange
+        def attempt() -> Any:
+            return identity.agrees({"crc32": "deadbeef"}, {"sha256": "0" * 64})
+
+        # Act
+        with self.assertRaises(smsimage.NoAuthority) as caught:
+            attempt()
+
+        # Assert
+        self.assertEqual(str(caught.exception), "nothing decides: no sha256 to compare")
 
 
 if __name__ == "__main__":

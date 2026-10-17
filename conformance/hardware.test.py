@@ -13,16 +13,17 @@ HELD: dict[str, Any] = json.loads((ROOT / "conformance" / "hardware.json").read_
 
 FACTS: dict[str, Any] = HELD["facts"]
 
-LARGEST_ANCHOR = header.CANDIDATES[0]
+LARGEST_ANCHOR: int = FACTS["headerAddress"]["value"]
 
+PRINTED_STRING = bytes(FACTS["openingString"]["value"])
 
-def relative(address: int) -> int:
-    return address - LARGEST_ANCHOR
-
+COMPARED = 8
 
 IMAGE_BYTES = 0x8000
 
 FILLED = 0xFF
+
+NIBBLES = range(0x10)
 
 
 def stamped(address: int, data: bytes) -> dict[int, int]:
@@ -37,7 +38,11 @@ def an_image(writes: dict[int, int]) -> bytes:
 
 
 def a_header() -> dict[int, int]:
-    return stamped(FACTS["headerAddress"]["value"], header.MAGIC)
+    return stamped(LARGEST_ANCHOR, PRINTED_STRING)
+
+
+def with_code(code: int) -> bytes:
+    return an_image({**a_header(), FACTS["sizeCodeAddress"]["value"]: code})
 
 
 def read_as(image: bytes) -> tuple[int | None, int | None]:
@@ -100,9 +105,15 @@ class PlacementTest(unittest.TestCase):
     def test_the_header_is_looked_for_first_where_the_manual_puts_it(self) -> None:
         # Arrange
         printed = FACTS["headerAddress"]["value"]
+        smaller = [one["header"] for one in FACTS["sizeCodes"]["value"].values() if "header" in one]
+        writes = {
+            key: value
+            for where in (*smaller, printed)
+            for key, value in stamped(where, PRINTED_STRING).items()
+        }
 
         # Act
-        first = header.CANDIDATES[0]
+        first = header.anchor_of(an_image(writes))
 
         # Assert
         self.assertEqual(first, printed)
@@ -110,45 +121,51 @@ class PlacementTest(unittest.TestCase):
     def test_and_at_every_smaller_address_the_size_codes_name(self) -> None:
         # Arrange
         smaller = {one["header"] for one in FACTS["sizeCodes"]["value"].values() if "header" in one}
+        writes = {
+            key: value for where in smaller for key, value in stamped(where, PRINTED_STRING).items()
+        }
 
         # Act
-        looked_at = set(header.CANDIDATES)
+        looked_at = set(header.anchors_in(an_image(writes)))
 
         # Assert
-        self.assertLessEqual(smaller, looked_at)
+        self.assertEqual(looked_at, smaller)
 
     def test_the_checksum_sits_at_the_two_bytes_the_manual_names(self) -> None:
         # Arrange
         printed = FACTS["checksum"]["value"]
+        serial = FACTS["serialNumber"]["value"]
+        image = an_image(
+            {**a_header(), printed["first"]: 0x34, printed["last"]: 0x12, serial["first"]: FILLED}
+        )
 
         # Act
-        held = (header.CHECKSUM.start, header.CHECKSUM.stop - 1)
+        carried = header.carried(image)
 
         # Assert
-        self.assertEqual(held, (relative(printed["first"]), relative(printed["last"])))
+        self.assertEqual(carried, 0x1234)
 
     def test_and_is_read_low_byte_first(self) -> None:
         # Arrange
-        image = bytearray(0x8000)
-        image[LARGEST_ANCHOR : LARGEST_ANCHOR + len(header.MAGIC)] = header.MAGIC
-        image[LARGEST_ANCHOR + header.CHECKSUM.start] = 0x34
-        image[LARGEST_ANCHOR + header.CHECKSUM.start + 1] = 0x12
+        printed = FACTS["checksum"]["value"]
+        image = an_image({**a_header(), printed["first"]: 0x34, printed["last"]: 0x12})
 
         # Act
-        carried = header.carried(bytes(image))
+        carried = header.carried(image)
 
         # Assert
-        self.assertEqual((FACTS["checksum"]["value"]["order"], carried), ("little", 0x1234))
+        self.assertEqual((printed["order"], carried), ("little", 0x1234))
 
     def test_the_size_code_is_read_from_the_byte_the_manual_names(self) -> None:
         # Arrange
         printed = FACTS["sizeCodeAddress"]["value"]
+        image = an_image({**a_header(), printed - 1: 76, printed: 77})
 
         # Act
-        held = header.REGION_AND_SIZE
+        held = header.declared_size(image)
 
         # Assert
-        self.assertEqual(held, relative(printed))
+        self.assertEqual(held, FACTS["sizeCodes"]["value"]["77"]["bytes"])
 
     def test_the_serial_and_revision_sit_between_the_checksum_and_the_size_code(self) -> None:
         # Arrange
@@ -169,34 +186,38 @@ class PlacementTest(unittest.TestCase):
     def test_the_header_is_as_long_as_the_fields_the_manual_lists(self) -> None:
         # Arrange
         span = FACTS["sizeCodeAddress"]["value"] - FACTS["headerAddress"]["value"] + 1
+        image = an_image({**a_header(), LARGEST_ANCHOR + span - 1: 77})
 
         # Act
-        held = header.LENGTH
+        held = header.declared_size(image)
 
         # Assert
-        self.assertEqual(held, span)
+        self.assertEqual((span, held), (0x10, FACTS["sizeCodes"]["value"]["77"]["bytes"]))
 
 
 class OpeningStringTest(unittest.TestCase):
     def test_the_string_looked_for_is_how_the_printed_one_begins(self) -> None:
         # Arrange
         printed = bytes(FACTS["openingString"]["value"])
+        begun = an_image(stamped(LARGEST_ANCHOR, printed[:COMPARED]))
+        short = an_image(stamped(LARGEST_ANCHOR, printed[: COMPARED - 1]))
 
         # Act
-        begins = printed.startswith(header.MAGIC)
+        found = (header.anchor_of(begun), header.anchor_of(short))
 
         # Assert
-        self.assertTrue(begins, printed)
+        self.assertEqual(found, (LARGEST_ANCHOR, None))
 
     def test_and_stops_short_of_the_two_spaces_the_library_mostly_lacks(self) -> None:
         # Arrange
-        printed = bytes(FACTS["openingString"]["value"])
+        lacking = PRINTED_STRING[:COMPARED] + bytes([FILLED, FILLED])
+        image = an_image(stamped(LARGEST_ANCHOR, lacking))
 
         # Act
-        left_out = printed[len(header.MAGIC) :]
+        found = header.anchor_of(image)
 
         # Assert
-        self.assertEqual(left_out, b"  ")
+        self.assertEqual((PRINTED_STRING[COMPARED:], found), (b"  ", LARGEST_ANCHOR))
 
 
 class SizeCodeTest(unittest.TestCase):
@@ -205,17 +226,17 @@ class SizeCodeTest(unittest.TestCase):
         codes = [int(code) for code in FACTS["sizeCodes"]["value"]]
 
         # Act
-        regions = {header.REGIONS[code >> 4] for code in codes}
+        regions = {header.region_of(with_code(code)) for code in codes}
 
         # Assert
-        self.assertEqual(regions, {header.SMS_EXPORT})
+        self.assertEqual(regions, {"sms-export"})
 
     def test_every_printed_code_reads_as_the_size_the_manual_gives_it(self) -> None:
         # Arrange
         printed = FACTS["sizeCodes"]["value"]
 
         # Act
-        read = {code: header.SIZES[int(code) & 0x0F] for code in printed}
+        read = {code: header.declared_size(with_code(int(code))) for code in printed}
 
         # Assert
         self.assertEqual(read, {code: one["bytes"] for code, one in printed.items()})
@@ -245,7 +266,7 @@ class ReadingTest(unittest.TestCase):
     def test_a_header_opened_at_the_printed_address_is_found_there(self) -> None:
         # Arrange
         printed = FACTS["headerAddress"]["value"]
-        image = an_image(stamped(printed, header.MAGIC))
+        image = an_image(stamped(printed, PRINTED_STRING[:COMPARED]))
 
         # Act
         found = header.anchor_of(image)
@@ -289,13 +310,9 @@ class ReadingTest(unittest.TestCase):
     def test_every_printed_size_code_declares_the_printed_size(self) -> None:
         # Arrange
         printed = FACTS["sizeCodes"]["value"]
-        where = FACTS["sizeCodeAddress"]["value"]
 
         # Act
-        read = {
-            code: header.declared_size(an_image({**a_header(), where: int(code)}))
-            for code in printed
-        }
+        read = {code: header.declared_size(with_code(int(code))) for code in printed}
 
         # Assert
         self.assertEqual(read, {code: one["bytes"] for code, one in printed.items()})
@@ -305,7 +322,10 @@ class ReadingTest(unittest.TestCase):
         printed = [one["header"] for one in FACTS["sizeCodes"]["value"].values() if "header" in one]
 
         # Act
-        found = [header.anchor_of(an_image(stamped(where, header.MAGIC))) for where in printed]
+        found = [
+            header.anchor_of(an_image(stamped(where, PRINTED_STRING[:COMPARED])))
+            for where in printed
+        ]
 
         # Assert
         self.assertEqual(found, printed)
@@ -357,20 +377,20 @@ class NotStatedTest(unittest.TestCase):
         printed = {int(code) >> 4 for code in FACTS["sizeCodes"]["value"]}
 
         # Act
-        beyond = set(header.REGIONS) - printed
+        named = {one for one in NIBBLES if header.region_of(with_code(one << 4 | 0xC))}
 
         # Assert
-        self.assertEqual(beyond, {0x3, 0x5, 0x6, 0x7})
+        self.assertEqual(named - printed, {0x3, 0x5, 0x6, 0x7})
 
     def test_and_sizes_larger_than_any_it_prints(self) -> None:
         # Arrange
         printed = {int(code) & 0x0F for code in FACTS["sizeCodes"]["value"]}
 
         # Act
-        beyond = set(header.SIZES) - printed
+        named = {one for one in NIBBLES if header.declared_size(with_code(0x40 | one))}
 
         # Assert
-        self.assertEqual(beyond, {0x1, 0x2})
+        self.assertEqual(named - printed, {0x1, 0x2})
 
 
 if __name__ == "__main__":
