@@ -1,3 +1,4 @@
+---
 name: CI
 
 on:
@@ -48,6 +49,11 @@ jobs:
 
       - name: Lint the workflows
         uses: raven-actions/actionlint@v2
+
+      - name: Lint every YAML file
+        run: |
+          pipx install yamllint==1.38.0
+          yamllint --strict .
 
       - name: Lint the shell scripts
         run: |
