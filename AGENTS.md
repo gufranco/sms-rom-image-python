@@ -158,6 +158,20 @@ their reasons live here:
 - The two ellipsis patterns in the coverage exclusions: a protocol method has no
   body to run, whether the ellipsis sits on its own line or after the
   signature. The same version split applies.
+- `@unittest\.skipUnless\(CLOCKED,` in the coverage exclusions: this member is
+  not a clocked part, so the family tests that drive a clock are skipped here
+  and their bodies never run.
+- `@unittest\.skipUnless\(A_PART,`,
+  `@unittest\.skipUnless\(A_PART and BUILDABLE,` and
+  `^def accounts_for_a_reset\(` in the coverage exclusions: this member is not a
+  part, so the family tests that build a `Chip` and account for its reset are
+  skipped here and their bodies never run.
+- `@unittest\.skipUnless\(VARIANTS,` and `^def built\(` in the coverage
+  exclusions: this package names no variants, so the family test that finds each
+  one built in the readme is skipped here.
+- `@unittest\.skipUnless\(SOLD_AS_A_COMPONENT,`, `^def machine_mentions\(` and
+  `^def listing\(` in the coverage exclusions: this part only existed inside one
+  machine, so the family sweep for machine names is skipped here.
 
 ## Layout
 
@@ -188,7 +202,9 @@ conformance/
   speed.py          the throughput floor
   package.py        the wheel audit
   source.py         the check that no documentation string remains
-  family.test.py    the family standard, held as tests
+  family_*.test.py  the family standard, held as tests, one topic a file
+  family_member.py  what this member answers to them
+  family_shared.py  what more than one of them reads
 ```
 
 ## Things that will bite you
