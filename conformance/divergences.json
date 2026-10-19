@@ -1,7 +1,7 @@
 {
   "note": "Every place Sega's manual and the cartridge library disagree, and every place this package reads something the manual does not settle. Each entry names what the document says, what the cartridges and the boot programs do, which one this package follows, and what evidence would close or reopen the question.",
   "authority": "hardware.json holds the ladder. Rung 1 is Sega's reference manual, rung 2 is Sega's own boot programs and the cartridges, rung 3 is nothing. The manual is a retyped instruction to licensees, so where the boot program that actually reads the header disagrees with it, the boot program decides, and packageFollows names it as microcode.",
-  "readOn": "2026-10-15",
+  "readOn": "2026-10-19",
   "divergences": [
     {
       "id": "checksum-coverage",
@@ -19,11 +19,13 @@
         "why": "The v1.3 export boot program, read at 0x02EA, sums from address 0 for the table's span, 0x1FF0, 0x3FF0, 0x7FF0 or 0xBFF0, and then the banks its second table counts, and compares the result with the stored word at 0x011E. conformance/boot.py reads both tables out of that program and checks them against this package."
       },
       "measured": {
-        "subjects": 2418,
-        "note": "Distinct images that carry a header and declare a size this reading knows, walked by conformance/census.py over the Master System and Game Gear libraries.",
-        "documentRule": "0 of 2418 agree",
-        "packageRule": "971 of 2418 agree",
-        "measuredBy": "python3 -m conformance.divergences <library> for the document rule; the package rule is the corpus figure"
+        "subjects": 2463,
+        "note": "Distinct images that carry a header and declare a size this reading knows, walked by conformance/census.py over the Master System, Game Gear and SG-1000 libraries.",
+        "documentRule": "0 of 2463 agree",
+        "packageRule": "1011 of 2463 agree",
+        "measuredBy": "python3 -m conformance.divergences <library> for the document rule; the package rule is the corpus figure; python3 -m conformance.boot <program> [program ...] reads each program's tables",
+        "otherBootPrograms": "Nine of the declared boot programs run the sum: the v1.0 prototype, v1.3, the store display unit, and the ones built into Sonic The Hedgehog, both Alex Kidd in Miracle World releases, Hang On v3.4, Hang On & Safari Hunt v2.4 and Missile Defense 3-D v4.4. All nine hold the same first span for every size code and the same bank count for every code but 2, gate on region 4 and compare eight bytes. The Europe v2.0 program carries the routine and its tables and calls neither; the Japan v2.1, the M404 prototype and the Korean Alex Kidd carry no TMR SEGA string to compare.",
+        "retailUnreproduced": "23 of the 393 retail Master System cartridges judged. 16 carry a region nibble other than 4, which none of the nine programs checks. The other 7 declare 32K, 128K or 256K, where all nine programs read the same table, so no boot program on disk reproduces them."
       },
       "packageFollows": "microcode",
       "wouldReopenIt": "Another export boot program summing a different span, read the same way."
@@ -44,9 +46,9 @@
         "why": "The export boot program compares eight bytes at 0x02D0 and the Game Gear boot program eight at 0x0114, and most headers carry other bytes where the two spaces would be."
       },
       "measured": {
-        "subjects": 2421,
+        "subjects": 2466,
         "note": "Distinct images with the eight-byte string at one of the three candidate addresses.",
-        "withTheTwoSpaces": "399 of 2421",
+        "withTheTwoSpaces": "400 of 2466",
         "measuredBy": "python3 -m conformance.divergences <library>"
       },
       "packageFollows": "microcode",
@@ -68,7 +70,7 @@
         "why": "The export boot program checks the sum only on region 4 and fails every other, the Japanese boot program never looks for a header and the Game Gear's ignores the region, so no boot program names the other codes. They are named after the cartridges that carry them."
       },
       "measured": {
-        "subjects": 2610,
+        "subjects": 2922,
         "smsJapan": "31 images, 12 of them reproducing their checksum",
         "ggJapan": "240 images",
         "ggExport": "335 images, 3 of them reproducing their checksum",
@@ -80,8 +82,8 @@
     {
       "id": "unprinted-size-codes",
       "severity": "low",
-      "status": "closed",
-      "topic": "The size codes above 256K.",
+      "status": "narrowed",
+      "topic": "The size codes above 256K, and how many banks code 2 adds.",
       "documentSays": {
         "rung": 1,
         "claim": "The largest code printed is 256K.",
@@ -90,15 +92,15 @@
       },
       "thisPackageDid": {
         "claim": "Reads a low nibble of 1 as 512K and 2 as 1M.",
-        "why": "The export boot program's bank table adds 30 banks for code 1 and 62 for code 2, which is 512K and 1M counted from address 0."
+        "why": "The v1.3 export boot program's bank table adds 30 banks for code 1 and 62 for code 2, which is 512K and 1M counted from address 0. In every program that runs the sum, the byte read for code 2 is the first byte of the instruction after the fourth entry, the one the program jumps to once the sum agrees. Hang On v3.4, Hang On & Safari Hunt v2.4 and Missile Defense 3-D v4.4 put another instruction there and read 33 banks for code 2. Every program that runs the sum reads 30 for code 1."
       },
       "measured": {
-        "subjects": 19,
-        "declared512K": "17 images, 13 of them reproducing their checksum",
-        "declared1M": "2 images, 1 of them reproducing its checksum"
+        "subjects": 20,
+        "declared512K": "18 images, 13 of them reproducing their checksum",
+        "declared1M": "2 images, 1 of them reproducing its checksum, and neither long enough for 33 and 62 banks to sum differently"
       },
       "packageFollows": "microcode",
-      "wouldReopenIt": "An export boot program whose bank table counts those codes differently."
+      "wouldCloseIt": "A 1M image declaring code 2 under region 4 whose stored sum agrees with 33 banks or with 62, or a Sega document that names the bank count for 1M."
     }
   ]
 }

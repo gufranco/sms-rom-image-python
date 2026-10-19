@@ -1,6 +1,6 @@
 # SMS ROM Image
 
-把 Sega Master System、Game Gear 或 SG-1000 卡帶映像檔當作檔案讀取。手冊有說明之處以 Sega 的 Mark III 參考手冊為準，手冊未說明之處以出口版開機程式和 2,610 個真實映像檔為準。
+把 Sega Master System、Game Gear 或 SG-1000 卡帶映像檔當作檔案讀取。手冊有說明之處以 Sega 的 Mark III 參考手冊為準，手冊未說明之處以出口版開機程式和 2,922 個真實映像檔為準。
 
 [English](README.md) | [日本語](README.ja.md) | [简体中文](README.zh-Hans.md) | 繁體中文（香港）
 
@@ -8,7 +8,7 @@
 [![Release](https://img.shields.io/github/v/release/gufranco/sms-rom-image-python)](https://github.com/gufranco/sms-rom-image-python/releases)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-**2,610** 個不同的映像檔，量度自 **5,111** 個壓縮檔項目，**0** 個屬性失敗，其中 **2,408** 個在 `0x7FF0` 讀到檔頭，**393** 個零售版 Master System 卡帶中有 **370** 個重現了儲存的校驗和，**14** 個開機程式以摘要值聲明，**750** 個測試，**100%** 語句及分支覆蓋率，沒有依賴項
+**2,922** 個不同的映像檔，量度自 **5,425** 個壓縮檔項目，**0** 個屬性失敗，其中 **2,453** 個在 `0x7FF0` 讀到檔頭，**393** 個零售版 Master System 卡帶中有 **370** 個重現了儲存的校驗和，**14** 個開機程式以摘要值聲明，**750** 個測試，**100%** 語句及分支覆蓋率，沒有依賴項
 
 ```python
 from smsimage import dump, header
@@ -70,7 +70,7 @@ python3 smsimage/doctor.py
 | [`identity`](smsimage/identity.py) | 甚麼令這個檔案成為它本身，由哪個值決定 |
 | [`manifest`](smsimage/manifest.py) | 讀取者提供了錯誤的檔案時，是哪一種錯誤 |
 
-對映像檔的每個查詢，在沒有可讀內容時都回答 `None`，而不會拋出例外。缺少檔頭是正常狀態：2,610 個映像檔中有 189 個沒有檔頭。
+對映像檔的每個查詢，在沒有可讀內容時都回答 `None`，而不會拋出例外。缺少檔頭是正常狀態：2,922 個映像檔中有 456 個沒有檔頭。
 
 ### 讀取傾印
 
@@ -315,26 +315,26 @@ bare stubbed sha256
 
 ## 真實遊戲庫實際包含甚麼
 
-Sega 的 _Software Reference Manual for the SEGA Mark III Console_ 在第 22 頁列出檔頭，而 [`conformance/hardware.json`](conformance/hardware.json) 保存了手冊陳述的每項事實及其出處句子。這是一份重新打字的副本，打字者不詳。手冊與卡帶不一致時以卡帶為準，[`conformance/divergences.json`](conformance/divergences.json) 記錄每項不一致及其量度結果。以下每個數字都是在進行普查的 Master System 和 Game Gear 遊戲庫上量度所得，以映像檔位元組的 SHA-256 為鍵，所以計數是映像檔的數目，而不是檔名的數目。
+Sega 的 _Software Reference Manual for the SEGA Mark III Console_ 在第 22 頁列出檔頭，而 [`conformance/hardware.json`](conformance/hardware.json) 保存了手冊陳述的每項事實及其出處句子。這是一份重新打字的副本，打字者不詳。手冊與卡帶不一致時以卡帶為準，[`conformance/divergences.json`](conformance/divergences.json) 記錄每項不一致及其量度結果。以下每個數字都是在進行普查的 Master System、Game Gear 和 SG-1000 遊戲庫上量度所得，以映像檔位元組的 SHA-256 為鍵，所以計數是映像檔的數目，而不是檔名的數目。
 
 | 量度項目                                          |  數目 |
 | :------------------------------------------------ | ----: |
-| 讀取的壓縮檔項目                                  | 5,111 |
-| 不同的映像檔                                      | 2,610 |
-| 重複列出已見過的映像檔                            | 2,501 |
-| 檔頭只在 `0x7FF0`                                 | 2,406 |
+| 讀取的壓縮檔項目                                  | 5,425 |
+| 不同的映像檔                                      | 2,922 |
+| 重複列出已見過的映像檔                            | 2,503 |
+| 檔頭只在 `0x7FF0`                                 | 2,450 |
 | 檔頭在 `0x3FF0` / `0x1FF0`                        | 8 / 5 |
-| 檔頭同時在 `0x3FF0` 和 `0x7FF0`，從 `0x7FF0` 讀取 |     2 |
-| 任何候選偏移位置都沒有檔頭                        |   189 |
+| 檔頭同時在 `0x3FF0` 和 `0x7FF0`，從 `0x7FF0` 讀取 |     3 |
+| 任何候選偏移位置都沒有檔頭                        |   456 |
 | 帶有 512 位元組拷貝機區塊                         |    17 |
 
 其中有五件事，會令按描述編寫的讀取程式出錯。
 
-**檔頭並非普遍存在。** 189 個映像檔沒有檔頭，其中只有 18 個短得無法在 `0x7FF0` 容納檔頭。所以每個查詢都回答 `None`，而不是拋出例外。
+**檔頭並非普遍存在。** 456 個映像檔沒有檔頭，其中只有 76 個短得無法在 `0x7FF0` 容納檔頭。其中 205 個是零售版 SG-1000 卡帶，沒有一個帶有檔頭：對甚麼都回答有的檔頭搜尋器，正是靠這個對照組發現的。所以每個查詢都回答 `None`，而不是拋出例外。
 
 **沒有檔頭的地方也會出現魔術字串。** 作為原始檔案讀取時，141 個映像檔在三個候選偏移位置以外帶有 `TMR SEGA`。其中 16 個是帶拷貝機區塊的映像檔，在區塊移除之前，它們的檔頭位於 `0x81F0`。其餘位於記憶庫邊界，這正是多合一卡帶或過量傾印的特徵。只會搜尋這三個候選位置。
 
-**有兩個映像檔在兩個候選位置都帶有魔術字串。** 最大的位置優先，而 `anchors_in` 會報告每個匹配，讓呼叫者看到這種歧義。
+**有三個映像檔在兩個候選位置都帶有魔術字串。** 最大的位置優先，而 `anchors_in` 會報告每個匹配，讓呼叫者看到這種歧義。
 
 ```python
 from smsimage import header
@@ -354,7 +354,7 @@ print(header.anchor_of(bytes(0x8000)))
 None
 ```
 
-**魔術字串之後的兩個位元組並非保留位元組。** 手冊把它們印作兩個空格 `20 20`，但 2,421 個檔頭中只有 399 個帶有這兩個位元組。`00 00` 出現在 1,107 個檔頭上，`FF FF` 出現在 525 個上，之後還有一長串其他值。出口版和 Game Gear 開機程式都比較八個位元組 `TMR SEGA`，本套件也一樣。`python3 -m conformance.divergences <library>` 可量度這些數值。
+**魔術字串之後的兩個位元組並非保留位元組。** 手冊把它們印作兩個空格 `20 20`，但 2,466 個檔頭中只有 400 個帶有這兩個位元組。`00 00` 出現在 1,149 個檔頭上，`FF FF` 出現在 527 個上，之後還有一長串其他值。出口版和 Game Gear 開機程式都比較八個位元組 `TMR SEGA`，本套件也一樣。`python3 -m conformance.divergences <library>` 可量度這些數值。
 
 **Game Gear 卡帶通常不儲存校驗和。** 在 Game Gear 集合中帶有檔頭的 1,105 個不同映像檔裏，1,018 個儲存的值為零，48 個重現了規則，這是 `python3 -m conformance.divergences` 只對該集合量度的結果。Game Gear 開機程式在三個位址尋找 `TMR SEGA`，此外甚麼都不檢查，所以該遊戲機上從來沒有任何東西讀取過儲存的值。`header.agrees` 對這些映像檔回答 `False`，這是關於遊戲機的陳述，而不是關於檔案的陳述。
 
@@ -362,15 +362,17 @@ None
 
 ## 校驗和規則
 
-這條規則就是出口版開機程式執行的規則，讀取自 [`artifacts.manifest.json`](artifacts.manifest.json) 中聲明的 v1.3 程式。每個大小代碼指定一個首段範圍，即 `0x1FF0`、`0x3FF0`、`0x7FF0`，或 48K 時為 `0xBFF0`，並把範圍以下的位元組加總。從 64K 起，再加上從第三個開始的完整 16K 記憶庫：64K 加 2 個，128K 加 6 個，256K 加 14 個，512K 加 30 個，1M 加 62 個。只保留低十六位。`python3 -m conformance.boot <program> [program ...]` 從每個執行加總的已聲明程式讀出兩個表、八位元組比較和區域檢查條件，並與本套件核對。手冊說只需排除兩個校驗和位元組，而按這種解讀，2,418 個映像檔中沒有一個能重現儲存的值。
+這條規則就是出口版開機程式執行的規則，讀取自 [`artifacts.manifest.json`](artifacts.manifest.json) 中聲明的 v1.3 程式。每個大小代碼指定一個首段範圍，即 `0x1FF0`、`0x3FF0`、`0x7FF0`，或 48K 時為 `0xBFF0`，並把範圍以下的位元組加總。從 64K 起，再加上從第三個開始的完整 16K 記憶庫：64K 加 2 個，128K 加 6 個，256K 加 14 個，512K 加 30 個，1M 加 62 個。只保留低十六位。`python3 -m conformance.boot <program> [program ...]` 從每個執行加總的已聲明程式讀出兩個表、八位元組比較和區域檢查條件，並與本套件核對。這樣的程式有九個，九個的首段範圍和 512K 以內的記憶庫數目都相同。到 1M 時出現分歧：v1.3 和另外五個讀出 62 個記憶庫，Hang On v3.4、Hang On & Safari Hunt v2.4 和 Missile Defense 3-D v4.4 讀出 33 個，而遊戲庫中沒有任何映像檔能分辨兩者。手冊說只需排除兩個校驗和位元組，而按這種解讀，2,463 個映像檔中沒有一個能重現儲存的值。
 
-| 群體                                                                                                            |                重現 |
-| :-------------------------------------------------------------------------------------------------------------- | ------------------: |
-| 零售版 Master System 卡帶，即 Master System 集合中的四個地區資料夾，由 `python3 -m conformance.categories` 量度 |   393 個中的 370 個 |
-| Master System 集合中所有帶有檔頭且大小為本解讀所知的映像檔，包括修改過的映像檔                                  | 1,331 個中的 925 個 |
-| 所有帶有檔頭且大小為本解讀所知的映像檔                                                                          | 2,418 個中的 971 個 |
+| 群體                                                                                                            |                  重現 |
+| :-------------------------------------------------------------------------------------------------------------- | --------------------: |
+| 零售版 Master System 卡帶，即 Master System 集合中的四個地區資料夾，由 `python3 -m conformance.categories` 量度 |     393 個中的 370 個 |
+| Master System 集合中所有帶有檔頭且大小為本解讀所知的映像檔，包括修改過的映像檔                                  |   1,331 個中的 925 個 |
+| 所有帶有檔頭且大小為本解讀所知的映像檔                                                                          | 2,463 個中的 1,011 個 |
 
 修改過的映像檔不一致，原因屬於修改本身：據 `python3 -m conformance.categories` 量度，翻譯版在 301 個中有 78 個重現規則，改版在 129 個中有 33 個。因此普查把一致與否作為觀察結果報告，而不以它作為關卡檢查。
+
+沒有任何其他開機程式能解釋 23 個無法重現的零售卡帶。其中 16 個的區域半位元組不是 `0x4`，九個程式都不會對這些檢查總和。其餘 7 個聲明 32K、128K 或 256K，九個程式在這些大小上讀的是同一個表。
 
 ## 普查，以及它的輸出為何可以發佈
 
@@ -380,7 +382,7 @@ None
 python3 -m conformance.census /path/to/library.zip /path/to/another
 ```
 
-它按 SHA-256 把每個不同的映像檔只計算一次，對每個映像檔檢查六項屬性，報告一項觀察結果，並寫入 [`conformance/corpus.json`](conformance/corpus.json)：145 種由形式、長度、錨點、區域、聲明大小，以及儲存的校驗和是否重現所構成的組合，每種組合附有計數。不含標題，也不含內容，所以其中沒有任何東西能重建任何卡帶的任何部分。
+它按 SHA-256 把每個不同的映像檔只計算一次，對每個映像檔檢查六項屬性，報告一項觀察結果，並寫入 [`conformance/corpus.json`](conformance/corpus.json)：151 種由形式、長度、錨點、區域、聲明大小，以及儲存的校驗和是否重現所構成的組合，每種組合附有計數。不含標題，也不含內容，所以其中沒有任何東西能重建任何卡帶的任何部分。
 
 | 結束代碼 | 條件                             |
 | :------- | :------------------------------- |
@@ -396,9 +398,9 @@ python3 -m conformance.census /path/to/library.zip /path/to/another
 
 手冊列出的每項事實，只要測試能觸及，都會與程式碼核對。[`conformance/hardware.json`](conformance/hardware.json) 記錄每項事實及其句子和頁碼，[`conformance/hardware.test.py`](conformance/hardware.test.py) 把它們與套件中的常數比較。`python3 -m conformance.documents` 取得手冊後，`python3 -m conformance.quotes` 會在手冊中找出每個引用的句子。
 
-`python3 -m conformance.corpus` 在沒有遊戲庫的情況下，把 [`conformance/corpus.json`](conformance/corpus.json) 中的 145 種組合對套件重播，測試套件則根據該檔案核對主要計數。`python3 -m conformance.speed` 要求 256K 映像檔的校驗和計算速度不低於每秒 130 次。
+`python3 -m conformance.corpus` 在沒有遊戲庫的情況下，把 [`conformance/corpus.json`](conformance/corpus.json) 中的 151 種組合對套件重播，測試套件則根據該檔案核對主要計數。`python3 -m conformance.speed` 要求 256K 映像檔的校驗和計算速度不低於每秒 130 次。
 
-讀取者可能需要的開機程式在 [`artifacts.manifest.json`](artifacts.manifest.json) 中以大小、CRC32、SHA-1 和 SHA-256 聲明。它們都不在本儲存庫中，這裏也沒有說明從哪裏取得。[OPEN-QUESTIONS.md](OPEN-QUESTIONS.md) 列出 Sega 的資料都未能解決的 2 個問題，以及解決每個問題需要甚麼。
+讀取者可能需要的開機程式在 [`artifacts.manifest.json`](artifacts.manifest.json) 中以大小、CRC32、SHA-1 和 SHA-256 聲明。它們都不在本儲存庫中，這裏也沒有說明從哪裏取得。[OPEN-QUESTIONS.md](OPEN-QUESTIONS.md) 列出 Sega 的資料都未能解決的 3 個問題，以及解決每個問題需要甚麼。
 
 ## 參與開發
 

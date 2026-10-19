@@ -9,6 +9,15 @@
     "count": 240
   },
   {
+    "anchor": null,
+    "carried": null,
+    "declared": null,
+    "form": "bare",
+    "region": null,
+    "size": 32768,
+    "count": 213
+  },
+  {
     "anchor": 32752,
     "carried": false,
     "declared": 262144,
@@ -55,6 +64,15 @@
   },
   {
     "anchor": 32752,
+    "carried": true,
+    "declared": 32768,
+    "form": "bare",
+    "region": "sms-export",
+    "size": 32768,
+    "count": 131
+  },
+  {
+    "anchor": 32752,
     "carried": false,
     "declared": 262144,
     "form": "bare",
@@ -70,15 +88,6 @@
     "region": "gg-export",
     "size": 262144,
     "count": 113
-  },
-  {
-    "anchor": 32752,
-    "carried": true,
-    "declared": 32768,
-    "form": "bare",
-    "region": "sms-export",
-    "size": 32768,
-    "count": 107
   },
   {
     "anchor": 32752,
@@ -104,8 +113,8 @@
     "declared": null,
     "form": "bare",
     "region": null,
-    "size": 32768,
-    "count": 71
+    "size": 49152,
+    "count": 68
   },
   {
     "anchor": 32752,
@@ -136,21 +145,21 @@
   },
   {
     "anchor": 32752,
+    "carried": true,
+    "declared": 32768,
+    "form": "bare",
+    "region": "sms-export",
+    "size": 131072,
+    "count": 50
+  },
+  {
+    "anchor": 32752,
     "carried": false,
     "declared": 131072,
     "form": "bare",
     "region": "gg-international",
     "size": 131072,
     "count": 50
-  },
-  {
-    "anchor": 32752,
-    "carried": true,
-    "declared": 32768,
-    "form": "bare",
-    "region": "sms-export",
-    "size": 131072,
-    "count": 49
   },
   {
     "anchor": 32752,
@@ -171,12 +180,30 @@
     "count": 49
   },
   {
+    "anchor": null,
+    "carried": null,
+    "declared": null,
+    "form": "bare",
+    "region": null,
+    "size": 16384,
+    "count": 45
+  },
+  {
     "anchor": 32752,
     "carried": false,
     "declared": 131072,
     "form": "bare",
     "region": "gg-japan",
     "size": 131072,
+    "count": 44
+  },
+  {
+    "anchor": 32752,
+    "carried": true,
+    "declared": 32768,
+    "form": "bare",
+    "region": "sms-export",
+    "size": 49152,
     "count": 44
   },
   {
@@ -199,21 +226,12 @@
   },
   {
     "anchor": 32752,
-    "carried": true,
+    "carried": false,
     "declared": 32768,
     "form": "bare",
     "region": "sms-export",
-    "size": 49152,
-    "count": 30
-  },
-  {
-    "anchor": null,
-    "carried": null,
-    "declared": null,
-    "form": "bare",
-    "region": null,
-    "size": 49152,
-    "count": 22
+    "size": 32768,
+    "count": 21
   },
   {
     "anchor": null,
@@ -254,20 +272,20 @@
   {
     "anchor": 32752,
     "carried": false,
-    "declared": 32768,
-    "form": "bare",
-    "region": "sms-export",
-    "size": 32768,
-    "count": 18
-  },
-  {
-    "anchor": 32752,
-    "carried": false,
     "declared": 131072,
     "form": "bare",
     "region": "sms-export",
     "size": 524288,
     "count": 18
+  },
+  {
+    "anchor": null,
+    "carried": null,
+    "declared": null,
+    "form": "bare",
+    "region": null,
+    "size": 8192,
+    "count": 17
   },
   {
     "anchor": 32752,
@@ -276,6 +294,15 @@
     "form": "bare",
     "region": "sms-japan",
     "size": 131072,
+    "count": 14
+  },
+  {
+    "anchor": null,
+    "carried": null,
+    "declared": null,
+    "form": "bare",
+    "region": null,
+    "size": 40960,
     "count": 14
   },
   {
@@ -294,7 +321,7 @@
     "form": "bare",
     "region": "sms-export",
     "size": 65536,
-    "count": 12
+    "count": 13
   },
   {
     "anchor": 32752,
@@ -321,6 +348,15 @@
     "form": "bare",
     "region": "sms-japan",
     "size": 131072,
+    "count": 8
+  },
+  {
+    "anchor": null,
+    "carried": null,
+    "declared": null,
+    "form": "bare",
+    "region": null,
+    "size": 65536,
     "count": 8
   },
   {
@@ -383,17 +419,8 @@
     "declared": null,
     "form": "bare",
     "region": null,
-    "size": 65536,
-    "count": 6
-  },
-  {
-    "anchor": null,
-    "carried": null,
-    "declared": null,
-    "form": "bare",
-    "region": null,
-    "size": 8192,
-    "count": 6
+    "size": 24576,
+    "count": 7
   },
   {
     "anchor": 32752,
@@ -412,15 +439,6 @@
     "region": "gg-japan",
     "size": 1048576,
     "count": 6
-  },
-  {
-    "anchor": null,
-    "carried": null,
-    "declared": null,
-    "form": "bare",
-    "region": null,
-    "size": 16384,
-    "count": 5
   },
   {
     "anchor": 32752,
@@ -492,6 +510,15 @@
     "form": "bare",
     "region": "gg-export",
     "size": 523228,
+    "count": 4
+  },
+  {
+    "anchor": null,
+    "carried": null,
+    "declared": null,
+    "form": "bare",
+    "region": null,
+    "size": 65535,
     "count": 4
   },
   {
@@ -1302,6 +1329,33 @@
     "form": "bare",
     "region": null,
     "size": 1024,
+    "count": 1
+  },
+  {
+    "anchor": null,
+    "carried": null,
+    "declared": null,
+    "form": "bare",
+    "region": null,
+    "size": 49136,
+    "count": 1
+  },
+  {
+    "anchor": 32752,
+    "carried": false,
+    "declared": 32768,
+    "form": "bare",
+    "region": "sms-export",
+    "size": 40960,
+    "count": 1
+  },
+  {
+    "anchor": 32752,
+    "carried": false,
+    "declared": 524288,
+    "form": "bare",
+    "region": "sms-export",
+    "size": 49152,
     "count": 1
   }
 ]

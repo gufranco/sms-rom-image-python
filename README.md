@@ -1,6 +1,6 @@
 # SMS ROM Image
 
-A Sega Master System, Game Gear or SG-1000 cartridge image read as a file, held to Sega's Mark III reference manual where it speaks and to the export boot program and 2,610 real images where it does not.
+A Sega Master System, Game Gear or SG-1000 cartridge image read as a file, held to Sega's Mark III reference manual where it speaks and to the export boot programs and 2,922 real images where it does not.
 
 English | [日本語](README.ja.md) | [简体中文](README.zh-Hans.md) | [繁體中文（香港）](README.zh-HK.md)
 
@@ -8,7 +8,7 @@ English | [日本語](README.ja.md) | [简体中文](README.zh-Hans.md) | [繁�
 [![Release](https://img.shields.io/github/v/release/gufranco/sms-rom-image-python)](https://github.com/gufranco/sms-rom-image-python/releases)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-**2,610** distinct images measured from **5,111** archive entries, **0** property failures, the header read at `0x7FF0` on **2,408** of them, the stored checksum reproduced on **370** of **393** retail Master System cartridges, **14** boot programs declared by digest, **750** tests, **100%** statement and branch coverage, no dependencies
+**2,922** distinct images measured from **5,425** archive entries, **0** property failures, the header read at `0x7FF0` on **2,453** of them, the stored checksum reproduced on **370** of **393** retail Master System cartridges, **14** boot programs declared by digest, **750** tests, **100%** statement and branch coverage, no dependencies
 
 ```python
 from smsimage import dump, header
@@ -70,7 +70,7 @@ Four modules answer four questions, in the order a caller has to ask them.
 | [`identity`](smsimage/identity.py) | What makes this file itself, and which value decides     |
 | [`manifest`](smsimage/manifest.py) | When a reader supplies the wrong file, which wrong is it |
 
-Every query on an image answers `None` rather than raising when there is nothing to read. A missing header is a normal state: 189 of the 2,610 images carry none.
+Every query on an image answers `None` rather than raising when there is nothing to read. A missing header is a normal state: 456 of the 2,922 images carry none.
 
 ### Reading a dump
 
@@ -315,26 +315,26 @@ bare stubbed sha256
 
 ## What a real library actually contains
 
-Sega's _Software Reference Manual for the SEGA Mark III Console_ prints the header on its page 22, and [`conformance/hardware.json`](conformance/hardware.json) holds every fact it states with the sentence it came from. It is a retyped copy whose typist is not recorded. Where it and the cartridges disagree the cartridges win, and [`conformance/divergences.json`](conformance/divergences.json) carries each disagreement with its measurement. Every figure below was measured across the Master System and Game Gear libraries the census was run on, keyed on the SHA-256 of the image bytes, so a count is a count of images rather than of filenames.
+Sega's _Software Reference Manual for the SEGA Mark III Console_ prints the header on its page 22, and [`conformance/hardware.json`](conformance/hardware.json) holds every fact it states with the sentence it came from. It is a retyped copy whose typist is not recorded. Where it and the cartridges disagree the cartridges win, and [`conformance/divergences.json`](conformance/divergences.json) carries each disagreement with its measurement. Every figure below was measured across the Master System, Game Gear and SG-1000 libraries the census was run on, keyed on the SHA-256 of the image bytes, so a count is a count of images rather than of filenames.
 
 | Measurement                                            | Count |
 | :----------------------------------------------------- | ----: |
-| Archive entries read                                   | 5,111 |
-| Distinct images                                        | 2,610 |
-| Duplicate listings of an image already seen            | 2,501 |
-| Header at `0x7FF0` only                                | 2,406 |
+| Archive entries read                                   | 5,425 |
+| Distinct images                                        | 2,922 |
+| Duplicate listings of an image already seen            | 2,503 |
+| Header at `0x7FF0` only                                | 2,450 |
 | Header at `0x3FF0` / `0x1FF0`                          | 8 / 5 |
-| Header at both `0x3FF0` and `0x7FF0`, read at `0x7FF0` |     2 |
-| No header at any candidate offset                      |   189 |
+| Header at both `0x3FF0` and `0x7FF0`, read at `0x7FF0` |     3 |
+| No header at any candidate offset                      |   456 |
 | Carrying a 512-byte copier block                       |    17 |
 
 Five things in there break a reader written from a description.
 
-**A header is not universal.** 189 images carry none, and only 18 of those are too short to hold one at `0x7FF0`. So every query answers `None` rather than raising.
+**A header is not universal.** 456 images carry none, and only 76 of those are too short to hold one at `0x7FF0`. 205 of them are the retail SG-1000 cartridges, none of which carries a header: they are the control that catches a header finder saying yes to everything. So every query answers `None` rather than raising.
 
 **The magic appears where no header is.** Read as raw files, 141 images carry `TMR SEGA` outside the three candidate offsets. 16 of those are copier-blocked images whose header sits at `0x81F0` until the block is removed. The rest sit at bank boundaries, which is what a multi-cart or an overdump looks like. Only the three candidates are searched.
 
-**Two images carry the magic at two candidates.** The largest wins, and `anchors_in` reports every match so a caller sees the ambiguity.
+**Three images carry the magic at two candidates.** The largest wins, and `anchors_in` reports every match so a caller sees the ambiguity.
 
 ```python
 from smsimage import header
@@ -354,7 +354,7 @@ print(header.anchor_of(bytes(0x8000)))
 None
 ```
 
-**The two bytes after the magic are not reserved.** The manual prints them as two spaces, `20 20`, and only 399 of the 2,421 headers carry them. `00 00` appears on 1,107 and `FF FF` on 525, with a long tail after that. The export and Game Gear boot programs both compare eight bytes, `TMR SEGA`, and so does this package. `python3 -m conformance.divergences <library>` measures these.
+**The two bytes after the magic are not reserved.** The manual prints them as two spaces, `20 20`, and only 400 of the 2,466 headers carry them. `00 00` appears on 1,149 and `FF FF` on 527, with a long tail after that. The export and Game Gear boot programs both compare eight bytes, `TMR SEGA`, and so does this package. `python3 -m conformance.divergences <library>` measures these.
 
 **A Game Gear cartridge usually stores no checksum.** Of the 1,105 distinct images in the Game Gear set that carry a header, 1,018 store the value zero and 48 reproduce the rule, as `python3 -m conformance.divergences` measures over that set alone. The Game Gear boot program looks for `TMR SEGA` at the three addresses and checks nothing else, so nothing on that console ever read the stored value. `header.agrees` answers `False` for those, and that is a statement about the console rather than about the file.
 
@@ -362,15 +362,17 @@ The manual prints the size codes up to 256K, each with region nibble `0x4`. The 
 
 ## The checksum rule
 
-The rule is the one the export boot program runs, read out of the v1.3 program declared in [`artifacts.manifest.json`](artifacts.manifest.json). Each size code names a first span, `0x1FF0`, `0x3FF0`, `0x7FF0` or, for 48K, `0xBFF0`, and the bytes below it are summed. From 64K up, whole 16K banks from the third onward are added: 2 for 64K, 6 for 128K, 14 for 256K, 30 for 512K and 62 for 1M. The low sixteen bits are kept. `python3 -m conformance.boot <program> [program ...]` reads both tables, the eight-byte compare and the region gate out of each declared program that runs the sum and checks them against this package. The manual says to leave out only the two checksum bytes, and that reading reproduces the stored value on none of the 2,418 images.
+The rule is the one the export boot programs run, read out of the v1.3 program declared in [`artifacts.manifest.json`](artifacts.manifest.json). Each size code names a first span, `0x1FF0`, `0x3FF0`, `0x7FF0` or, for 48K, `0xBFF0`, and the bytes below it are summed. From 64K up, whole 16K banks from the third onward are added: 2 for 64K, 6 for 128K, 14 for 256K, 30 for 512K and 62 for 1M. The low sixteen bits are kept. `python3 -m conformance.boot <program> [program ...]` reads both tables, the eight-byte compare and the region gate out of each declared program that runs the sum and checks them against this package. Nine do, and all nine read the same first spans and the same bank counts up to 512K. For 1M they split: v1.3 and five others read 62 banks, while Hang On v3.4, Hang On & Safari Hunt v2.4 and Missile Defense 3-D v4.4 read 33, and no image in the library tells the two apart. The manual says to leave out only the two checksum bytes, and that reading reproduces the stored value on none of the 2,463 images.
 
-| Population                                                                                                                |   Reproduced |
-| :------------------------------------------------------------------------------------------------------------------------ | -----------: |
-| Retail Master System cartridges, the four region folders of the Master System set, by `python3 -m conformance.categories` |   370 of 393 |
-| Every image in the Master System set with a header and a size the reading knows, modified ones included                   | 925 of 1,331 |
-| Every image with a header and a size the reading knows                                                                    | 971 of 2,418 |
+| Population                                                                                                                |     Reproduced |
+| :------------------------------------------------------------------------------------------------------------------------ | -------------: |
+| Retail Master System cartridges, the four region folders of the Master System set, by `python3 -m conformance.categories` |     370 of 393 |
+| Every image in the Master System set with a header and a size the reading knows, modified ones included                   |   925 of 1,331 |
+| Every image with a header and a size the reading knows                                                                    | 1,011 of 2,463 |
 
 A modified image disagrees for a reason that belongs to the modification: translations reproduce the rule on 78 of 301 and hacks on 33 of 129, as `python3 -m conformance.categories` measures. That is why the census reports agreement as an observation rather than gating on it.
+
+No other boot program explains the 23 retail cartridges that do not reproduce. 16 of them carry a region nibble other than `0x4`, and none of the nine programs checks the sum on those. The other 7 declare 32K, 128K or 256K, where all nine read the same table.
 
 ## The census, and why its output can ship
 
@@ -380,7 +382,7 @@ A modified image disagrees for a reason that belongs to the modification: transl
 python3 -m conformance.census /path/to/library.zip /path/to/another
 ```
 
-It counts each distinct image once by SHA-256, checks six properties on every one, reports one observation, and writes [`conformance/corpus.json`](conformance/corpus.json): 145 combinations of form, length, anchor, region, declared size and whether the stored checksum reproduced, each with a count. No title and no content, so nothing in it could rebuild any part of any cartridge.
+It counts each distinct image once by SHA-256, checks six properties on every one, reports one observation, and writes [`conformance/corpus.json`](conformance/corpus.json): 151 combinations of form, length, anchor, region, declared size and whether the stored checksum reproduced, each with a count. No title and no content, so nothing in it could rebuild any part of any cartridge.
 
 | Exit code | When                                             |
 | :-------- | :----------------------------------------------- |
@@ -396,9 +398,9 @@ Given no image, the census says it examined nothing and leaves the existing corp
 
 Every fact the manual prints that a test can reach is held to the code. [`conformance/hardware.json`](conformance/hardware.json) carries each fact with its sentence and page, and [`conformance/hardware.test.py`](conformance/hardware.test.py) compares them with the constants in the package. `python3 -m conformance.quotes` finds every quoted sentence in the manual, once `python3 -m conformance.documents` has fetched it.
 
-`python3 -m conformance.corpus` replays the 145 combinations in [`conformance/corpus.json`](conformance/corpus.json) against the package with no library present, and the suite checks the headline counts against that file. `python3 -m conformance.speed` holds the checksum of a 256K image to a floor of 130 per second.
+`python3 -m conformance.corpus` replays the 151 combinations in [`conformance/corpus.json`](conformance/corpus.json) against the package with no library present, and the suite checks the headline counts against that file. `python3 -m conformance.speed` holds the checksum of a 256K image to a floor of 130 per second.
 
-The boot programs a reader may need are declared in [`artifacts.manifest.json`](artifacts.manifest.json) by size, CRC32, SHA-1 and SHA-256. None of them is in this repository and nothing here says where to obtain one. [OPEN-QUESTIONS.md](OPEN-QUESTIONS.md) lists the 2 things no Sega source settles, and what would settle each.
+The boot programs a reader may need are declared in [`artifacts.manifest.json`](artifacts.manifest.json) by size, CRC32, SHA-1 and SHA-256. None of them is in this repository and nothing here says where to obtain one. [OPEN-QUESTIONS.md](OPEN-QUESTIONS.md) lists the 3 things no Sega source settles, and what would settle each.
 
 ## Working on it
 

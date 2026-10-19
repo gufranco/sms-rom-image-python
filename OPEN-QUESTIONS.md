@@ -5,13 +5,13 @@ What this project does not know for certain, and what it would take to find out.
 Everything here is a place where being faithful is still a claim rather than a
 measurement. The authority above everything else is a Sega manual that a person
 retyped; below it sit Sega's own boot programs, which are the code that actually
-reads a header, and 2,610 distinct cartridge images.
+reads a header, and 2,922 distinct cartridge images.
 
-The settled surface is 145 distinct combinations replayed from the corpus with no
-failures, six properties checked on every one of 2,610 images, every constant
+The settled surface is 151 distinct combinations replayed from the corpus with no
+failures, six properties checked on every one of 2,922 images, every constant
 here held against the sentence Sega printed, and the checksum rule and size
-tables held against the export boot program they were read from. What follows
-is the residue.
+tables held against the nine export boot programs that run the sum. What
+follows is the residue.
 
 Every entry is also in
 [`conformance/divergences.json`](conformance/divergences.json) with its status
@@ -23,10 +23,10 @@ A retail cartridge is the strongest evidence there is about what was built, and
 it says nothing about what was specified. Where neither the manual nor a boot
 program speaks, a library tells you what shipped and not what the rule was.
 
-## What would settle both of them
+## What would settle them
 
-A Sega document printing the region codes, ideally the same manual in a printed
-copy rather than a retyped one.
+A Sega document printing the region codes and the size codes above 256K,
+ideally the same manual in a printed copy rather than a retyped one.
 
 ## Where no Sega source names it
 
@@ -65,12 +65,37 @@ Where the boot programs disagree with it, they decide.
 **What would settle or reopen it.** A scan of a Sega printing to compare the
 retyped page against.
 
+### How many banks size code 2 adds.
+
+**The document says.** Nothing. The largest size code it prints is 256K.
+
+Source: Sega, _Software Reference Manual for the SEGA Mark III Console_, page 22.
+
+**What the boot programs do.** Nine declared programs run the sum, and every one
+reads code 2's bank count from the first byte of the instruction after its
+four-entry bank table, the one it jumps to once the sum agrees. The v1.0
+prototype, v1.3, the store display unit, Sonic The Hedgehog and both Alex Kidd
+in Miracle World programs read 62. Hang On v3.4, Hang On & Safari Hunt v2.4 and
+Missile Defense 3-D v4.4 read 33. `python3 -m conformance.boot` reads both.
+
+**What the cartridges do.** Two images declare code 2, and neither is long
+enough for 33 and 62 banks to sum differently.
+
+**What this project follows.** The v1.3 program: 62 banks, 1M.
+
+**Why.** It is the program the rest of the rule was read from, and no image
+separates the two counts.
+
+**What would settle or reopen it.** A 1M image declaring code 2 under region 4
+whose stored sum agrees with one count and not the other, or a Sega document
+naming the bank count for 1M.
+
 ## What is not in question
 
 So the boundary is visible rather than implied:
 
 - **Every combination a real library contains.** 145 of them, replayed with no
-  failures, measured across 2,610 distinct images.
+  failures, measured across 2,922 distinct images.
 - **Where the header sits, the string it opens with and where the checksum is
   kept.** From Sega's manual, pinned fact by fact in
   [`conformance/hardware.json`](conformance/hardware.json) with the sentence and
@@ -78,13 +103,16 @@ So the boundary is visible rather than implied:
   [`conformance/hardware.test.py`](conformance/hardware.test.py).
 - **Which bytes the checksum covers.** The v1.3 export boot program sums the span
   its table gives the size code and then whole 16K banks from the third on.
-  [`conformance/boot.py`](conformance/boot.py) reads both tables out of it.
-  Read literally, the manual's sentence reproduces 0 of 2,418 stored values;
-  the boot program's rule reproduces 971.
-- **The size codes above 256K.** The same program's bank table counts 30 banks
-  for code 1 and 62 for code 2: 512K and 1M.
+  [`conformance/boot.py`](conformance/boot.py) reads both tables out of it and
+  out of the eight other programs that run the sum, and all nine agree on every
+  first span. Read literally, the manual's sentence reproduces 0 of 2,463 stored
+  values; the boot program's rule reproduces 1,011.
+- **Size code 1.** Every program that runs the sum counts 30 banks for it: 512K.
+- **Why 23 of 393 retail Master System cartridges do not reproduce their sum.**
+  16 carry a region nibble other than 4, which no program on disk checks. The
+  other 7 declare sizes where all nine programs read the same table.
 - **How long the opening string is.** Eight bytes. The export and Game Gear boot
-  programs both compare eight, and only 399 of 2,421 headers carry the two
+  programs both compare eight, and only 400 of 2,466 headers carry the two
   spaces the manual prints after them.
 - **Whether a Game Gear checks the checksum.** It does not. Its boot program
   compares `TMR SEGA` at the three addresses and nothing else, which is why

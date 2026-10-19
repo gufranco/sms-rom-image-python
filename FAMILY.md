@@ -1148,12 +1148,12 @@ the others do not also get._
 _Software Reference Manual for the SEGA Mark III Console_ prints the header on
 its page 22; it is pinned by digest and quoted fact by fact in
 [`conformance/hardware.json`](conformance/hardware.json). Where it and the cartridges part, the cartridges
-win and [`conformance/divergences.json`](conformance/divergences.json) carries the measurement, read off 2,610
-distinct images from the Master System and Game Gear libraries.
+win and [`conformance/divergences.json`](conformance/divergences.json) carries the measurement, read off 2,922
+distinct images from the Master System, Game Gear and SG-1000 libraries.
 
 **The census is the oracle.** There is no published conformance suite for a file
 format. The census walks a library, gates on six properties, reports one
-observation, and writes a corpus of 145 combinations that holds no content. The
+observation, and writes a corpus of 151 combinations that holds no content. The
 observation is the only check that asks the artifact rather than the code: the
 stored checksum is reproduced on 370 of 393 retail Master System cartridges.
 

@@ -11,7 +11,7 @@ A package that reads Master System, Game Gear and SG-1000 cartridge images as
 files: it removes a copier block, finds the header at one of three addresses,
 reads the region and size it declares, and computes the checksum to compare with
 the one the cartridge carries. What the header means comes from Sega's reference
-manual; what real cartridges contain comes from a census of 2,610 distinct
+manual; what real cartridges contain comes from a census of 2,922 distinct
 images, and the two are not the same thing.
 
 ## The interface a caller drives
@@ -52,24 +52,28 @@ place they part.
 
 ## What is settled and what is not
 
-**Settled: every combination a real library contains.** 145 of them, replayed
+**Settled: every combination a real library contains.** 151 of them, replayed
 from [`conformance/corpus.json`](conformance/corpus.json) with no failures, over
-2,610 distinct images.
+2,922 distinct images. 205 of them are retail SG-1000 cartridges, and none
+carries a header: they are the control that catches a header finder saying yes
+to everything.
 
 **Settled: what the manual states about the header.** Pinned in
 [`conformance/hardware.json`](conformance/hardware.json) and held to this
 package's constants by
 [`conformance/hardware.test.py`](conformance/hardware.test.py).
 
-**Not settled: 2 things**, each in [OPEN-QUESTIONS.md](OPEN-QUESTIONS.md) with
+**Not settled: 3 things**, each in [OPEN-QUESTIONS.md](OPEN-QUESTIONS.md) with
 what would close it. Do not close one by argument.
 
 ## The manual's checksum sentence is not the rule
 
 The manual says the checksum covers the ROM with only `$7FFA` and `$7FFB` left
-out. Read that way it reproduces the stored value on 0 of 2,418 images. The rule
+out. Read that way it reproduces the stored value on 0 of 2,463 images. The rule
 here is the one the v1.3 export boot program runs: a first span the size code
-picks from its table, then whole 16K banks from the third on. It reproduces 971.
+picks from its table, then whole 16K banks from the third on. It reproduces
+1,011. The eight other declared programs that run the sum read the same first
+spans; three of them read 33 banks for size code 2 where v1.3 reads 62.
 A 48K declaration sums through the header and stops short of its own last
 sixteen bytes, because that is what the program's table says.
 
@@ -199,7 +203,7 @@ smsimage/
   version.py     rewritten by the release job and by nothing else
 conformance/
   census.py         walks a library you own and checks six properties on all of it
-  corpus.json       145 combinations covering 2,610 distinct images
+  corpus.json       151 combinations covering 2,922 distinct images
   corpus.py         replays every combination against the package
   documents.json    the manual, by digest
   documents.py      brings it down and refuses any other file
@@ -207,7 +211,7 @@ conformance/
   divergences.json  every place a cartridge and the manual part
   divergences.py    measures what the corpus cannot hold
   categories.py     the same measurements per folder, and for the retail set
-  boot.py           the export boot program's tables, checked against the package
+  boot.py           each export boot program's tables, checked against the package
   manual.py         the manual's text, laid flat for matching
   quotes.py         every quote the records carry, found in the manual word for word
   links.py          the weekly check that every cited address still answers
@@ -234,7 +238,7 @@ for every one of them. The census reports agreement as an observation for that
 reason.
 
 **The two bytes after `TMR SEGA` are not part of the match.** The manual prints
-them as spaces and only 399 of 2,421 headers carry them.
+them as spaces and only 400 of 2,466 headers carry them.
 
 ## Before calling anything finished
 

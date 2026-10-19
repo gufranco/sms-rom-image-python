@@ -251,7 +251,7 @@ class CorpusTest(Scratch):
     def test_it_reads_the_corpus_this_repository_ships(self) -> None:
         # Arrange
         combinations = json.loads((ROOT / "conformance" / "corpus.json").read_text())
-        images = 2610
+        images = 2922
 
         # Act
         found = doctor.check_corpus()
