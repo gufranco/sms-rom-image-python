@@ -34,7 +34,7 @@ copy rather than a retyped one.
 
 **The document says.** Every size code it prints carries a high nibble of 4.
 
-Source: Sega, *Software Reference Manual for the SEGA Mark III Console*, page 22.
+Source: Sega, _Software Reference Manual for the SEGA Mark III Console_, page 22.
 
 **What the boot programs do.** The export one checks the sum only on region 4
 and fails every other; the Japanese one never looks for a header; the Game

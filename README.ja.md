@@ -38,10 +38,10 @@ True
 
 ## インストール
 
-| 要件 | バージョン |
-|:--|:--|
-| Python | 3.12以降 |
-| git | 任意、クローン用 |
+| 要件   | バージョン       |
+| :----- | :--------------- |
+| Python | 3.12以降         |
+| git    | 任意、クローン用 |
 
 ```bash
 git clone https://github.com/gufranco/sms-rom-image-python.git
@@ -63,22 +63,22 @@ python3 smsimage/doctor.py
 
 4つのモジュールが4つの問いに答えます。順序は呼び出し側が問うべき順です。
 
-| モジュール | 問い |
-|:--|:--|
-| [`dump`](smsimage/dump.py) | ダンプ装置は何を付け加えたか |
-| [`header`](smsimage/header.py) | カートリッジは自身について何を、どこで述べているか |
+| モジュール                         | 問い                                                             |
+| :--------------------------------- | :--------------------------------------------------------------- |
+| [`dump`](smsimage/dump.py)         | ダンプ装置は何を付け加えたか                                     |
+| [`header`](smsimage/header.py)     | カートリッジは自身について何を、どこで述べているか               |
 | [`identity`](smsimage/identity.py) | このファイルをこのファイルたらしめるものは何か、どの値が決め手か |
-| [`manifest`](smsimage/manifest.py) | 読み手が誤ったファイルを渡したとき、どういう誤りか |
+| [`manifest`](smsimage/manifest.py) | 読み手が誤ったファイルを渡したとき、どういう誤りか               |
 
 イメージへの問い合わせは、読み取るものがない場合、例外を送出せずに`None`を返します。ヘッダーがないのは正常な状態です。2,610本のイメージのうち189本はヘッダーを持ちません。
 
 ### ダンプの読み取り
 
-| 呼び出し | 戻り値 |
-|:--|:--|
-| `dump.read(path)` | ファイルのバイト列。コピー機ブロックがあれば取り除いたもの。`path`は`str`または`Path`です |
-| `dump.form(data)` | `data`が512バイトより長く、その長さがキロバイト単位の整数倍より512余る場合は`"stubbed"`、それ以外は`"bare"` |
-| `dump.strip_copier_stub(data)` | 形式が`"stubbed"`なら先頭512バイトを除いた`data`、それ以外は`data`をそのまま |
+| 呼び出し                       | 戻り値                                                                                                      |
+| :----------------------------- | :---------------------------------------------------------------------------------------------------------- |
+| `dump.read(path)`              | ファイルのバイト列。コピー機ブロックがあれば取り除いたもの。`path`は`str`または`Path`です                   |
+| `dump.form(data)`              | `data`が512バイトより長く、その長さがキロバイト単位の整数倍より512余る場合は`"stubbed"`、それ以外は`"bare"` |
+| `dump.strip_copier_stub(data)` | 形式が`"stubbed"`なら先頭512バイトを除いた`data`、それ以外は`data`をそのまま                                |
 
 ```python
 from smsimage import dump
@@ -98,15 +98,15 @@ for length in (512, 1536, 32768, 33280):
 
 ### ヘッダー
 
-| 呼び出し | 戻り値 |
-|:--|:--|
-| `header.anchors_in(image)` | `TMR SEGA`を持つ候補オフセットすべて。大きい順のタプル |
-| `header.anchor_of(image)` | そのうち最初のもの、または`None` |
-| `header.region_of(image)` | アンカーに`0x0F`を足した位置のバイトの上位ニブルに対応する名前。ヘッダーがないか名前がない場合は`None` |
+| 呼び出し                      | 戻り値                                                                                                   |
+| :---------------------------- | :------------------------------------------------------------------------------------------------------- |
+| `header.anchors_in(image)`    | `TMR SEGA`を持つ候補オフセットすべて。大きい順のタプル                                                   |
+| `header.anchor_of(image)`     | そのうち最初のもの、または`None`                                                                         |
+| `header.region_of(image)`     | アンカーに`0x0F`を足した位置のバイトの上位ニブルに対応する名前。ヘッダーがないか名前がない場合は`None`   |
 | `header.declared_size(image)` | そのバイトの下位ニブルに対応するバイト単位のサイズ。ヘッダーがないか、解釈が知らないコードの場合は`None` |
-| `header.carried(image)` | アンカーに`0x0A`を足した位置のリトルエンディアンのワード。ヘッダーがなければ`None` |
-| `header.checksum(image)` | 輸出版ブートプログラムが計算する合計。`0x10000`未満の`int`。ヘッダーがないかサイズコードが不明なら`None` |
-| `header.agrees(image)` | `checksum(image) == carried(image)`。比較するチェックサムがなければ`None` |
+| `header.carried(image)`       | アンカーに`0x0A`を足した位置のリトルエンディアンのワード。ヘッダーがなければ`None`                       |
+| `header.checksum(image)`      | 輸出版ブートプログラムが計算する合計。`0x10000`未満の`int`。ヘッダーがないかサイズコードが不明なら`None` |
+| `header.agrees(image)`        | `checksum(image) == carried(image)`。比較するチェックサムがなければ`None`                                |
 
 ```python
 from smsimage import header
@@ -141,9 +141,9 @@ None None None
 
 ### 同一性
 
-| 呼び出し | 戻り値 |
-|:--|:--|
-| `identity.measure(data)` | `size`、`crc32`、`md5`、`sha1`、`sha256`のマッピング。ダイジェストは小文字の16進数です |
+| 呼び出し                           | 戻り値                                                                                                           |
+| :--------------------------------- | :--------------------------------------------------------------------------------------------------------------- |
+| `identity.measure(data)`           | `size`、`crc32`、`md5`、`sha1`、`sha256`のマッピング。ダイジェストは小文字の16進数です                           |
 | `identity.agrees(found, expected)` | 2つの`sha256`の値が大文字小文字を区別せずに一致するかどうか。どちらかが持っていなければ`NoAuthority`を送出します |
 
 ファイルが目的のファイルかどうかを決めるのは1つの値だけです。より弱い値が食い違うレコードでも、その値が一致すれば一致とみなします。
@@ -182,23 +182,23 @@ nothing decides: no sha256 to compare
 
 `Manifest(document)`は、`artifacts`マッピングを含むマッピングを受け取ります。各アーティファクトはレコードの`accepted`リストを持ち、各レコードは`sha256`を持ちます。アーティファクトは`name`と、`sha256`と`why`を持つエントリからなる`badDumps`リストを持つこともできます。`manifest.read(path)`はJSONファイルを解析してマニフェストを作ります。
 
-| メンバー | 意味 |
-|:--|:--|
-| `Manifest.keys` | アーティファクトのキー。タプルです |
-| `Manifest.name(key)` | アーティファクトの`name`。名前がないか宣言されていない場合は`key` |
-| `Manifest.match(key, data)` | バイト列`data`をアーティファクト`key`と照合した`Match` |
-| `Match.key`, `Match.verdict` | 問い合わせたキーと、下記5つの判定のいずれか |
-| `Match.found` | そのバイト列に対して`identity.measure`が返したもの |
-| `Match.why` | 一致した不良ダンプの`why`。それ以外は`None` |
-| `bool(match)` | `accepted`の場合のみTrue |
+| メンバー                     | 意味                                                              |
+| :--------------------------- | :---------------------------------------------------------------- |
+| `Manifest.keys`              | アーティファクトのキー。タプルです                                |
+| `Manifest.name(key)`         | アーティファクトの`name`。名前がないか宣言されていない場合は`key` |
+| `Manifest.match(key, data)`  | バイト列`data`をアーティファクト`key`と照合した`Match`            |
+| `Match.key`, `Match.verdict` | 問い合わせたキーと、下記5つの判定のいずれか                       |
+| `Match.found`                | そのバイト列に対して`identity.measure`が返したもの                |
+| `Match.why`                  | 一致した不良ダンプの`why`。それ以外は`None`                       |
+| `bool(match)`                | `accepted`の場合のみTrue                                          |
 
-| 判定 | 条件 |
-|:--|:--|
-| `accepted` | SHA-256がアーティファクトの受け入れるものである |
-| `a known bad dump` | SHA-256がアーティファクトの`badDumps`に載っているものである |
+| 判定                                  | 条件                                                               |
+| :------------------------------------ | :----------------------------------------------------------------- |
+| `accepted`                            | SHA-256がアーティファクトの受け入れるものである                    |
+| `a known bad dump`                    | SHA-256がアーティファクトの`badDumps`に載っているものである        |
 | `the right length, the wrong content` | サイズは受け入れ済みレコードと一致するが、ダイジェストは一致しない |
-| `a length nothing declares` | ダイジェストもサイズも一致しない |
-| `undeclared` | マニフェストにそのキーのアーティファクトがない |
+| `a length nothing declares`           | ダイジェストもサイズも一致しない                                   |
+| `undeclared`                          | マニフェストにそのキーのアーティファクトがない                     |
 
 ```python
 from smsimage import Manifest, identity
@@ -265,31 +265,31 @@ NoAuthority bios: an accepted file with no sha256 to decide on
 
 どちらも[`smsimage/errors.py`](smsimage/errors.py)にあり、パッケージのトップレベルで公開されているため、呼び出し側はそれぞれを名前で捕捉できます。
 
-| エラー | 送出される条件 |
-|:--|:--|
-| `Malformed` | `Manifest`に、マッピングでないもの、アーティファクトを宣言していないもの、マッピングでないアーティファクトを持つもの、`accepted`リストが欠けているか空のアーティファクトを持つものが渡された |
-| `NoAuthority` | `identity.agrees`に`sha256`を持たない側が渡された、または`Manifest`に`sha256`を持たない受け入れ済みレコードが渡された |
+| エラー        | 送出される条件                                                                                                                                                                               |
+| :------------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Malformed`   | `Manifest`に、マッピングでないもの、アーティファクトを宣言していないもの、マッピングでないアーティファクトを持つもの、`accepted`リストが欠けているか空のアーティファクトを持つものが渡された |
+| `NoAuthority` | `identity.agrees`に`sha256`を持たない側が渡された、または`Manifest`に`sha256`を持たない受け入れ済みレコードが渡された                                                                        |
 
 `manifest.read`は、読み取れないファイルや不正なJSONに対して、`pathlib`と`json`が送出するものをそのまま送出させます。
 
 ### モジュールの内容
 
-| 名前 | 内容 |
-|:--|:--|
-| `smsimage.MAGIC` | `b"TMR SEGA"`。ヘッダーの先頭8バイト |
-| `smsimage.CANDIDATES` | `(0x7FF0, 0x3FF0, 0x1FF0)`。探索するオフセット、大きい順 |
-| `smsimage.REGIONS` | リージョンニブルから名前への対応：`0x3` `sms-japan`、`0x4` `sms-export`、`0x5` `gg-japan`、`0x6` `gg-export`、`0x7` `gg-international` |
-| `smsimage.SIZES` | サイズニブルからバイト数への対応：`0xA` 8K、`0xB` 16K、`0xC` 32K、`0xD` 48K、`0xE` 64K、`0xF` 128K、`0x0` 256K、`0x1` 512K、`0x2` 1M |
-| `smsimage.BARE`, `smsimage.STUBBED` | `dump.form`が返す2つの値 |
-| `smsimage.AUTHORITATIVE` | `"sha256"`。決め手となる唯一の値 |
-| `smsimage.VERDICTS` | 5つの判定。`match`が試す順 |
-| `smsimage.Manifest`, `smsimage.Match` | マニフェストとその答え |
-| `smsimage.Malformed`, `smsimage.NoAuthority` | 2つのエラー |
-| `smsimage.__version__` | インストールされているバージョン |
-| `dump.COPIER_BLOCK` | 512 |
-| `identity.CROSS_REFERENCE` | `("size", "crc32", "md5", "sha1")`。測定はするが決め手にはならない値 |
-| `header.CHECKSUM`, `header.REGION_AND_SIZE` | チェックサムのワードと、リージョンとサイズのバイトの位置。アンカーからの相対で`0x0A`から`0x0B`、および`0x0F` |
-| `header.FIRST_SPAN`, `header.BANKS_FROM_THE_THIRD` | 輸出版ブートプログラムの2つの表。サイズニブルをキーとします |
+| 名前                                               | 内容                                                                                                                                   |
+| :------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------- |
+| `smsimage.MAGIC`                                   | `b"TMR SEGA"`。ヘッダーの先頭8バイト                                                                                                   |
+| `smsimage.CANDIDATES`                              | `(0x7FF0, 0x3FF0, 0x1FF0)`。探索するオフセット、大きい順                                                                               |
+| `smsimage.REGIONS`                                 | リージョンニブルから名前への対応：`0x3` `sms-japan`、`0x4` `sms-export`、`0x5` `gg-japan`、`0x6` `gg-export`、`0x7` `gg-international` |
+| `smsimage.SIZES`                                   | サイズニブルからバイト数への対応：`0xA` 8K、`0xB` 16K、`0xC` 32K、`0xD` 48K、`0xE` 64K、`0xF` 128K、`0x0` 256K、`0x1` 512K、`0x2` 1M   |
+| `smsimage.BARE`, `smsimage.STUBBED`                | `dump.form`が返す2つの値                                                                                                               |
+| `smsimage.AUTHORITATIVE`                           | `"sha256"`。決め手となる唯一の値                                                                                                       |
+| `smsimage.VERDICTS`                                | 5つの判定。`match`が試す順                                                                                                             |
+| `smsimage.Manifest`, `smsimage.Match`              | マニフェストとその答え                                                                                                                 |
+| `smsimage.Malformed`, `smsimage.NoAuthority`       | 2つのエラー                                                                                                                            |
+| `smsimage.__version__`                             | インストールされているバージョン                                                                                                       |
+| `dump.COPIER_BLOCK`                                | 512                                                                                                                                    |
+| `identity.CROSS_REFERENCE`                         | `("size", "crc32", "md5", "sha1")`。測定はするが決め手にはならない値                                                                   |
+| `header.CHECKSUM`, `header.REGION_AND_SIZE`        | チェックサムのワードと、リージョンとサイズのバイトの位置。アンカーからの相対で`0x0A`から`0x0B`、および`0x0F`                           |
+| `header.FIRST_SPAN`, `header.BANKS_FROM_THE_THIRD` | 輸出版ブートプログラムの2つの表。サイズニブルをキーとします                                                                            |
 
 ```python
 import smsimage
@@ -317,16 +317,16 @@ bare stubbed sha256
 
 セガの*Software Reference Manual for the SEGA Mark III Console*は22ページにヘッダーを掲載しており、[`conformance/hardware.json`](conformance/hardware.json)には、そこに書かれた事実がすべて、出典の文とともに収められています。このマニュアルは打ち直された写しで、打ち直した人の記録はありません。マニュアルとカートリッジが食い違う場合はカートリッジを優先し、[`conformance/divergences.json`](conformance/divergences.json)に食い違いごとの測定値を記録しています。以下の数値はすべて、全数調査を行ったマスターシステムとゲームギアのライブラリ全体で測定したもので、イメージのバイト列のSHA-256をキーとしています。そのため、数はファイル名の数ではなくイメージの数です。
 
-| 測定項目 | 件数 |
-|:--|--:|
-| 読み取ったアーカイブエントリ | 5,111 |
-| 異なるイメージ | 2,610 |
-| 既出のイメージの重複掲載 | 2,501 |
-| `0x7FF0`のみにヘッダー | 2,406 |
-| `0x3FF0` / `0x1FF0`にヘッダー | 8 / 5 |
-| `0x3FF0`と`0x7FF0`の両方にヘッダー、`0x7FF0`で読み取り | 2 |
-| どの候補オフセットにもヘッダーなし | 189 |
-| 512バイトのコピー機ブロック付き | 17 |
+| 測定項目                                               |  件数 |
+| :----------------------------------------------------- | ----: |
+| 読み取ったアーカイブエントリ                           | 5,111 |
+| 異なるイメージ                                         | 2,610 |
+| 既出のイメージの重複掲載                               | 2,501 |
+| `0x7FF0`のみにヘッダー                                 | 2,406 |
+| `0x3FF0` / `0x1FF0`にヘッダー                          | 8 / 5 |
+| `0x3FF0`と`0x7FF0`の両方にヘッダー、`0x7FF0`で読み取り |     2 |
+| どの候補オフセットにもヘッダーなし                     |   189 |
+| 512バイトのコピー機ブロック付き                        |    17 |
 
 ここには、説明文から書かれたリーダーを壊すものが5つあります。
 
@@ -364,11 +364,11 @@ None
 
 規則は輸出版ブートプログラムが実行するもので、[`artifacts.manifest.json`](artifacts.manifest.json)で宣言したv1.3のプログラムから読み取ったものです。各サイズコードは最初の範囲として`0x1FF0`、`0x3FF0`、`0x7FF0`、48Kの場合は`0xBFF0`を指定し、その手前のバイトを合計します。64K以上では、3番目以降の16Kバンク全体を加算します。64Kで2個、128Kで6個、256Kで14個、512Kで30個、1Mで62個です。下位16ビットを保持します。`python3 -m conformance.boot <that program>`は、そのプログラムから2つの表、8バイトの比較、リージョンの判定を読み取り、このパッケージと照合します。マニュアルは2つのチェックサムバイトだけを除外するよう指示していますが、その解釈では2,418本のイメージのどれでも格納値を再現できません。
 
-| 対象 | 再現 |
-|:--|--:|
-| 市販マスターシステムカートリッジ。マスターシステムのセットの4つのリージョンフォルダ、`python3 -m conformance.categories`による | 393本中370本 |
-| マスターシステムのセットのうち、ヘッダーと解釈が知るサイズを持つすべてのイメージ。改変版を含む | 1,331本中925本 |
-| ヘッダーと解釈が知るサイズを持つすべてのイメージ | 2,418本中971本 |
+| 対象                                                                                                                           |           再現 |
+| :----------------------------------------------------------------------------------------------------------------------------- | -------------: |
+| 市販マスターシステムカートリッジ。マスターシステムのセットの4つのリージョンフォルダ、`python3 -m conformance.categories`による |   393本中370本 |
+| マスターシステムのセットのうち、ヘッダーと解釈が知るサイズを持つすべてのイメージ。改変版を含む                                 | 1,331本中925本 |
+| ヘッダーと解釈が知るサイズを持つすべてのイメージ                                                                               | 2,418本中971本 |
 
 改変されたイメージは、改変に起因する理由で食い違います。`python3 -m conformance.categories`の測定では、翻訳版は301本中78本、ハック版は129本中33本で規則を再現します。そのため、全数調査は一致をゲートにせず、観察結果として報告します。
 
@@ -382,11 +382,11 @@ python3 -m conformance.census /path/to/library.zip /path/to/another
 
 異なるイメージをSHA-256で1本ずつ数え、それぞれで6つの性質を確認し、1つの観察結果を報告し、[`conformance/corpus.json`](conformance/corpus.json)を書き出します。中身は、形式、長さ、アンカー、リージョン、宣言サイズ、格納済みチェックサムを再現したかどうかの組み合わせ145通りと、それぞれの件数です。タイトルも内容も含まないため、どのカートリッジのどの部分も、そこから再構築することはできません。
 
-| 終了コード | 条件 |
-|:--|:--|
-| 0 | すべてのイメージですべての性質が成り立った |
-| 1 | 性質が崩れた、または指定したパスが存在しない |
-| 2 | パスが指定されなかった |
+| 終了コード | 条件                                         |
+| :--------- | :------------------------------------------- |
+| 0          | すべてのイメージですべての性質が成り立った   |
+| 1          | 性質が崩れた、または指定したパスが存在しない |
+| 2          | パスが指定されなかった                       |
 
 6つの性質は、現時点では構造上一致する関数同士の不変条件です。各テストは、守っている組の片側を置き換えて性質が発火することを確認するため、6つすべてについて、検出すべきずれを実際に検出することが確かめられています。
 
@@ -402,13 +402,13 @@ python3 -m conformance.census /path/to/library.zip /path/to/another
 
 ## 開発に参加する
 
-| 必要なもの | 場所 |
-|:--|:--|
-| すべてのゲートと実行順 | [CONTRIBUTING.md](CONTRIBUTING.md) |
-| コーディングエージェント向けの同じ内容 | [AGENTS.md](AGENTS.md) |
-| このリポジトリがファミリーの他のリポジトリと共有する標準 | [FAMILY.md](FAMILY.md) |
-| バグ報告 | [GitHub Issues](https://github.com/gufranco/sms-rom-image-python/issues) |
-| セキュリティ報告 | [SECURITY.md](SECURITY.md) |
+| 必要なもの                                               | 場所                                                                     |
+| :------------------------------------------------------- | :----------------------------------------------------------------------- |
+| すべてのゲートと実行順                                   | [CONTRIBUTING.md](CONTRIBUTING.md)                                       |
+| コーディングエージェント向けの同じ内容                   | [AGENTS.md](AGENTS.md)                                                   |
+| このリポジトリがファミリーの他のリポジトリと共有する標準 | [FAMILY.md](FAMILY.md)                                                   |
+| バグ報告                                                 | [GitHub Issues](https://github.com/gufranco/sms-rom-image-python/issues) |
+| セキュリティ報告                                         | [SECURITY.md](SECURITY.md)                                               |
 
 ```bash
 uvx ruff@0.16.3 format --check .
@@ -427,7 +427,7 @@ done
 
 ## 参考文献
 
-- *Software Reference Manual for the SEGA Mark III Console*、セガ、日付なし、22ページ、氏名不明の人物による打ち直し。45ページ、184,840バイト、SHA-256 `166f09331ba9df055f7a352f10c6a7843911470bc72d9347eda4a0de86e8cfce`。ヘッダーの配置、先頭の文字列、チェックサムバイト、サイズコードについて参照しました。再配布はできず、このリポジトリには含まれていません。`python3 -m conformance.documents`はhttps://segaretro.org/images/d/d6/SoftwareReferenceManualForSegaMarkIIIEU.pdf から`docs/`にダウンロードし、それ以外のファイルは拒否します。このREADME内のアドレスはすべて毎週確認しています。
+- _Software Reference Manual for the SEGA Mark III Console_、セガ、日付なし、22ページ、氏名不明の人物による打ち直し。45ページ、184,840バイト、SHA-256 `166f09331ba9df055f7a352f10c6a7843911470bc72d9347eda4a0de86e8cfce`。ヘッダーの配置、先頭の文字列、チェックサムバイト、サイズコードについて参照しました。再配布はできず、このリポジトリには含まれていません。`python3 -m conformance.documents`はhttps://segaretro.org/images/d/d6/SoftwareReferenceManualForSegaMarkIIIEU.pdf から`docs/`にダウンロードし、それ以外のファイルは拒否します。このREADME内のアドレスはすべて毎週確認しています。
 
 ## 引用
 

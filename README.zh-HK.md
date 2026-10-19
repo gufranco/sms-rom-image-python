@@ -38,10 +38,10 @@ True
 
 ## 安裝
 
-| 需求 | 版本 |
-|:--|:--|
-| Python | 3.12 或更新 |
-| git | 任何版本，用於複製儲存庫 |
+| 需求   | 版本                     |
+| :----- | :----------------------- |
+| Python | 3.12 或更新              |
+| git    | 任何版本，用於複製儲存庫 |
 
 ```bash
 git clone https://github.com/gufranco/sms-rom-image-python.git
@@ -63,10 +63,10 @@ python3 smsimage/doctor.py
 
 四個模組回答四個問題，排列順序就是呼叫者需要提出這些問題的順序。
 
-| 模組 | 問題 |
-|:--|:--|
-| [`dump`](smsimage/dump.py) | 傾印裝置加入了甚麼 |
-| [`header`](smsimage/header.py) | 卡帶如何描述自己，描述寫在哪裏 |
+| 模組                               | 問題                                   |
+| :--------------------------------- | :------------------------------------- |
+| [`dump`](smsimage/dump.py)         | 傾印裝置加入了甚麼                     |
+| [`header`](smsimage/header.py)     | 卡帶如何描述自己，描述寫在哪裏         |
 | [`identity`](smsimage/identity.py) | 甚麼令這個檔案成為它本身，由哪個值決定 |
 | [`manifest`](smsimage/manifest.py) | 讀取者提供了錯誤的檔案時，是哪一種錯誤 |
 
@@ -74,11 +74,11 @@ python3 smsimage/doctor.py
 
 ### 讀取傾印
 
-| 呼叫 | 回傳 |
-|:--|:--|
-| `dump.read(path)` | 檔案的位元組，若有拷貝機區塊則已移除。`path` 是 `str` 或 `Path` |
-| `dump.form(data)` | 當 `data` 長於 512 位元組，且長度比整數個 KB 多出 512 時回傳 `"stubbed"`，否則回傳 `"bare"` |
-| `dump.strip_copier_stub(data)` | 形式為 `"stubbed"` 時回傳去掉前 512 位元組的 `data`，否則原樣回傳 `data` |
+| 呼叫                           | 回傳                                                                                        |
+| :----------------------------- | :------------------------------------------------------------------------------------------ |
+| `dump.read(path)`              | 檔案的位元組，若有拷貝機區塊則已移除。`path` 是 `str` 或 `Path`                             |
+| `dump.form(data)`              | 當 `data` 長於 512 位元組，且長度比整數個 KB 多出 512 時回傳 `"stubbed"`，否則回傳 `"bare"` |
+| `dump.strip_copier_stub(data)` | 形式為 `"stubbed"` 時回傳去掉前 512 位元組的 `data`，否則原樣回傳 `data`                    |
 
 ```python
 from smsimage import dump
@@ -98,15 +98,15 @@ for length in (512, 1536, 32768, 33280):
 
 ### 檔頭
 
-| 呼叫 | 回傳 |
-|:--|:--|
-| `header.anchors_in(image)` | 所有含有 `TMR SEGA` 的候選偏移位置，由大到小，以 tuple 回傳 |
-| `header.anchor_of(image)` | 其中第一個，或 `None` |
-| `header.region_of(image)` | 錨點加 `0x0F` 處位元組的高半位元組所對應的名稱；沒有檔頭或沒有名稱時為 `None` |
-| `header.declared_size(image)` | 該位元組的低半位元組所對應的大小，以位元組計；沒有檔頭或代碼不為本解讀所知時為 `None` |
-| `header.carried(image)` | 錨點加 `0x0A` 處的小端序字；沒有檔頭時為 `None` |
-| `header.checksum(image)` | 出口版開機程式計算的總和，為小於 `0x10000` 的 `int`；沒有檔頭或大小代碼未知時為 `None` |
-| `header.agrees(image)` | `checksum(image) == carried(image)`；沒有可比較的校驗和時為 `None` |
+| 呼叫                          | 回傳                                                                                   |
+| :---------------------------- | :------------------------------------------------------------------------------------- |
+| `header.anchors_in(image)`    | 所有含有 `TMR SEGA` 的候選偏移位置，由大到小，以 tuple 回傳                            |
+| `header.anchor_of(image)`     | 其中第一個，或 `None`                                                                  |
+| `header.region_of(image)`     | 錨點加 `0x0F` 處位元組的高半位元組所對應的名稱；沒有檔頭或沒有名稱時為 `None`          |
+| `header.declared_size(image)` | 該位元組的低半位元組所對應的大小，以位元組計；沒有檔頭或代碼不為本解讀所知時為 `None`  |
+| `header.carried(image)`       | 錨點加 `0x0A` 處的小端序字；沒有檔頭時為 `None`                                        |
+| `header.checksum(image)`      | 出口版開機程式計算的總和，為小於 `0x10000` 的 `int`；沒有檔頭或大小代碼未知時為 `None` |
+| `header.agrees(image)`        | `checksum(image) == carried(image)`；沒有可比較的校驗和時為 `None`                     |
 
 ```python
 from smsimage import header
@@ -141,10 +141,10 @@ None None None
 
 ### 身份
 
-| 呼叫 | 回傳 |
-|:--|:--|
-| `identity.measure(data)` | 包含 `size`、`crc32`、`md5`、`sha1` 和 `sha256` 的映射，摘要值為小寫十六進位 |
-| `identity.agrees(found, expected)` | 兩個 `sha256` 值是否相符，不分大小寫。任何一方沒有該值時拋出 `NoAuthority` |
+| 呼叫                               | 回傳                                                                         |
+| :--------------------------------- | :--------------------------------------------------------------------------- |
+| `identity.measure(data)`           | 包含 `size`、`crc32`、`md5`、`sha1` 和 `sha256` 的映射，摘要值為小寫十六進位 |
+| `identity.agrees(found, expected)` | 兩個 `sha256` 值是否相符，不分大小寫。任何一方沒有該值時拋出 `NoAuthority`   |
 
 只有一個值決定檔案是否就是那個檔案。即使記錄中較弱的值不一致，只要這個值相符，仍然算作匹配：
 
@@ -182,23 +182,23 @@ nothing decides: no sha256 to compare
 
 `Manifest(document)` 接受一個含有 `artifacts` 映射的映射。每個構件有一個 `accepted` 記錄列表，每筆記錄帶有 `sha256`。構件也可以帶有 `name` 及 `badDumps` 列表，列表條目帶有 `sha256` 和 `why`。`manifest.read(path)` 把 JSON 檔案解析成一個清單。
 
-| 成員 | 意義 |
-|:--|:--|
-| `Manifest.keys` | 構件的鍵，以 tuple 回傳 |
-| `Manifest.name(key)` | 構件的 `name`；構件沒有名稱或未經聲明時為 `key` |
-| `Manifest.match(key, data)` | 位元組 `data` 對照構件 `key` 的 `Match` |
-| `Match.key`, `Match.verdict` | 所查詢的鍵，以及下列五種判定之一 |
-| `Match.found` | `identity.measure` 對這些位元組的回傳值 |
-| `Match.why` | 所匹配壞傾印的 `why`，否則為 `None` |
-| `bool(match)` | 只有 `accepted` 時為 True |
+| 成員                         | 意義                                            |
+| :--------------------------- | :---------------------------------------------- |
+| `Manifest.keys`              | 構件的鍵，以 tuple 回傳                         |
+| `Manifest.name(key)`         | 構件的 `name`；構件沒有名稱或未經聲明時為 `key` |
+| `Manifest.match(key, data)`  | 位元組 `data` 對照構件 `key` 的 `Match`         |
+| `Match.key`, `Match.verdict` | 所查詢的鍵，以及下列五種判定之一                |
+| `Match.found`                | `identity.measure` 對這些位元組的回傳值         |
+| `Match.why`                  | 所匹配壞傾印的 `why`，否則為 `None`             |
+| `bool(match)`                | 只有 `accepted` 時為 True                       |
 
-| 判定 | 條件 |
-|:--|:--|
-| `accepted` | SHA-256 是構件接受的值之一 |
-| `a known bad dump` | SHA-256 是構件列在 `badDumps` 下的值之一 |
-| `the right length, the wrong content` | 大小與某筆接受記錄相符，但摘要值不符 |
-| `a length nothing declares` | 摘要值和大小都不相符 |
-| `undeclared` | 清單在該鍵下沒有構件 |
+| 判定                                  | 條件                                     |
+| :------------------------------------ | :--------------------------------------- |
+| `accepted`                            | SHA-256 是構件接受的值之一               |
+| `a known bad dump`                    | SHA-256 是構件列在 `badDumps` 下的值之一 |
+| `the right length, the wrong content` | 大小與某筆接受記錄相符，但摘要值不符     |
+| `a length nothing declares`           | 摘要值和大小都不相符                     |
+| `undeclared`                          | 清單在該鍵下沒有構件                     |
 
 ```python
 from smsimage import Manifest, identity
@@ -265,31 +265,31 @@ NoAuthority bios: an accepted file with no sha256 to decide on
 
 兩者都定義在 [`smsimage/errors.py`](smsimage/errors.py)，並在套件頂層公開，所以呼叫者可以按名稱分別捕捉。
 
-| 錯誤 | 拋出時機 |
-|:--|:--|
-| `Malformed` | `Manifest` 收到的不是映射、沒有聲明任何構件、有某個構件不是映射，或有某個構件的 `accepted` 列表缺失或為空 |
-| `NoAuthority` | `identity.agrees` 收到沒有 `sha256` 的一方，或 `Manifest` 收到沒有 `sha256` 的接受記錄 |
+| 錯誤          | 拋出時機                                                                                                  |
+| :------------ | :-------------------------------------------------------------------------------------------------------- |
+| `Malformed`   | `Manifest` 收到的不是映射、沒有聲明任何構件、有某個構件不是映射，或有某個構件的 `accepted` 列表缺失或為空 |
+| `NoAuthority` | `identity.agrees` 收到沒有 `sha256` 的一方，或 `Manifest` 收到沒有 `sha256` 的接受記錄                    |
 
 `manifest.read` 遇到無法讀取的檔案或無效的 JSON 時，由 `pathlib` 和 `json` 拋出它們本身的例外。
 
 ### 模組內容
 
-| 名稱 | 內容 |
-|:--|:--|
-| `smsimage.MAGIC` | `b"TMR SEGA"`，檔頭開首的八個位元組 |
-| `smsimage.CANDIDATES` | `(0x7FF0, 0x3FF0, 0x1FF0)`，搜尋的偏移位置，由大到小 |
-| `smsimage.REGIONS` | 區域半位元組對應的名稱：`0x3` `sms-japan`、`0x4` `sms-export`、`0x5` `gg-japan`、`0x6` `gg-export`、`0x7` `gg-international` |
-| `smsimage.SIZES` | 大小半位元組對應的位元組數：`0xA` 8K、`0xB` 16K、`0xC` 32K、`0xD` 48K、`0xE` 64K、`0xF` 128K、`0x0` 256K、`0x1` 512K、`0x2` 1M |
-| `smsimage.BARE`, `smsimage.STUBBED` | `dump.form` 回傳的兩個值 |
-| `smsimage.AUTHORITATIVE` | `"sha256"`，唯一起決定作用的值 |
-| `smsimage.VERDICTS` | 五種判定，按 `match` 嘗試的順序排列 |
-| `smsimage.Manifest`, `smsimage.Match` | 清單及其回答 |
-| `smsimage.Malformed`, `smsimage.NoAuthority` | 兩種錯誤 |
-| `smsimage.__version__` | 已安裝的版本 |
-| `dump.COPIER_BLOCK` | 512 |
-| `identity.CROSS_REFERENCE` | `("size", "crc32", "md5", "sha1")`，會量度但從不起決定作用 |
-| `header.CHECKSUM`, `header.REGION_AND_SIZE` | 校驗和字以及區域與大小位元組相對於錨點的位置：`0x0A` 至 `0x0B`，以及 `0x0F` |
-| `header.FIRST_SPAN`, `header.BANKS_FROM_THE_THIRD` | 出口版開機程式的兩個表，以大小半位元組為鍵 |
+| 名稱                                               | 內容                                                                                                                           |
+| :------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------- |
+| `smsimage.MAGIC`                                   | `b"TMR SEGA"`，檔頭開首的八個位元組                                                                                            |
+| `smsimage.CANDIDATES`                              | `(0x7FF0, 0x3FF0, 0x1FF0)`，搜尋的偏移位置，由大到小                                                                           |
+| `smsimage.REGIONS`                                 | 區域半位元組對應的名稱：`0x3` `sms-japan`、`0x4` `sms-export`、`0x5` `gg-japan`、`0x6` `gg-export`、`0x7` `gg-international`   |
+| `smsimage.SIZES`                                   | 大小半位元組對應的位元組數：`0xA` 8K、`0xB` 16K、`0xC` 32K、`0xD` 48K、`0xE` 64K、`0xF` 128K、`0x0` 256K、`0x1` 512K、`0x2` 1M |
+| `smsimage.BARE`, `smsimage.STUBBED`                | `dump.form` 回傳的兩個值                                                                                                       |
+| `smsimage.AUTHORITATIVE`                           | `"sha256"`，唯一起決定作用的值                                                                                                 |
+| `smsimage.VERDICTS`                                | 五種判定，按 `match` 嘗試的順序排列                                                                                            |
+| `smsimage.Manifest`, `smsimage.Match`              | 清單及其回答                                                                                                                   |
+| `smsimage.Malformed`, `smsimage.NoAuthority`       | 兩種錯誤                                                                                                                       |
+| `smsimage.__version__`                             | 已安裝的版本                                                                                                                   |
+| `dump.COPIER_BLOCK`                                | 512                                                                                                                            |
+| `identity.CROSS_REFERENCE`                         | `("size", "crc32", "md5", "sha1")`，會量度但從不起決定作用                                                                     |
+| `header.CHECKSUM`, `header.REGION_AND_SIZE`        | 校驗和字以及區域與大小位元組相對於錨點的位置：`0x0A` 至 `0x0B`，以及 `0x0F`                                                    |
+| `header.FIRST_SPAN`, `header.BANKS_FROM_THE_THIRD` | 出口版開機程式的兩個表，以大小半位元組為鍵                                                                                     |
 
 ```python
 import smsimage
@@ -315,18 +315,18 @@ bare stubbed sha256
 
 ## 真實遊戲庫實際包含甚麼
 
-Sega 的 *Software Reference Manual for the SEGA Mark III Console* 在第 22 頁列出檔頭，而 [`conformance/hardware.json`](conformance/hardware.json) 保存了手冊陳述的每項事實及其出處句子。這是一份重新打字的副本，打字者不詳。手冊與卡帶不一致時以卡帶為準，[`conformance/divergences.json`](conformance/divergences.json) 記錄每項不一致及其量度結果。以下每個數字都是在進行普查的 Master System 和 Game Gear 遊戲庫上量度所得，以映像檔位元組的 SHA-256 為鍵，所以計數是映像檔的數目，而不是檔名的數目。
+Sega 的 _Software Reference Manual for the SEGA Mark III Console_ 在第 22 頁列出檔頭，而 [`conformance/hardware.json`](conformance/hardware.json) 保存了手冊陳述的每項事實及其出處句子。這是一份重新打字的副本，打字者不詳。手冊與卡帶不一致時以卡帶為準，[`conformance/divergences.json`](conformance/divergences.json) 記錄每項不一致及其量度結果。以下每個數字都是在進行普查的 Master System 和 Game Gear 遊戲庫上量度所得，以映像檔位元組的 SHA-256 為鍵，所以計數是映像檔的數目，而不是檔名的數目。
 
-| 量度項目 | 數目 |
-|:--|--:|
-| 讀取的壓縮檔項目 | 5,111 |
-| 不同的映像檔 | 2,610 |
-| 重複列出已見過的映像檔 | 2,501 |
-| 檔頭只在 `0x7FF0` | 2,406 |
-| 檔頭在 `0x3FF0` / `0x1FF0` | 8 / 5 |
-| 檔頭同時在 `0x3FF0` 和 `0x7FF0`，從 `0x7FF0` 讀取 | 2 |
-| 任何候選偏移位置都沒有檔頭 | 189 |
-| 帶有 512 位元組拷貝機區塊 | 17 |
+| 量度項目                                          |  數目 |
+| :------------------------------------------------ | ----: |
+| 讀取的壓縮檔項目                                  | 5,111 |
+| 不同的映像檔                                      | 2,610 |
+| 重複列出已見過的映像檔                            | 2,501 |
+| 檔頭只在 `0x7FF0`                                 | 2,406 |
+| 檔頭在 `0x3FF0` / `0x1FF0`                        | 8 / 5 |
+| 檔頭同時在 `0x3FF0` 和 `0x7FF0`，從 `0x7FF0` 讀取 |     2 |
+| 任何候選偏移位置都沒有檔頭                        |   189 |
+| 帶有 512 位元組拷貝機區塊                         |    17 |
 
 其中有五件事，會令按描述編寫的讀取程式出錯。
 
@@ -364,11 +364,11 @@ None
 
 這條規則就是出口版開機程式執行的規則，讀取自 [`artifacts.manifest.json`](artifacts.manifest.json) 中聲明的 v1.3 程式。每個大小代碼指定一個首段範圍，即 `0x1FF0`、`0x3FF0`、`0x7FF0`，或 48K 時為 `0xBFF0`，並把範圍以下的位元組加總。從 64K 起，再加上從第三個開始的完整 16K 記憶庫：64K 加 2 個，128K 加 6 個，256K 加 14 個，512K 加 30 個，1M 加 62 個。只保留低十六位。`python3 -m conformance.boot <that program>` 從該程式讀出兩個表、八位元組比較和區域檢查條件，並與本套件核對。手冊說只需排除兩個校驗和位元組，而按這種解讀，2,418 個映像檔中沒有一個能重現儲存的值。
 
-| 群體 | 重現 |
-|:--|--:|
-| 零售版 Master System 卡帶，即 Master System 集合中的四個地區資料夾，由 `python3 -m conformance.categories` 量度 | 393 個中的 370 個 |
-| Master System 集合中所有帶有檔頭且大小為本解讀所知的映像檔，包括修改過的映像檔 | 1,331 個中的 925 個 |
-| 所有帶有檔頭且大小為本解讀所知的映像檔 | 2,418 個中的 971 個 |
+| 群體                                                                                                            |                重現 |
+| :-------------------------------------------------------------------------------------------------------------- | ------------------: |
+| 零售版 Master System 卡帶，即 Master System 集合中的四個地區資料夾，由 `python3 -m conformance.categories` 量度 |   393 個中的 370 個 |
+| Master System 集合中所有帶有檔頭且大小為本解讀所知的映像檔，包括修改過的映像檔                                  | 1,331 個中的 925 個 |
+| 所有帶有檔頭且大小為本解讀所知的映像檔                                                                          | 2,418 個中的 971 個 |
 
 修改過的映像檔不一致，原因屬於修改本身：據 `python3 -m conformance.categories` 量度，翻譯版在 301 個中有 78 個重現規則，改版在 129 個中有 33 個。因此普查把一致與否作為觀察結果報告，而不以它作為關卡檢查。
 
@@ -382,11 +382,11 @@ python3 -m conformance.census /path/to/library.zip /path/to/another
 
 它按 SHA-256 把每個不同的映像檔只計算一次，對每個映像檔檢查六項屬性，報告一項觀察結果，並寫入 [`conformance/corpus.json`](conformance/corpus.json)：145 種由形式、長度、錨點、區域、聲明大小，以及儲存的校驗和是否重現所構成的組合，每種組合附有計數。不含標題，也不含內容，所以其中沒有任何東西能重建任何卡帶的任何部分。
 
-| 結束代碼 | 條件 |
-|:--|:--|
-| 0 | 每項屬性在每個映像檔上都成立 |
-| 1 | 有屬性不成立，或給出的路徑不存在 |
-| 2 | 沒有給出路徑 |
+| 結束代碼 | 條件                             |
+| :------- | :------------------------------- |
+| 0        | 每項屬性在每個映像檔上都成立     |
+| 1        | 有屬性不成立，或給出的路徑不存在 |
+| 2        | 沒有給出路徑                     |
 
 這六項屬性是函數之間的不變式，這些函數目前在構造上就一致。每個測試替換它所守護的那一對中的一方，觀察屬性是否觸發，所以六項屬性都已證實能捕捉它們要防範的偏移。
 
@@ -402,13 +402,13 @@ python3 -m conformance.census /path/to/library.zip /path/to/another
 
 ## 參與開發
 
-| 需要 | 位置 |
-|:--|:--|
-| 每個關卡檢查及其執行順序 | [CONTRIBUTING.md](CONTRIBUTING.md) |
-| 給程式碼代理的相同資料 | [AGENTS.md](AGENTS.md) |
-| 本儲存庫與同系列其他儲存庫共用的標準 | [FAMILY.md](FAMILY.md) |
-| 錯誤報告 | [GitHub Issues](https://github.com/gufranco/sms-rom-image-python/issues) |
-| 安全問題報告 | [SECURITY.md](SECURITY.md) |
+| 需要                                 | 位置                                                                     |
+| :----------------------------------- | :----------------------------------------------------------------------- |
+| 每個關卡檢查及其執行順序             | [CONTRIBUTING.md](CONTRIBUTING.md)                                       |
+| 給程式碼代理的相同資料               | [AGENTS.md](AGENTS.md)                                                   |
+| 本儲存庫與同系列其他儲存庫共用的標準 | [FAMILY.md](FAMILY.md)                                                   |
+| 錯誤報告                             | [GitHub Issues](https://github.com/gufranco/sms-rom-image-python/issues) |
+| 安全問題報告                         | [SECURITY.md](SECURITY.md)                                               |
 
 ```bash
 uvx ruff@0.16.3 format --check .
@@ -427,7 +427,7 @@ done
 
 ## 參考資料
 
-- *Software Reference Manual for the SEGA Mark III Console*，Sega，無日期，第 22 頁，由不具名者重新打字。45 頁，184,840 位元組，SHA-256 `166f09331ba9df055f7a352f10c6a7843911470bc72d9347eda4a0de86e8cfce`。用於檔頭佈局、開首字串、校驗和位元組和大小代碼。它不可再分發，也不在本儲存庫中。`python3 -m conformance.documents` 從 https://segaretro.org/images/d/d6/SoftwareReferenceManualForSegaMarkIIIEU.pdf 下載它到 `docs/`，並拒絕任何其他檔案。本 README 中的每個網址每週都會檢查。
+- _Software Reference Manual for the SEGA Mark III Console_，Sega，無日期，第 22 頁，由不具名者重新打字。45 頁，184,840 位元組，SHA-256 `166f09331ba9df055f7a352f10c6a7843911470bc72d9347eda4a0de86e8cfce`。用於檔頭佈局、開首字串、校驗和位元組和大小代碼。它不可再分發，也不在本儲存庫中。`python3 -m conformance.documents` 從 https://segaretro.org/images/d/d6/SoftwareReferenceManualForSegaMarkIIIEU.pdf 下載它到 `docs/`，並拒絕任何其他檔案。本 README 中的每個網址每週都會檢查。
 
 ## 引用本專案
 
