@@ -8,7 +8,7 @@ English | [日本語](README.ja.md) | [简体中文](README.zh-Hans.md) | [繁�
 [![Release](https://img.shields.io/github/v/release/gufranco/sms-rom-image-python)](https://github.com/gufranco/sms-rom-image-python/releases)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-**2,922** distinct images measured from **5,425** archive entries, **0** property failures, the header read at `0x7FF0` on **2,453** of them, the stored checksum reproduced on **370** of **393** retail Master System cartridges, **14** boot programs declared by digest, **750** tests, **100%** statement and branch coverage, no dependencies
+**2,922** distinct images measured from **5,425** archive entries, **0** property failures, the header read at `0x7FF0` on **2,453** of them, the stored checksum reproduced on **370** of **393** retail Master System cartridges, **14** boot programs declared by digest, **761** tests, **100%** statement and branch coverage, no dependencies
 
 ```python
 from smsimage import dump, header

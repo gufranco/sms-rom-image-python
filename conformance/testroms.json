@@ -1,0 +1,739 @@
+{
+  "cartridges": [
+    {
+      "id": "64-color-palette-test",
+      "title": "64 Color Palette Test (PD)",
+      "sha256": "7b9058becf83cb01a60f7fcdc57c89db1e8806d00af4ffcd35ba42e8498db79f",
+      "source": "~/sms-artifacts/htgdb/Master EverDrive/5 Tools & Service Test Carts.zip, member 64 Color Palette Test (PD).sms",
+      "exercises": "the header finder, the region and size codes, and the checksum",
+      "outcome": "read",
+      "heldBy": [
+        "conformance/testroms.test.py::RecordedReadingTest.test_every_image_reads_as_recorded"
+      ],
+      "read": {
+        "form": "bare",
+        "size": 32768,
+        "anchor": 32752,
+        "region": null,
+        "declared": 262144,
+        "carried": false,
+        "stored": 0,
+        "computed": 37516
+      }
+    },
+    {
+      "id": "bios-alex-kidd-in-miracle-world-bios-version-world-sega-ages",
+      "title": "[BIOS] Alex Kidd in Miracle World (BIOS Version) (World) (Sega Ages)",
+      "sha256": "aaf39841be10f9cd6908a95a7451c3a0c8ac77125eb412b7a41cad260c888ab5",
+      "source": "~/sms-artifacts/htgdb/Master EverDrive/5 Tools & Service Test Carts.zip, member Bios/[BIOS] Alex Kidd in Miracle World (BIOS Version) (World) (Sega Ages).sms",
+      "exercises": "the header finder, the region and size codes, and the checksum",
+      "outcome": "read",
+      "heldBy": [
+        "conformance/testroms.test.py::RecordedReadingTest.test_every_image_reads_as_recorded"
+      ],
+      "read": {
+        "form": "bare",
+        "size": 131072,
+        "anchor": 32752,
+        "region": "sms-export",
+        "declared": 131072,
+        "carried": false,
+        "stored": 35182,
+        "computed": 28102
+      }
+    },
+    {
+      "id": "bios-alex-kidd-in-miracle-world-korea-unl",
+      "title": "[BIOS] Alex Kidd in Miracle World (Korea) (Unl)",
+      "sha256": "57abf3c00c82a8e042ebeb2bfe412adac9ba005e9009845236390de3ee645248",
+      "source": "~/sms-artifacts/htgdb/Master EverDrive/5 Tools & Service Test Carts.zip, member Bios/[BIOS] Alex Kidd in Miracle World (Korea) (Unl).sms",
+      "exercises": "the header finder, the region and size codes, and the checksum",
+      "outcome": "read",
+      "heldBy": [
+        "conformance/testroms.test.py::RecordedReadingTest.test_every_image_reads_as_recorded"
+      ],
+      "read": {
+        "form": "bare",
+        "size": 131072,
+        "anchor": 32752,
+        "region": "sms-export",
+        "declared": 131072,
+        "carried": false,
+        "stored": 65535,
+        "computed": 698
+      }
+    },
+    {
+      "id": "bios-alex-kidd-in-miracle-world-usa-europe",
+      "title": "[BIOS] Alex Kidd in Miracle World (USA, Europe)",
+      "sha256": "0c08e17b0ecc3967e1094f12841fdc97fdcbbf986e3bf9a06b35b69e7d95e4cd",
+      "source": "~/sms-artifacts/htgdb/Master EverDrive/5 Tools & Service Test Carts.zip, member Bios/[BIOS] Alex Kidd in Miracle World (USA, Europe).sms",
+      "exercises": "the header finder, the region and size codes, and the checksum",
+      "outcome": "read",
+      "heldBy": [
+        "conformance/testroms.test.py::RecordedReadingTest.test_every_image_reads_as_recorded"
+      ],
+      "read": {
+        "form": "bare",
+        "size": 131072,
+        "anchor": 32752,
+        "region": "sms-export",
+        "declared": 131072,
+        "carried": true,
+        "stored": 35182,
+        "computed": 35182
+      }
+    },
+    {
+      "id": "bios-hang-on-safari-hunt-usa-europe-brazil-en-v2-4",
+      "title": "[BIOS] Hang On & Safari Hunt (USA, Europe, Brazil) (En) (v2.4)",
+      "sha256": "e9eb04ec80ded8658f765c4eca75cdbe23cbc7d8fed73f9c3db7a868dbf649ff",
+      "source": "~/sms-artifacts/htgdb/Master EverDrive/5 Tools & Service Test Carts.zip, member Bios/[BIOS] Hang On & Safari Hunt (USA, Europe, Brazil) (En) (v2.4).sms",
+      "exercises": "the header finder, the region and size codes, and the checksum",
+      "outcome": "read",
+      "heldBy": [
+        "conformance/testroms.test.py::RecordedReadingTest.test_every_image_reads_as_recorded"
+      ],
+      "read": {
+        "form": "bare",
+        "size": 131072,
+        "anchor": 32752,
+        "region": "sms-export",
+        "declared": 131072,
+        "carried": false,
+        "stored": 30361,
+        "computed": 6446
+      }
+    },
+    {
+      "id": "bios-hang-on-usa-europe-v3-4",
+      "title": "[BIOS] Hang On (USA, Europe) (v3.4)",
+      "sha256": "1a73bc6e1a9973b98432774a1480b3ac1259027a97590d5e67d52745159abbbc",
+      "source": "~/sms-artifacts/htgdb/Master EverDrive/5 Tools & Service Test Carts.zip, member Bios/[BIOS] Hang On (USA, Europe) (v3.4).sms",
+      "exercises": "the header finder, the region and size codes, and the checksum",
+      "outcome": "read",
+      "heldBy": [
+        "conformance/testroms.test.py::RecordedReadingTest.test_every_image_reads_as_recorded"
+      ],
+      "read": {
+        "form": "bare",
+        "size": 131072,
+        "anchor": null,
+        "region": null,
+        "declared": null,
+        "carried": null,
+        "stored": null,
+        "computed": null
+      }
+    },
+    {
+      "id": "bios-missile-defense-3-d-usa-europe-v4-4",
+      "title": "[BIOS] Missile Defense 3-D (USA, Europe) (v4.4)",
+      "sha256": "13c0639cc037167f53e6151dbdea013758c3d09a76b064a894bf15c39c0a3897",
+      "source": "~/sms-artifacts/htgdb/Master EverDrive/5 Tools & Service Test Carts.zip, member Bios/[BIOS] Missile Defense 3-D (USA, Europe) (v4.4).sms",
+      "exercises": "the header finder, the region and size codes, and the checksum",
+      "outcome": "read",
+      "heldBy": [
+        "conformance/testroms.test.py::RecordedReadingTest.test_every_image_reads_as_recorded"
+      ],
+      "read": {
+        "form": "bare",
+        "size": 131072,
+        "anchor": null,
+        "region": null,
+        "declared": null,
+        "carried": null,
+        "stored": null,
+        "computed": null
+      }
+    },
+    {
+      "id": "bios-sega-master-system-europe-v2-0",
+      "title": "[BIOS] Sega Master System (Europe) (v2.0)",
+      "sha256": "1eb16fc06ceaf05651d7cfd69d1713e6ddccc4349a511f6fd17e037d71f9d85b",
+      "source": "~/sms-artifacts/htgdb/Master EverDrive/5 Tools & Service Test Carts.zip, member Bios/[BIOS] Sega Master System (Europe) (v2.0).sms",
+      "exercises": "the header finder, the region and size codes, and the checksum",
+      "outcome": "read",
+      "heldBy": [
+        "conformance/testroms.test.py::RecordedReadingTest.test_every_image_reads_as_recorded"
+      ],
+      "read": {
+        "form": "bare",
+        "size": 8192,
+        "anchor": null,
+        "region": null,
+        "declared": null,
+        "carried": null,
+        "stored": null,
+        "computed": null
+      }
+    },
+    {
+      "id": "bios-sega-master-system-japan-v2-1",
+      "title": "[BIOS] Sega Master System (Japan) (v2.1)",
+      "sha256": "67846e26764bd862f19179294347f7353a4166b62ac4198a5ec32933b7da486e",
+      "source": "~/sms-artifacts/htgdb/Master EverDrive/5 Tools & Service Test Carts.zip, member Bios/[BIOS] Sega Master System (Japan) (v2.1).sms",
+      "exercises": "the header finder, the region and size codes, and the checksum",
+      "outcome": "read",
+      "heldBy": [
+        "conformance/testroms.test.py::RecordedReadingTest.test_every_image_reads_as_recorded"
+      ],
+      "read": {
+        "form": "bare",
+        "size": 8192,
+        "anchor": null,
+        "region": null,
+        "declared": null,
+        "carried": null,
+        "stored": null,
+        "computed": null
+      }
+    },
+    {
+      "id": "bios-sega-master-system-usa-m404-proto",
+      "title": "[BIOS] Sega Master System (USA) (M404) (Proto)",
+      "sha256": "2a4371fadb9da65037ccd622adb77fc4c6e9a993ed2034e0e08bc320b4e9b41f",
+      "source": "~/sms-artifacts/htgdb/Master EverDrive/5 Tools & Service Test Carts.zip, member Bios/[BIOS] Sega Master System (USA) (M404) (Proto).sms",
+      "exercises": "the header finder, the region and size codes, and the checksum",
+      "outcome": "read",
+      "heldBy": [
+        "conformance/testroms.test.py::RecordedReadingTest.test_every_image_reads_as_recorded"
+      ],
+      "read": {
+        "form": "bare",
+        "size": 8192,
+        "anchor": null,
+        "region": null,
+        "declared": null,
+        "carried": null,
+        "stored": null,
+        "computed": null
+      }
+    },
+    {
+      "id": "bios-sega-master-system-usa-store-display-unit",
+      "title": "[BIOS] Sega Master System (USA) (Store Display Unit)",
+      "sha256": "6f4e6de10f1d07bda695c629c67457bb0248eeb8ffa0c61a2742b8529274de30",
+      "source": "~/sms-artifacts/htgdb/Master EverDrive/5 Tools & Service Test Carts.zip, member Bios/[BIOS] Sega Master System (USA) (Store Display Unit).sms",
+      "exercises": "the header finder, the region and size codes, and the checksum",
+      "outcome": "read",
+      "heldBy": [
+        "conformance/testroms.test.py::RecordedReadingTest.test_every_image_reads_as_recorded"
+      ],
+      "read": {
+        "form": "bare",
+        "size": 16384,
+        "anchor": null,
+        "region": null,
+        "declared": null,
+        "carried": null,
+        "stored": null,
+        "computed": null
+      }
+    },
+    {
+      "id": "bios-sega-master-system-usa-v1-0-proto",
+      "title": "[BIOS] Sega Master System (USA) (v1.0) (Proto)",
+      "sha256": "cb01de3464797a77b52e82f5f9b05398540df8c1151d31128d49584028589062",
+      "source": "~/sms-artifacts/htgdb/Master EverDrive/5 Tools & Service Test Carts.zip, member Bios/[BIOS] Sega Master System (USA) (v1.0) (Proto).sms",
+      "exercises": "the header finder, the region and size codes, and the checksum",
+      "outcome": "read",
+      "heldBy": [
+        "conformance/testroms.test.py::RecordedReadingTest.test_every_image_reads_as_recorded"
+      ],
+      "read": {
+        "form": "bare",
+        "size": 8192,
+        "anchor": null,
+        "region": null,
+        "declared": null,
+        "carried": null,
+        "stored": null,
+        "computed": null
+      }
+    },
+    {
+      "id": "bios-sega-master-system-usa-europe-v1-3",
+      "title": "[BIOS] Sega Master System (USA, Europe) (v1.3)",
+      "sha256": "477617917a12a30f9f43844909dc2de6e6a617430f5c9a36306c86414a670d50",
+      "source": "~/sms-artifacts/htgdb/Master EverDrive/5 Tools & Service Test Carts.zip, member Bios/[BIOS] Sega Master System (USA, Europe) (v1.3).sms",
+      "exercises": "the header finder, the region and size codes, and the checksum",
+      "outcome": "read",
+      "heldBy": [
+        "conformance/testroms.test.py::RecordedReadingTest.test_every_image_reads_as_recorded"
+      ],
+      "read": {
+        "form": "bare",
+        "size": 8192,
+        "anchor": null,
+        "region": null,
+        "declared": null,
+        "carried": null,
+        "stored": null,
+        "computed": null
+      }
+    },
+    {
+      "id": "bios-sonic-the-hedgehog-europe",
+      "title": "[BIOS] Sonic The Hedgehog (Europe)",
+      "sha256": "c51ec80b7a609c5ee3d203ceee2b602ae4dfb4479caf15dc1d030c40c0364e93",
+      "source": "~/sms-artifacts/htgdb/Master EverDrive/5 Tools & Service Test Carts.zip, member Bios/[BIOS] Sonic The Hedgehog (Europe).sms",
+      "exercises": "the header finder, the region and size codes, and the checksum",
+      "outcome": "read",
+      "heldBy": [
+        "conformance/testroms.test.py::RecordedReadingTest.test_every_image_reads_as_recorded"
+      ],
+      "read": {
+        "form": "bare",
+        "size": 262144,
+        "anchor": 32752,
+        "region": "sms-export",
+        "declared": 262144,
+        "carried": false,
+        "stored": 42267,
+        "computed": 44098
+      }
+    },
+    {
+      "id": "color-switch-test-japan-en-proto",
+      "title": "Color & Switch Test (Japan) (En) (Proto)",
+      "sha256": "4c184967c21261f55174d0de28b65dd064fcebbaa3ec779a00c21adabb6372ca",
+      "source": "~/sms-artifacts/htgdb/Master EverDrive/5 Tools & Service Test Carts.zip, member Color & Switch Test (Japan) (En) (Proto).sms",
+      "exercises": "the header finder, the region and size codes, and the checksum",
+      "outcome": "read",
+      "heldBy": [
+        "conformance/testroms.test.py::RecordedReadingTest.test_every_image_reads_as_recorded"
+      ],
+      "read": {
+        "form": "bare",
+        "size": 32768,
+        "anchor": 32752,
+        "region": "sms-export",
+        "declared": 32768,
+        "carried": true,
+        "stored": 65061,
+        "computed": 65061
+      }
+    },
+    {
+      "id": "controllers-test-sms-genesis-v1-sverx-2018-01-30",
+      "title": "Controllers Test - SMS & Genesis (PD) v1 sverx 2018-01-30",
+      "sha256": "f00344d018208f6001a0da868c3d6709bdd0da2ee57aa0b1f5a0f7adb6c722f9",
+      "source": "~/sms-artifacts/htgdb/Master EverDrive/5 Tools & Service Test Carts.zip, member Controllers Test - SMS & Genesis (PD) v1 sverx 2018-01-30.sms",
+      "exercises": "the header finder, the region and size codes, and the checksum",
+      "outcome": "read",
+      "heldBy": [
+        "conformance/testroms.test.py::RecordedReadingTest.test_every_image_reads_as_recorded"
+      ],
+      "read": {
+        "form": "bare",
+        "size": 16384,
+        "anchor": null,
+        "region": null,
+        "declared": null,
+        "carried": null,
+        "stored": null,
+        "computed": null
+      }
+    },
+    {
+      "id": "empty-slot-to-test-sms-bios-splash-screen",
+      "title": "Empty Slot to test SMS BIOS splash screen (PD)",
+      "sha256": "b5a41c3758763bbec72769fab4a2533bf2db0b6312d93d25a695f9e4b9e02260",
+      "source": "~/sms-artifacts/htgdb/Master EverDrive/5 Tools & Service Test Carts.zip, member Empty Slot to test SMS BIOS splash screen (PD).sms",
+      "exercises": "the header finder, the region and size codes, and the checksum",
+      "outcome": "read",
+      "heldBy": [
+        "conformance/testroms.test.py::RecordedReadingTest.test_every_image_reads_as_recorded"
+      ],
+      "read": {
+        "form": "bare",
+        "size": 131072,
+        "anchor": null,
+        "region": null,
+        "declared": null,
+        "carried": null,
+        "stored": null,
+        "computed": null
+      }
+    },
+    {
+      "id": "interrupt-test",
+      "title": "Interrupt Test (PD)",
+      "sha256": "54f94e61f7690c4bfea36f70d3bf1e0b9f7583ef64c0c49deb571c9b0ffed408",
+      "source": "~/sms-artifacts/htgdb/Master EverDrive/5 Tools & Service Test Carts.zip, member Interrupt Test (PD).sms",
+      "exercises": "the header finder, the region and size codes, and the checksum",
+      "outcome": "read",
+      "heldBy": [
+        "conformance/testroms.test.py::RecordedReadingTest.test_every_image_reads_as_recorded"
+      ],
+      "read": {
+        "form": "bare",
+        "size": 32768,
+        "anchor": 32752,
+        "region": null,
+        "declared": 262144,
+        "carried": false,
+        "stored": 8224,
+        "computed": 33540
+      }
+    },
+    {
+      "id": "line-interrupt-test-1-charles-macdonald",
+      "title": "Line Interrupt Test #1 (PD) Charles MacDonald",
+      "sha256": "3a5538cf3592ce83378cb6592d00ab0c9a39c0ce093d12c32982977d615254d7",
+      "source": "~/sms-artifacts/htgdb/Master EverDrive/5 Tools & Service Test Carts.zip, member Line Interrupt Test #1 (PD) Charles MacDonald.sms",
+      "exercises": "the header finder, the region and size codes, and the checksum",
+      "outcome": "read",
+      "heldBy": [
+        "conformance/testroms.test.py::RecordedReadingTest.test_every_image_reads_as_recorded"
+      ],
+      "read": {
+        "form": "bare",
+        "size": 32768,
+        "anchor": 32752,
+        "region": "sms-export",
+        "declared": 32768,
+        "carried": true,
+        "stored": 38601,
+        "computed": 38601
+      }
+    },
+    {
+      "id": "sega-graphic-board-usa-v2-0-proto",
+      "title": "Sega Graphic Board (USA) (v2.0) (Proto)",
+      "sha256": "208f39ae99b691e87777661ebafa8532939416da7b8893fd3e6638f389b07279",
+      "source": "~/sms-artifacts/htgdb/Master EverDrive/5 Tools & Service Test Carts.zip, member Sega Graphic Board (USA) (v2.0) (Proto).sms",
+      "exercises": "the header finder, the region and size codes, and the checksum",
+      "outcome": "read",
+      "heldBy": [
+        "conformance/testroms.test.py::RecordedReadingTest.test_every_image_reads_as_recorded"
+      ],
+      "read": {
+        "form": "bare",
+        "size": 32768,
+        "anchor": 32752,
+        "region": "sms-export",
+        "declared": 32768,
+        "carried": true,
+        "stored": 9864,
+        "computed": 9864
+      }
+    },
+    {
+      "id": "sega-mark-iii-bg-test-v0-01",
+      "title": "Sega Mark III BG Test v0.01 (PD)",
+      "sha256": "1bf18c7a722b8d2ab46cc011127a710a3c0ee8444fe0a77a0e74f3406920e6a5",
+      "source": "~/sms-artifacts/htgdb/Master EverDrive/5 Tools & Service Test Carts.zip, member Sega Mark III BG Test v0.01 (PD).sms",
+      "exercises": "the header finder, the region and size codes, and the checksum",
+      "outcome": "read",
+      "heldBy": [
+        "conformance/testroms.test.py::RecordedReadingTest.test_every_image_reads_as_recorded"
+      ],
+      "read": {
+        "form": "bare",
+        "size": 32768,
+        "anchor": null,
+        "region": null,
+        "declared": null,
+        "carried": null,
+        "stored": null,
+        "computed": null
+      }
+    },
+    {
+      "id": "sega-mark-iii-port-test-v0-1",
+      "title": "Sega Mark III Port Test v0.1 (PD)",
+      "sha256": "6e6ef0ea9f9acca4b666e845cc170bf4eca1f28c24b75b7bc87b168c82aa3b87",
+      "source": "~/sms-artifacts/htgdb/Master EverDrive/5 Tools & Service Test Carts.zip, member Sega Mark III Port Test v0.1 (PD).sms",
+      "exercises": "the header finder, the region and size codes, and the checksum",
+      "outcome": "read",
+      "heldBy": [
+        "conformance/testroms.test.py::RecordedReadingTest.test_every_image_reads_as_recorded"
+      ],
+      "read": {
+        "form": "bare",
+        "size": 32768,
+        "anchor": null,
+        "region": null,
+        "declared": null,
+        "carried": null,
+        "stored": null,
+        "computed": null
+      }
+    },
+    {
+      "id": "sms-boot-loader-0-9",
+      "title": "SMS Boot Loader 0.9 (PD)",
+      "sha256": "ba360798d1789f2543e42ed1287939914108b8e6bc27830da9cf782f5a851af4",
+      "source": "~/sms-artifacts/htgdb/Master EverDrive/5 Tools & Service Test Carts.zip, member SMS Boot Loader 0.9 (PD).sms",
+      "exercises": "the header finder, the region and size codes, and the checksum",
+      "outcome": "read",
+      "heldBy": [
+        "conformance/testroms.test.py::RecordedReadingTest.test_every_image_reads_as_recorded"
+      ],
+      "read": {
+        "form": "bare",
+        "size": 32768,
+        "anchor": 32752,
+        "region": "sms-export",
+        "declared": 32768,
+        "carried": true,
+        "stored": 51161,
+        "computed": 51161
+      }
+    },
+    {
+      "id": "sms-fm-tool-ym2413-v1-chris-covell",
+      "title": "SMS FM Tool - YM2413 (PD) v1 Chris Covell",
+      "sha256": "f9b6e8536752b7b264fa081553bc5bd76b4eea10da9f995d7e7821842bfc302b",
+      "source": "~/sms-artifacts/htgdb/Master EverDrive/5 Tools & Service Test Carts.zip, member SMS FM Tool - YM2413 (PD) v1 Chris Covell.sms",
+      "exercises": "the header finder, the region and size codes, and the checksum",
+      "outcome": "read",
+      "heldBy": [
+        "conformance/testroms.test.py::RecordedReadingTest.test_every_image_reads_as_recorded"
+      ],
+      "read": {
+        "form": "bare",
+        "size": 65536,
+        "anchor": 32752,
+        "region": "sms-export",
+        "declared": 32768,
+        "carried": true,
+        "stored": 36877,
+        "computed": 36877
+      }
+    },
+    {
+      "id": "sms-genesis-6-button-controller-test-by-charles-macdonald",
+      "title": "SMS Genesis 6 Button Controller Test by Charles MacDonald (PD)",
+      "sha256": "94508b8479cad43810bfe15fe3390c720dfb8eea3a0a911957ffb2393ecdc98e",
+      "source": "~/sms-artifacts/htgdb/Master EverDrive/5 Tools & Service Test Carts.zip, member SMS Genesis 6 Button Controller Test by Charles MacDonald (PD).sms",
+      "exercises": "the header finder, the region and size codes, and the checksum",
+      "outcome": "read",
+      "heldBy": [
+        "conformance/testroms.test.py::RecordedReadingTest.test_every_image_reads_as_recorded"
+      ],
+      "read": {
+        "form": "bare",
+        "size": 32768,
+        "anchor": 32752,
+        "region": null,
+        "declared": 262144,
+        "carried": false,
+        "stored": 0,
+        "computed": 38964
+      }
+    },
+    {
+      "id": "sms-paging-pfr-detect-v2-eric-r-quinn",
+      "title": "SMS Paging PFR Detect (PD) v2 Eric R. Quinn",
+      "sha256": "7c56d5d84c5f701711f2254458b3ce36be7e00aa1438d46d040f21a24b595515",
+      "source": "~/sms-artifacts/htgdb/Master EverDrive/5 Tools & Service Test Carts.zip, member SMS Paging PFR Detect (PD) v2 Eric R. Quinn.sms",
+      "exercises": "the header finder, the region and size codes, and the checksum",
+      "outcome": "read",
+      "heldBy": [
+        "conformance/testroms.test.py::RecordedReadingTest.test_every_image_reads_as_recorded"
+      ],
+      "read": {
+        "form": "bare",
+        "size": 32768,
+        "anchor": 32752,
+        "region": null,
+        "declared": 1048576,
+        "carried": true,
+        "stored": 35607,
+        "computed": 35607
+      }
+    },
+    {
+      "id": "sms-palette-tool-v1-0",
+      "title": "SMS Palette Tool v1.0",
+      "sha256": "7b01ec09b9a7ea2f1224ac36fb06c44dfd6d3d0f14d19b22006240e723272165",
+      "source": "~/sms-artifacts/htgdb/Master EverDrive/5 Tools & Service Test Carts.zip, member SMS Palette Tool v1.0.sms",
+      "exercises": "the header finder, the region and size codes, and the checksum",
+      "outcome": "read",
+      "heldBy": [
+        "conformance/testroms.test.py::RecordedReadingTest.test_every_image_reads_as_recorded"
+      ],
+      "read": {
+        "form": "bare",
+        "size": 32768,
+        "anchor": 32752,
+        "region": null,
+        "declared": null,
+        "carried": null,
+        "stored": 62969,
+        "computed": null
+      }
+    },
+    {
+      "id": "sms-sound-test-v1-1-nicolas-warren",
+      "title": "SMS Sound Test (PD) v1.1 Nicolas Warren",
+      "sha256": "66d155741e24e42a946731965187725e48c1974d04cd5d183a086fe9078feb61",
+      "source": "~/sms-artifacts/htgdb/Master EverDrive/5 Tools & Service Test Carts.zip, member SMS Sound Test (PD) v1.1 Nicolas Warren.sms",
+      "exercises": "the header finder, the region and size codes, and the checksum",
+      "outcome": "read",
+      "heldBy": [
+        "conformance/testroms.test.py::RecordedReadingTest.test_every_image_reads_as_recorded"
+      ],
+      "read": {
+        "form": "bare",
+        "size": 32768,
+        "anchor": 32752,
+        "region": "sms-export",
+        "declared": 32768,
+        "carried": true,
+        "stored": 24994,
+        "computed": 24994
+      }
+    },
+    {
+      "id": "sms-sprite-test",
+      "title": "SMS Sprite Test (PD)",
+      "sha256": "d948fc4be6b54e88a2347ec3722ec1037d144c50cf5c37b0cb62fa6fccba966f",
+      "source": "~/sms-artifacts/htgdb/Master EverDrive/5 Tools & Service Test Carts.zip, member SMS Sprite Test (PD).sms",
+      "exercises": "the header finder, the region and size codes, and the checksum",
+      "outcome": "read",
+      "heldBy": [
+        "conformance/testroms.test.py::RecordedReadingTest.test_every_image_reads_as_recorded"
+      ],
+      "read": {
+        "form": "bare",
+        "size": 32768,
+        "anchor": 32752,
+        "region": null,
+        "declared": 262144,
+        "carried": false,
+        "stored": 0,
+        "computed": 17579
+      }
+    },
+    {
+      "id": "sms-test-suite-v0-32-sverx",
+      "title": "SMS Test Suite (PD) v0.32 sverx",
+      "sha256": "18c08b24df7339efe8339cd16a9a1bd863cfeac393cc9dde988b8dd35d395a41",
+      "source": "~/sms-artifacts/htgdb/Master EverDrive/5 Tools & Service Test Carts.zip, member SMS Test Suite (PD) v0.32 sverx.sms",
+      "exercises": "the header finder, the region and size codes, and the checksum",
+      "outcome": "read",
+      "heldBy": [
+        "conformance/testroms.test.py::RecordedReadingTest.test_every_image_reads_as_recorded"
+      ],
+      "read": {
+        "form": "bare",
+        "size": 32768,
+        "anchor": 32752,
+        "region": "sms-export",
+        "declared": 32768,
+        "carried": true,
+        "stored": 49424,
+        "computed": 49424
+      }
+    },
+    {
+      "id": "sms-v-counter-test-program-charles-macdonald",
+      "title": "SMS V Counter Test Program (PD) Charles MacDonald",
+      "sha256": "70be2135231cc24ab624975c857df64366a42668d9793e25f210b720cd3db147",
+      "source": "~/sms-artifacts/htgdb/Master EverDrive/5 Tools & Service Test Carts.zip, member SMS V Counter Test Program (PD) Charles MacDonald.sms",
+      "exercises": "the header finder, the region and size codes, and the checksum",
+      "outcome": "read",
+      "heldBy": [
+        "conformance/testroms.test.py::RecordedReadingTest.test_every_image_reads_as_recorded"
+      ],
+      "read": {
+        "form": "bare",
+        "size": 32768,
+        "anchor": 32752,
+        "region": null,
+        "declared": 262144,
+        "carried": false,
+        "stored": 0,
+        "computed": 48614
+      }
+    },
+    {
+      "id": "sms-vgm-player-v0-45-maxim",
+      "title": "SMS VGM Player (PD) v0.45 Maxim",
+      "sha256": "e7e7549582f29fe9a02222190de345d1bae2253173a969bc250ec3f5d352f65f",
+      "source": "~/sms-artifacts/htgdb/Master EverDrive/5 Tools & Service Test Carts.zip, member SMS VGM Player (PD) v0.45 Maxim.sms",
+      "exercises": "the header finder, the region and size codes, and the checksum",
+      "outcome": "read",
+      "heldBy": [
+        "conformance/testroms.test.py::RecordedReadingTest.test_every_image_reads_as_recorded"
+      ],
+      "read": {
+        "form": "bare",
+        "size": 32768,
+        "anchor": 32752,
+        "region": "sms-export",
+        "declared": 32768,
+        "carried": true,
+        "stored": 25091,
+        "computed": 25091
+      }
+    },
+    {
+      "id": "zexall-sdsc",
+      "title": "ZEXALL Z-80 Instruction Excerciser (PD) v0.12SDSC Maxim, Eric Quinn",
+      "sha256": "b83412eb9115eda7ce97ff5e46d4b3273258980bbe6b9c83c7cae7433d1c319b",
+      "source": "~/sms-artifacts/htgdb/Master EverDrive/5 Tools & Service Test Carts.zip, member ZEXALL Z-80 Instruction Excerciser (PD) v0.12SDSC Maxim, Eric Quinn.sms",
+      "exercises": "the header finder, the region and size codes, and the checksum",
+      "outcome": "read",
+      "heldBy": [
+        "conformance/testroms.test.py::RecordedReadingTest.test_every_image_reads_as_recorded"
+      ],
+      "read": {
+        "form": "bare",
+        "size": 32768,
+        "anchor": 32752,
+        "region": "sms-export",
+        "declared": 32768,
+        "carried": true,
+        "stored": 54947,
+        "computed": 54947
+      }
+    },
+    {
+      "id": "zexall-svpd",
+      "title": "ZEXALL Z-80 Instruction Excerciser (PD) v0.12SVPD Maxim, Eric Quinn",
+      "sha256": "35193d879b8e17ee2793a67a54f9952c5564e81a7d5bdb6150f20de3045f9e59",
+      "source": "~/sms-artifacts/htgdb/Master EverDrive/5 Tools & Service Test Carts.zip, member ZEXALL Z-80 Instruction Excerciser (PD) v0.12SVPD Maxim, Eric Quinn.sms",
+      "exercises": "the header finder, the region and size codes, and the checksum",
+      "outcome": "read",
+      "heldBy": [
+        "conformance/testroms.test.py::RecordedReadingTest.test_every_image_reads_as_recorded"
+      ],
+      "read": {
+        "form": "bare",
+        "size": 32768,
+        "anchor": 32752,
+        "region": "sms-export",
+        "declared": 32768,
+        "carried": true,
+        "stored": 9682,
+        "computed": 9682
+      }
+    },
+    {
+      "id": "sg-1000-m2-check",
+      "title": "SG-1000 M2 Test Cartridge (Japan)",
+      "sha256": "1e2af6adb98f17f228dbd2daf3ae7896318127de308464f8f871a62f25429718",
+      "source": "~/sms-artifacts/htgdb/Sega SG-1000/5 Programs & Tools.zip, member SG-1000 M2 Test Cartridge (Japan).sg",
+      "exercises": "the header finder, the region and size codes, and the checksum",
+      "outcome": "read",
+      "heldBy": [
+        "conformance/testroms.test.py::RecordedReadingTest.test_every_image_reads_as_recorded"
+      ],
+      "read": {
+        "form": "bare",
+        "size": 8192,
+        "anchor": null,
+        "region": null,
+        "declared": null,
+        "carried": null,
+        "stored": null,
+        "computed": null
+      }
+    }
+  ]
+}

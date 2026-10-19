@@ -81,6 +81,29 @@ sixteen bytes, because that is what the program's table says.
 `python3 -m conformance.boot <every declared boot program>` and
 `python3 -m conformance.divergences <library>` before and after.**
 
+## Test cartridges
+
+[`conformance/testroms.json`](conformance/testroms.json) lists every test
+cartridge and boot program this package reads, by SHA-256, as FAMILY.md's
+fifth requirement asks. All 35 are `read`: the 34 files in the Master
+EverDrive set's `5 Tools & Service Test Carts.zip`, thirteen boot programs
+among them, and the SG-1000 M2 check program from the SG-1000 set's
+`5 Programs & Tools.zip`, both under `~/sms-artifacts/htgdb/`. Each entry keeps
+what the package read: the form, the size, the anchor, the region, the declared
+size, the stored and computed checksums, and whether they agree.
+[`conformance/testroms.test.py`](conformance/testroms.test.py) holds those
+readings with no image present.
+
+```bash
+python3 -m conformance.testroms [--write] <zip, folder or image ...>
+```
+
+With no argument it reads the folders and zips named in `TEST_CARTRIDGES`,
+separated by the path separator. With none present it says so and exits 2, and
+CI turns that into a notice. Nothing here runs a cartridge: running them is the
+job of the members that model the parts they test, and the ones that need a
+whole machine wait on `sega-vdp-python` and `sega-sms-python`.
+
 ## Every gate, in the order to run them
 
 ```bash
@@ -212,6 +235,8 @@ conformance/
   divergences.py    measures what the corpus cannot hold
   categories.py     the same measurements per folder, and for the retail set
   boot.py           each export boot program's tables, checked against the package
+  testroms.json     every test cartridge and boot program read, by digest, and what was read
+  testroms.py       reads the ones you hold and holds them to that record
   manual.py         the manual's text, laid flat for matching
   quotes.py         every quote the records carry, found in the manual word for word
   links.py          the weekly check that every cited address still answers
