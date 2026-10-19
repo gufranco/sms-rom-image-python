@@ -614,10 +614,11 @@
       "title": "SMS Test Suite (PD) v0.32 sverx",
       "sha256": "18c08b24df7339efe8339cd16a9a1bd863cfeac393cc9dde988b8dd35d395a41",
       "source": "~/sms-artifacts/htgdb/Master EverDrive/5 Tools & Service Test Carts.zip, member SMS Test Suite (PD) v0.32 sverx.sms",
-      "exercises": "the header finder, the region and size codes, and the checksum",
-      "outcome": "read",
+      "exercises": "the header finder, the region and size codes, and the checksum; and, run, its BIOS identification: the 8 KB byte sum of each boot program looked up in its own table of 13 sums at 03F3h",
+      "outcome": "run",
       "heldBy": [
-        "conformance/testroms.test.py::RecordedReadingTest.test_every_image_reads_as_recorded"
+        "conformance/testroms.test.py::RecordedReadingTest.test_every_image_reads_as_recorded",
+        "conformance/testroms.test.py::RecordedBootSumTest.test_the_test_suite_names_twelve_of_the_thirteen_boot_programs"
       ],
       "read": {
         "form": "bare",
@@ -628,6 +629,63 @@
         "carried": true,
         "stored": 49424,
         "computed": 49424
+      },
+      "sumTable": 1011,
+      "sumEntries": 13,
+      "sumSource": "github.com/sverx/SMSTestSuite main.c at d55228d43474b57372461cd20ddf527965f1b906, the BIOS identification it runs at 021Eh: the sum of bytes 0000h to 1FFFh with memory control set to E3h, looked up in the table at 03F3h, four bytes an entry",
+      "bootSums": {
+        "bios-alex-kidd-in-miracle-world-bios-version-world-sega-ages": {
+          "sum": "930a",
+          "entry": null
+        },
+        "bios-alex-kidd-in-miracle-world-korea-unl": {
+          "sum": "af19",
+          "entry": 5
+        },
+        "bios-alex-kidd-in-miracle-world-usa-europe": {
+          "sum": "9204",
+          "entry": 0
+        },
+        "bios-hang-on-safari-hunt-usa-europe-brazil-en-v2-4": {
+          "sum": "8738",
+          "entry": 1
+        },
+        "bios-hang-on-usa-europe-v3-4": {
+          "sum": "7f6f",
+          "entry": 2
+        },
+        "bios-missile-defense-3-d-usa-europe-v4-4": {
+          "sum": "f124",
+          "entry": 4
+        },
+        "bios-sega-master-system-europe-v2-0": {
+          "sum": "e8b0",
+          "entry": 10
+        },
+        "bios-sega-master-system-japan-v2-1": {
+          "sum": "95c3",
+          "entry": 7
+        },
+        "bios-sega-master-system-usa-m404-proto": {
+          "sum": "934d",
+          "entry": 8
+        },
+        "bios-sega-master-system-usa-store-display-unit": {
+          "sum": "dc4e",
+          "entry": 11
+        },
+        "bios-sega-master-system-usa-v1-0-proto": {
+          "sum": "5f04",
+          "entry": 9
+        },
+        "bios-sega-master-system-usa-europe-v1-3": {
+          "sum": "ef78",
+          "entry": 6
+        },
+        "bios-sonic-the-hedgehog-europe": {
+          "sum": "de36",
+          "entry": 3
+        }
       }
     },
     {

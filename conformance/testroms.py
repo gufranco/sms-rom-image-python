@@ -19,6 +19,14 @@ USAGE_ERROR = 3
 
 INDENT = 2
 
+READ_OUTCOMES = ("read", "run")
+
+BOOT_PROGRAM = "bios-"
+
+SUMMED = 0x2000
+
+SUM_ENTRY = 4
+
 USAGE = "usage: python3 -m conformance.testroms [--write] [image, folder or zip ...]"
 
 
@@ -45,6 +53,44 @@ def images(places: Sequence[Path], wanted: set[str]) -> dict[str, bytes]:
             if digest in wanted:
                 found[digest] = raw
     return found
+
+
+def boot_sum(image: bytes) -> int:
+    return sum(image[:SUMMED]) & 0xFFFF
+
+
+def sum_table(suite: bytes, table: int, count: int) -> list[int]:
+    return [
+        int.from_bytes(suite[at : at + 2], "little")
+        for at in range(table, table + count * SUM_ENTRY, SUM_ENTRY)
+    ]
+
+
+def identified(suite: bytes, one: dict[str, Any], boots: dict[str, bytes]) -> dict[str, Any]:
+    sums = sum_table(suite, one["sumTable"], one["sumEntries"])
+    found = {name: boot_sum(image) for name, image in boots.items()}
+    return {
+        name: {"sum": f"{value:04x}", "entry": sums.index(value) if value in sums else None}
+        for name, value in found.items()
+    }
+
+
+def sums_judged(held: dict[str, Any], found: dict[str, bytes]) -> bool:
+    good = True
+    boots = {
+        one["id"]: found[one["sha256"]]
+        for one in held["cartridges"]
+        if one["id"].startswith(BOOT_PROGRAM) and one["sha256"] in found
+    }
+    for one in held["cartridges"]:
+        if "sumTable" not in one or one["sha256"] not in found:
+            continue
+        measured = identified(found[one["sha256"]], one, boots)
+        same = measured == one.get("bootSums")
+        print(f"{'ran' if same else 'DIFFERS'} {one['id']}: {json.dumps(measured)}")
+        good = same and good
+        one["bootSums"] = measured
+    return good
 
 
 def options(argv: Sequence[str]) -> tuple[bool, list[Path]] | None:
@@ -75,7 +121,7 @@ def main(argv: Sequence[str], where: Path | str | None = None) -> int:
         return USAGE_ERROR
     write, given = parsed
     held = record(where)
-    wanted = [one for one in held["cartridges"] if one["outcome"] == "read"]
+    wanted = [one for one in held["cartridges"] if one["outcome"] in READ_OUTCOMES]
     found = images(places_from(given), {one["sha256"] for one in wanted})
     if not found:
         print(f"SKIPPED none of the {len(wanted)} pinned images is on this machine")
@@ -88,6 +134,7 @@ def main(argv: Sequence[str], where: Path | str | None = None) -> int:
         measured = reading(found[one["sha256"]])
         good = judged(one, measured) and good
         one["read"] = measured
+    good = sums_judged(held, found) and good
     print(f"{len(found)} of {len(wanted)} pinned images read")
     if write:
         Path(where or RECORD).write_text(json.dumps(held, indent=INDENT) + "\n")

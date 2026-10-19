@@ -94,6 +94,13 @@ size, the stored and computed checksums, and whether they agree.
 [`conformance/testroms.test.py`](conformance/testroms.test.py) holds those
 readings with no image present.
 
+One of them is also `run`. sverx's SMS Test Suite 0.32 identifies the boot
+program it finds by the 16-bit sum of its first 8K, looked up in a table of 13
+sums at `03F3h`, four bytes an entry. The runner takes that table from the image
+you hold, sums each boot program the same way, and keeps which entry each one
+matched in `bootSums`. Twelve of the thirteen boot programs here match an entry;
+the Sega Ages Alex Kidd build sums to `930Ah`, which the table does not hold.
+
 ```bash
 python3 -m conformance.testroms [--write] <zip, folder or image ...>
 ```

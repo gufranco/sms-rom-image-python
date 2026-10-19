@@ -120,7 +120,7 @@ class RecordedReadingTest(unittest.TestCase):
                 one["read"]["carried"],
             )
             for one in testroms.record()["cartridges"]
-            if one["outcome"] == "read"
+            if "read" in one
         }
 
         # Assert
@@ -136,6 +136,132 @@ class RecordedReadingTest(unittest.TestCase):
 
         # Assert
         self.assertRaises(AssertionError, attempt)
+
+
+class RecordedBootSumTest(unittest.TestCase):
+    def test_the_test_suite_names_twelve_of_the_thirteen_boot_programs(self) -> None:
+        # Arrange
+        expected = {
+            "bios-alex-kidd-in-miracle-world-bios-version-world-sega-ages": None,
+            "bios-alex-kidd-in-miracle-world-korea-unl": 5,
+            "bios-alex-kidd-in-miracle-world-usa-europe": 0,
+            "bios-hang-on-safari-hunt-usa-europe-brazil-en-v2-4": 1,
+            "bios-hang-on-usa-europe-v3-4": 2,
+            "bios-missile-defense-3-d-usa-europe-v4-4": 4,
+            "bios-sega-master-system-europe-v2-0": 10,
+            "bios-sega-master-system-japan-v2-1": 7,
+            "bios-sega-master-system-usa-m404-proto": 8,
+            "bios-sega-master-system-usa-store-display-unit": 11,
+            "bios-sega-master-system-usa-v1-0-proto": 9,
+            "bios-sega-master-system-usa-europe-v1-3": 6,
+            "bios-sonic-the-hedgehog-europe": 3,
+        }
+        held = next(
+            one
+            for one in testroms.record()["cartridges"]
+            if one["id"] == "sms-test-suite-v0-32-sverx"
+        )
+
+        # Act
+        found = {name: sums["entry"] for name, sums in held["bootSums"].items()}
+
+        # Assert
+        self.assertEqual(found, expected)
+
+
+class BootSumTest(unittest.TestCase):
+    def test_a_boot_program_is_named_by_the_entry_holding_its_sum(self) -> None:
+        # Arrange
+        suite = (
+            bytes(8) + (0x0102).to_bytes(2, "little") + bytes(2) + (0x0003).to_bytes(2, "little")
+        )
+        listed = {"sumTable": 8, "sumEntries": 2}
+
+        # Act
+        found = testroms.identified(suite, listed, {"one": bytes([1, 2]), "two": bytes([9])})
+
+        # Assert
+        self.assertEqual(
+            found, {"one": {"sum": "0003", "entry": 1}, "two": {"sum": "0009", "entry": None}}
+        )
+
+    def test_only_the_first_eight_kilobytes_are_summed(self) -> None:
+        # Arrange
+        image = bytes([1]) * 0x2000 + bytes([0xFF]) * 0x10
+
+        # Act
+        found = testroms.boot_sum(image)
+
+        # Assert
+        self.assertEqual(found, 0x2000)
+
+    def test_the_suite_and_a_boot_program_held_together_are_judged(self) -> None:
+        # Arrange
+        folder = Path(tempfile.mkdtemp())
+        boot = bytes([7]) * 16
+        suite = bytes(8) + (0x0070).to_bytes(2, "little")
+        record = folder / "testroms.json"
+        record.write_text(
+            json.dumps(
+                {
+                    "cartridges": [
+                        {
+                            "id": "suite",
+                            "sha256": hashlib.sha256(suite).hexdigest(),
+                            "outcome": "run",
+                            "read": testroms.reading(suite),
+                            "sumTable": 8,
+                            "sumEntries": 1,
+                            "bootSums": {"bios-one": {"sum": "0070", "entry": 0}},
+                        },
+                        {
+                            "id": "bios-one",
+                            "sha256": hashlib.sha256(boot).hexdigest(),
+                            "outcome": "read",
+                            "read": testroms.reading(boot),
+                        },
+                    ]
+                }
+            )
+        )
+
+        # Act
+        code = testroms.main(
+            [str(held_in(folder, suite, "suite.sms")), str(held_in(folder, boot, "boot.sms"))],
+            record,
+        )
+
+        # Assert
+        self.assertEqual(code, 0)
+
+    def test_a_boot_sum_that_differs_from_the_record_exits_one(self) -> None:
+        # Arrange
+        folder = Path(tempfile.mkdtemp())
+        suite = bytes(8) + (0x0070).to_bytes(2, "little")
+        record = folder / "testroms.json"
+        record.write_text(
+            json.dumps(
+                {
+                    "cartridges": [
+                        {
+                            "id": "suite",
+                            "sha256": hashlib.sha256(suite).hexdigest(),
+                            "outcome": "run",
+                            "read": testroms.reading(suite),
+                            "sumTable": 8,
+                            "sumEntries": 1,
+                            "bootSums": {"bios-one": {"sum": "0070", "entry": 0}},
+                        }
+                    ]
+                }
+            )
+        )
+
+        # Act
+        code = testroms.main([str(held_in(folder, suite, "suite.sms"))], record)
+
+        # Assert
+        self.assertEqual(code, 1)
 
 
 class ReadingTest(unittest.TestCase):
