@@ -8,7 +8,7 @@ English | [日本語](README.ja.md) | [简体中文](README.zh-Hans.md) | [繁�
 [![Release](https://img.shields.io/github/v/release/gufranco/sms-rom-image-python)](https://github.com/gufranco/sms-rom-image-python/releases)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-**2,610** distinct images measured from **5,111** archive entries, **0** property failures, the header read at `0x7FF0` on **2,408** of them, the stored checksum reproduced on **370** of **393** retail Master System cartridges, **14** boot programs declared by digest, **744** tests, **100%** statement and branch coverage, no dependencies
+**2,610** distinct images measured from **5,111** archive entries, **0** property failures, the header read at `0x7FF0` on **2,408** of them, the stored checksum reproduced on **370** of **393** retail Master System cartridges, **14** boot programs declared by digest, **750** tests, **100%** statement and branch coverage, no dependencies
 
 ```python
 from smsimage import dump, header
@@ -362,7 +362,7 @@ The manual prints the size codes up to 256K, each with region nibble `0x4`. The 
 
 ## The checksum rule
 
-The rule is the one the export boot program runs, read out of the v1.3 program declared in [`artifacts.manifest.json`](artifacts.manifest.json). Each size code names a first span, `0x1FF0`, `0x3FF0`, `0x7FF0` or, for 48K, `0xBFF0`, and the bytes below it are summed. From 64K up, whole 16K banks from the third onward are added: 2 for 64K, 6 for 128K, 14 for 256K, 30 for 512K and 62 for 1M. The low sixteen bits are kept. `python3 -m conformance.boot <that program>` reads both tables, the eight-byte compare and the region gate out of it and checks them against this package. The manual says to leave out only the two checksum bytes, and that reading reproduces the stored value on none of the 2,418 images.
+The rule is the one the export boot program runs, read out of the v1.3 program declared in [`artifacts.manifest.json`](artifacts.manifest.json). Each size code names a first span, `0x1FF0`, `0x3FF0`, `0x7FF0` or, for 48K, `0xBFF0`, and the bytes below it are summed. From 64K up, whole 16K banks from the third onward are added: 2 for 64K, 6 for 128K, 14 for 256K, 30 for 512K and 62 for 1M. The low sixteen bits are kept. `python3 -m conformance.boot <program> [program ...]` reads both tables, the eight-byte compare and the region gate out of each declared program that runs the sum and checks them against this package. The manual says to leave out only the two checksum bytes, and that reading reproduces the stored value on none of the 2,418 images.
 
 | Population                                                                                                                |   Reproduced |
 | :------------------------------------------------------------------------------------------------------------------------ | -----------: |

@@ -74,7 +74,7 @@ A 48K declaration sums through the header and stops short of its own last
 sixteen bytes, because that is what the program's table says.
 
 **If you are about to change the checksum, run
-`python3 -m conformance.boot <the v1.3 program>` and
+`python3 -m conformance.boot <every declared boot program>` and
 `python3 -m conformance.divergences <library>` before and after.**
 
 ## Every gate, in the order to run them
