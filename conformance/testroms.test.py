@@ -352,12 +352,29 @@ class MainTest(unittest.TestCase):
         # Arrange
         environment = {k: v for k, v in os.environ.items() if k != testroms.PLACES}
 
+        nothing = Path(tempfile.mkdtemp()) / "external"
+
         # Act
         with mock.patch.dict(os.environ, environment, clear=True):
-            code = testroms.main([])
+            code = testroms.main([], kept=nothing)
 
         # Assert
         self.assertEqual(code, testroms.NOTHING_TO_READ)
+
+    def test_with_nothing_named_it_reads_every_zip_kept_in_external(self) -> None:
+        # Arrange
+        folder = Path(tempfile.mkdtemp())
+        record = a_record(folder, AN_IMAGE, read=ITS_READING)
+        with zipfile.ZipFile(folder / "pack.zip", "w") as pack:
+            pack.writestr("tools/held.sms", AN_IMAGE)
+        environment = {k: v for k, v in os.environ.items() if k != testroms.PLACES}
+
+        # Act
+        with mock.patch.dict(os.environ, environment, clear=True):
+            code = testroms.main([], record, kept=folder)
+
+        # Assert
+        self.assertEqual(code, 0)
 
     def test_an_option_it_does_not_know_is_a_usage_error(self) -> None:
         # Arrange

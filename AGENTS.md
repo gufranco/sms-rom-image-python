@@ -78,17 +78,18 @@ A 48K declaration sums through the header and stops short of its own last
 sixteen bytes, because that is what the program's table says.
 
 **If you are about to change the checksum, run
-`python3 -m conformance.boot <every declared boot program>` and
-`python3 -m conformance.divergences <library>` before and after.**
+`python3 -m conformance.boot external/boot/*` and
+`python3 -m conformance.divergences external/*.zip` before and after.**
 
 ## Test cartridges
 
 [`conformance/testroms.json`](conformance/testroms.json) lists every test
 cartridge and boot program this package reads, by SHA-256, as FAMILY.md's
 fifth requirement asks. All 35 are `read`: the 34 files in the Master
-EverDrive set's `5 Tools & Service Test Carts.zip`, thirteen boot programs
-among them, and the SG-1000 M2 check program from the SG-1000 set's
-`5 Programs & Tools.zip`, both under `~/sms-artifacts/htgdb/`. Each entry keeps
+EverDrive pack's `5 Tools & Service Test Carts` folder, thirteen boot programs
+among them, and the SG-1000 M2 check program from the SG-1000 pack's
+`5 Programs & Tools` folder, both read inside the packs kept in `external/`.
+Each entry keeps
 what the package read: the form, the size, the anchor, the region, the declared
 size, the stored and computed checksums, and whether they agree.
 [`conformance/testroms.test.py`](conformance/testroms.test.py) holds those
@@ -106,10 +107,35 @@ python3 -m conformance.testroms [--write] <zip, folder or image ...>
 ```
 
 With no argument it reads the folders and zips named in `TEST_CARTRIDGES`,
-separated by the path separator. With none present it says so and exits 2, and
+separated by the path separator, and with that unset, `external/`. With none
+present it says so and exits 2, and
 CI turns that into a notice. Nothing here runs a cartridge: running them is the
 job of the members that model the parts they test, and the ones that need a
 whole machine wait on `sega-vdp-python` and `sega-sms-python`.
+
+## Files kept in `external/`
+
+Everything this member reads and may not ship sits in `external/`, which git
+ignores and Dropbox is told to leave alone, per FAMILY.md's "Where the files a
+member reads are kept". The `external` mapping in
+[`artifacts.manifest.json`](artifacts.manifest.json) names all 17 files by size,
+CRC32, MD5, SHA-1 and SHA-256. The `artifacts` mapping beside it is what the
+package declares and reads, and is left as it was.
+
+- The three packs the census reads whole: `@Master System - Master EverDrive
+2022-05-04.zip`, `@Game Gear - EverDrive GG 2020-12-21.zip` and
+  `@Sega SG-1000 2022-05-20.zip`. The test cartridges are read inside them.
+- `external/boot/`, the 14 boot programs the package declares, extracted from
+  those packs byte for byte so `conformance.boot` can read them as files.
+
+```bash
+python3 -m conformance.external
+python3 -m conformance.external --describe external/<file>
+```
+
+The first says which are here, verified, missing or wrong. The second prints
+the manifest entry for a file being added, which gets its entry in the same
+change.
 
 ## Every gate, in the order to run them
 
@@ -139,9 +165,9 @@ python3 -m conformance.quotes
 And, with a library present, the two that walk it:
 
 ```bash
-python3 -m conformance.census <library> [library ...]
-python3 -m conformance.divergences <library> [library ...]
-python3 -m conformance.categories <the Master System set>
+python3 -m conformance.census external/*.zip
+python3 -m conformance.divergences external/*.zip
+python3 -m conformance.categories "external/@Master System - Master EverDrive 2022-05-04.zip"
 ```
 
 Everything under [`conformance/`](conformance) runs as a module. Run as a
@@ -253,6 +279,9 @@ conformance/
   family_*.test.py  the family standard, held as tests, one topic a file
   family_member.py  what this member answers to them
   family_shared.py  what more than one of them reads
+  external.py       which files in external/ are here, verified, missing or wrong
+external/           the three packs and the boot programs read out of them, never committed
+artifacts.manifest.json  every file in external/, by size and every digest
 ```
 
 ## Things that will bite you

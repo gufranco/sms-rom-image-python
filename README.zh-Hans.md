@@ -8,7 +8,7 @@
 [![Release](https://img.shields.io/github/v/release/gufranco/sms-rom-image-python)](https://github.com/gufranco/sms-rom-image-python/releases)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-从 **5,425** 个归档条目中测量出 **2,922** 个不同镜像，属性失败 **0** 次，其中 **2,453** 个在 `0x7FF0` 读到文件头，**393** 个零售版 Master System 卡带中有 **370** 个复现了存储的校验和，**14** 个启动程序按摘要声明，**791** 个测试，**100%** 语句和分支覆盖率，无依赖
+从 **5,425** 个归档条目中测量出 **2,922** 个不同镜像，属性失败 **0** 次，其中 **2,453** 个在 `0x7FF0` 读到文件头，**393** 个零售版 Master System 卡带中有 **370** 个复现了存储的校验和，**14** 个启动程序按摘要声明，**835** 个测试，**100%** 语句和分支覆盖率，无依赖
 
 ```python
 from smsimage import dump, header
@@ -379,7 +379,7 @@ None
 [`conformance/census.py`](conformance/census.py) 遍历你拥有的游戏库：目录、zip 归档以及单个 `.sms`、`.gg` 和 `.sg` 文件。
 
 ```bash
-python3 -m conformance.census /path/to/library.zip /path/to/another
+python3 -m conformance.census external/*.zip
 ```
 
 它按 SHA-256 对每个不同镜像只计一次，在每个镜像上检查六项属性，报告一项观察结果，并写出 [`conformance/corpus.json`](conformance/corpus.json)：形式、长度、锚点、区域、声明大小以及存储的校验和是否复现的 151 种组合，每种附有计数。不含标题，也不含内容，因此其中没有任何东西能重建任何卡带的任何部分。

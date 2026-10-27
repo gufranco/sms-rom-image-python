@@ -13,6 +13,8 @@ RECORD = Path(__file__).resolve().parent / "testroms.json"
 
 PLACES = "TEST_CARTRIDGES"
 
+KEPT = Path(__file__).resolve().parent.parent / "external"
+
 NOTHING_TO_READ = 2
 
 USAGE_ERROR = 3
@@ -101,11 +103,12 @@ def options(argv: Sequence[str]) -> tuple[bool, list[Path]] | None:
     return write, [Path(one) for one in rest]
 
 
-def places_from(given: list[Path]) -> list[Path]:
+def places_from(given: list[Path], kept: Path) -> list[Path]:
     if given:
         return given
     named = os.environ.get(PLACES, "")
-    return [Path(one) for one in named.split(os.pathsep) if one]
+    listed = [Path(one) for one in named.split(os.pathsep) if one]
+    return listed or [*sorted(kept.glob("*.zip")), kept]
 
 
 def judged(one: dict[str, Any], found: dict[str, Any]) -> bool:
@@ -114,7 +117,7 @@ def judged(one: dict[str, Any], found: dict[str, Any]) -> bool:
     return same
 
 
-def main(argv: Sequence[str], where: Path | str | None = None) -> int:
+def main(argv: Sequence[str], where: Path | str | None = None, kept: Path = KEPT) -> int:
     parsed = options(argv)
     if parsed is None:
         print(USAGE)
@@ -122,7 +125,7 @@ def main(argv: Sequence[str], where: Path | str | None = None) -> int:
     write, given = parsed
     held = record(where)
     wanted = [one for one in held["cartridges"] if one["outcome"] in READ_OUTCOMES]
-    found = images(places_from(given), {one["sha256"] for one in wanted})
+    found = images(places_from(given, kept), {one["sha256"] for one in wanted})
     if not found:
         print(f"SKIPPED none of the {len(wanted)} pinned images is on this machine")
         return NOTHING_TO_READ

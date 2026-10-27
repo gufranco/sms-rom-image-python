@@ -8,7 +8,7 @@
 [![Release](https://img.shields.io/github/v/release/gufranco/sms-rom-image-python)](https://github.com/gufranco/sms-rom-image-python/releases)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-**5,425**件のアーカイブエントリから測定した**2,922**本の異なるイメージ、性質の不成立**0**件、そのうち**2,453**本で`0x7FF0`のヘッダーを読み取り、市販マスターシステムカートリッジ**393**本中**370**本で格納済みチェックサムを再現、ダイジェストで宣言したブートプログラム**14**本、テスト**791**件、ステートメントカバレッジとブランチカバレッジ**100%**、依存関係なし
+**5,425**件のアーカイブエントリから測定した**2,922**本の異なるイメージ、性質の不成立**0**件、そのうち**2,453**本で`0x7FF0`のヘッダーを読み取り、市販マスターシステムカートリッジ**393**本中**370**本で格納済みチェックサムを再現、ダイジェストで宣言したブートプログラム**14**本、テスト**835**件、ステートメントカバレッジとブランチカバレッジ**100%**、依存関係なし
 
 ```python
 from smsimage import dump, header
@@ -379,7 +379,7 @@ None
 [`conformance/census.py`](conformance/census.py)は、あなたが所有するライブラリを走査します。対象はディレクトリ、ZIPアーカイブ、単体の`.sms`、`.gg`、`.sg`ファイルです。
 
 ```bash
-python3 -m conformance.census /path/to/library.zip /path/to/another
+python3 -m conformance.census external/*.zip
 ```
 
 異なるイメージをSHA-256で1本ずつ数え、それぞれで6つの性質を確認し、1つの観察結果を報告し、[`conformance/corpus.json`](conformance/corpus.json)を書き出します。中身は、形式、長さ、アンカー、リージョン、宣言サイズ、格納済みチェックサムを再現したかどうかの組み合わせ151通りと、それぞれの件数です。タイトルも内容も含まないため、どのカートリッジのどの部分も、そこから再構築することはできません。

@@ -8,7 +8,7 @@ English | [日本語](README.ja.md) | [简体中文](README.zh-Hans.md) | [繁�
 [![Release](https://img.shields.io/github/v/release/gufranco/sms-rom-image-python)](https://github.com/gufranco/sms-rom-image-python/releases)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-**2,922** distinct images measured from **5,425** archive entries, **0** property failures, the header read at `0x7FF0` on **2,453** of them, the stored checksum reproduced on **370** of **393** retail Master System cartridges, **14** boot programs declared by digest, **791** tests, **100%** statement and branch coverage, no dependencies
+**2,922** distinct images measured from **5,425** archive entries, **0** property failures, the header read at `0x7FF0` on **2,453** of them, the stored checksum reproduced on **370** of **393** retail Master System cartridges, **14** boot programs declared by digest, **835** tests, **100%** statement and branch coverage, no dependencies
 
 ```python
 from smsimage import dump, header
@@ -379,7 +379,7 @@ No other boot program explains the 23 retail cartridges that do not reproduce. 1
 [`conformance/census.py`](conformance/census.py) walks a library you own: directories, zip archives and single `.sms`, `.gg` and `.sg` files.
 
 ```bash
-python3 -m conformance.census /path/to/library.zip /path/to/another
+python3 -m conformance.census external/*.zip
 ```
 
 It counts each distinct image once by SHA-256, checks six properties on every one, reports one observation, and writes [`conformance/corpus.json`](conformance/corpus.json): 151 combinations of form, length, anchor, region, declared size and whether the stored checksum reproduced, each with a count. No title and no content, so nothing in it could rebuild any part of any cartridge.

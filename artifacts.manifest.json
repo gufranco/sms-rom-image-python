@@ -191,5 +191,467 @@
       ],
       "badDumps": []
     }
+  },
+  "externalNote": "Every file this repository's tools read and may not ship, each kept under external/, which git and Dropbox both ignore. The artifacts mapping above is what the package itself declares; this one is where the files sit. python3 -m conformance.external reports which are here, which are missing and which are not the file named; SHA-256 alone decides.",
+  "external": {
+    "master-system-master-everdrive-2022-05-04-zip": {
+      "required": false,
+      "purpose": "The Master System pack the census reads whole, and the test cartridges and boot programs inside it.",
+      "usedBy": ["conformance/census.py", "conformance/testroms.py"],
+      "canonical_form": {
+        "container": "zip",
+        "header": "as shipped",
+        "notes": "The archive itself, because the census reads it as it is and names each image inside by its own SHA-256 in conformance/corpus.json."
+      },
+      "accepted": [
+        {
+          "label": "@Master System - Master EverDrive 2022-05-04",
+          "path": "@Master System - Master EverDrive 2022-05-04.zip",
+          "common_filename": "@Master System - Master EverDrive 2022-05-04.zip",
+          "size": 372091134,
+          "crc32": "72fe7729",
+          "md5": "ff1ae20c65d3a561d6c4b85e42c2e48e",
+          "sha1": "92c56296a37f3c08ba8ed491638d9e155d274897",
+          "sha256": "be177de33b29b1f962b784fee27efcbfbacff8899f26ce11ac6edf4927750aa2",
+          "preferred": true,
+          "provenance": {
+            "db": "Master EverDrive pack",
+            "dat_version": "2022-05-04"
+          }
+        }
+      ]
+    },
+    "game-gear-everdrive-gg-2020-12-21-zip": {
+      "required": false,
+      "purpose": "The Game Gear pack the census reads whole.",
+      "usedBy": ["conformance/census.py", "conformance/testroms.py"],
+      "canonical_form": {
+        "container": "zip",
+        "header": "as shipped",
+        "notes": "The archive itself, because the census reads it as it is and names each image inside by its own SHA-256 in conformance/corpus.json."
+      },
+      "accepted": [
+        {
+          "label": "@Game Gear - EverDrive GG 2020-12-21",
+          "path": "@Game Gear - EverDrive GG 2020-12-21.zip",
+          "common_filename": "@Game Gear - EverDrive GG 2020-12-21.zip",
+          "size": 383313127,
+          "crc32": "557384fd",
+          "md5": "68f1d211f825218b4e577f042d904402",
+          "sha1": "82cb66c4acaec9e6bb4d01ec4f60acb767aca3cf",
+          "sha256": "0fd25b154a84f2add55367c4ce6ac47f6445535b7397a761e9c116f9c5549a47",
+          "preferred": true,
+          "provenance": {
+            "db": "EverDrive GG pack",
+            "dat_version": "2020-12-21"
+          }
+        }
+      ]
+    },
+    "sega-sg-1000-2022-05-20-zip": {
+      "required": false,
+      "purpose": "The SG-1000 pack the census reads whole, and the SG-1000 M2 check program inside it.",
+      "usedBy": ["conformance/census.py", "conformance/testroms.py"],
+      "canonical_form": {
+        "container": "zip",
+        "header": "as shipped",
+        "notes": "The archive itself, because the census reads it as it is and names each image inside by its own SHA-256 in conformance/corpus.json."
+      },
+      "accepted": [
+        {
+          "label": "@Sega SG-1000 2022-05-20",
+          "path": "@Sega SG-1000 2022-05-20.zip",
+          "common_filename": "@Sega SG-1000 2022-05-20.zip",
+          "size": 5539976,
+          "crc32": "9fcf86ca",
+          "md5": "0bb6df51f43c1086b3f41f000d05d8ad",
+          "sha1": "d4b24557e90d808ed5827260da42ac7917321e6d",
+          "sha256": "4bbc493767557264639b1f5ac51f610d570e3074af428e1f185c0a90ba5cfc1c",
+          "preferred": true,
+          "provenance": {
+            "db": "SG-1000 pack",
+            "dat_version": "2022-05-20"
+          }
+        }
+      ]
+    },
+    "boot-bios-alex-kidd-in-miracle-world-bios-version-world-sega-ages-sms": {
+      "required": false,
+      "purpose": "A boot program the package declares under artifacts, extracted from its pack so conformance.boot can read it as a file.",
+      "usedBy": ["conformance/boot.py"],
+      "canonical_form": {
+        "container": "raw",
+        "header": "none",
+        "notes": "The member extracted byte for byte from the pack that ships it; the same SHA-256 the artifacts mapping declares."
+      },
+      "accepted": [
+        {
+          "label": "[BIOS] Alex Kidd in Miracle World (BIOS Version) (World) (Sega Ages)",
+          "path": "boot/[BIOS] Alex Kidd in Miracle World (BIOS Version) (World) (Sega Ages).sms",
+          "common_filename": "[BIOS] Alex Kidd in Miracle World (BIOS Version) (World) (Sega Ages).sms",
+          "size": 131072,
+          "crc32": "025790ff",
+          "md5": "91b4d4db66e30f2b5ce7f7c2541ee897",
+          "sha1": "c6cfecec5241951aee7dfeda20871ba45cb785fa",
+          "sha256": "aaf39841be10f9cd6908a95a7451c3a0c8ac77125eb412b7a41cad260c888ab5",
+          "preferred": true,
+          "provenance": {
+            "db": "Master EverDrive pack 2022-05-04 and EverDrive GG pack 2020-12-21",
+            "dat_version": "extracted 2026-10-27"
+          }
+        }
+      ]
+    },
+    "boot-bios-alex-kidd-in-miracle-world-korea-unl-sms": {
+      "required": false,
+      "purpose": "A boot program the package declares under artifacts, extracted from its pack so conformance.boot can read it as a file.",
+      "usedBy": ["conformance/boot.py"],
+      "canonical_form": {
+        "container": "raw",
+        "header": "none",
+        "notes": "The member extracted byte for byte from the pack that ships it; the same SHA-256 the artifacts mapping declares."
+      },
+      "accepted": [
+        {
+          "label": "[BIOS] Alex Kidd in Miracle World (Korea) (Unl)",
+          "path": "boot/[BIOS] Alex Kidd in Miracle World (Korea) (Unl).sms",
+          "common_filename": "[BIOS] Alex Kidd in Miracle World (Korea) (Unl).sms",
+          "size": 131072,
+          "crc32": "9c5bad91",
+          "md5": "e49e63328c78fe3d24ae32bf903583e0",
+          "sha1": "2feafd8f1c40fdf1bd5668f8c5c02e5560945b17",
+          "sha256": "57abf3c00c82a8e042ebeb2bfe412adac9ba005e9009845236390de3ee645248",
+          "preferred": true,
+          "provenance": {
+            "db": "Master EverDrive pack 2022-05-04 and EverDrive GG pack 2020-12-21",
+            "dat_version": "extracted 2026-10-27"
+          }
+        }
+      ]
+    },
+    "boot-bios-alex-kidd-in-miracle-world-usa-europe-sms": {
+      "required": false,
+      "purpose": "A boot program the package declares under artifacts, extracted from its pack so conformance.boot can read it as a file.",
+      "usedBy": ["conformance/boot.py"],
+      "canonical_form": {
+        "container": "raw",
+        "header": "none",
+        "notes": "The member extracted byte for byte from the pack that ships it; the same SHA-256 the artifacts mapping declares."
+      },
+      "accepted": [
+        {
+          "label": "[BIOS] Alex Kidd in Miracle World (USA, Europe)",
+          "path": "boot/[BIOS] Alex Kidd in Miracle World (USA, Europe).sms",
+          "common_filename": "[BIOS] Alex Kidd in Miracle World (USA, Europe).sms",
+          "size": 131072,
+          "crc32": "cf4a09ea",
+          "md5": "e8b26871629b938887757a64798df6dc",
+          "sha1": "3af7b66248d34eb26da40c92bf2fa4c73a46a051",
+          "sha256": "0c08e17b0ecc3967e1094f12841fdc97fdcbbf986e3bf9a06b35b69e7d95e4cd",
+          "preferred": true,
+          "provenance": {
+            "db": "Master EverDrive pack 2022-05-04 and EverDrive GG pack 2020-12-21",
+            "dat_version": "extracted 2026-10-27"
+          }
+        }
+      ]
+    },
+    "boot-bios-hang-on-safari-hunt-usa-europe-brazil-en-v2-4-sms": {
+      "required": false,
+      "purpose": "A boot program the package declares under artifacts, extracted from its pack so conformance.boot can read it as a file.",
+      "usedBy": ["conformance/boot.py"],
+      "canonical_form": {
+        "container": "raw",
+        "header": "none",
+        "notes": "The member extracted byte for byte from the pack that ships it; the same SHA-256 the artifacts mapping declares."
+      },
+      "accepted": [
+        {
+          "label": "[BIOS] Hang On & Safari Hunt (USA, Europe, Brazil) (En) (v2.4)",
+          "path": "boot/[BIOS] Hang On & Safari Hunt (USA, Europe, Brazil) (En) (v2.4).sms",
+          "common_filename": "[BIOS] Hang On & Safari Hunt (USA, Europe, Brazil) (En) (v2.4).sms",
+          "size": 131072,
+          "crc32": "91e93385",
+          "md5": "02cbb2e348945c9ac41e37502a58ca76",
+          "sha1": "9e179392cd416af14024d8f31c981d9ee9a64517",
+          "sha256": "e9eb04ec80ded8658f765c4eca75cdbe23cbc7d8fed73f9c3db7a868dbf649ff",
+          "preferred": true,
+          "provenance": {
+            "db": "Master EverDrive pack 2022-05-04 and EverDrive GG pack 2020-12-21",
+            "dat_version": "extracted 2026-10-27"
+          }
+        }
+      ]
+    },
+    "boot-bios-hang-on-usa-europe-v3-4-sms": {
+      "required": false,
+      "purpose": "A boot program the package declares under artifacts, extracted from its pack so conformance.boot can read it as a file.",
+      "usedBy": ["conformance/boot.py"],
+      "canonical_form": {
+        "container": "raw",
+        "header": "none",
+        "notes": "The member extracted byte for byte from the pack that ships it; the same SHA-256 the artifacts mapping declares."
+      },
+      "accepted": [
+        {
+          "label": "[BIOS] Hang On (USA, Europe) (v3.4)",
+          "path": "boot/[BIOS] Hang On (USA, Europe) (v3.4).sms",
+          "common_filename": "[BIOS] Hang On (USA, Europe) (v3.4).sms",
+          "size": 131072,
+          "crc32": "8edf7ac6",
+          "md5": "5cd8f62cd8786af0226e6d2248279338",
+          "sha1": "51fd6d7990f62cd9d18c9ecfc62ed7936169107e",
+          "sha256": "1a73bc6e1a9973b98432774a1480b3ac1259027a97590d5e67d52745159abbbc",
+          "preferred": true,
+          "provenance": {
+            "db": "Master EverDrive pack 2022-05-04 and EverDrive GG pack 2020-12-21",
+            "dat_version": "extracted 2026-10-27"
+          }
+        }
+      ]
+    },
+    "boot-bios-missile-defense-3-d-usa-europe-v4-4-sms": {
+      "required": false,
+      "purpose": "A boot program the package declares under artifacts, extracted from its pack so conformance.boot can read it as a file.",
+      "usedBy": ["conformance/boot.py"],
+      "canonical_form": {
+        "container": "raw",
+        "header": "none",
+        "notes": "The member extracted byte for byte from the pack that ships it; the same SHA-256 the artifacts mapping declares."
+      },
+      "accepted": [
+        {
+          "label": "[BIOS] Missile Defense 3-D (USA, Europe) (v4.4)",
+          "path": "boot/[BIOS] Missile Defense 3-D (USA, Europe) (v4.4).sms",
+          "common_filename": "[BIOS] Missile Defense 3-D (USA, Europe) (v4.4).sms",
+          "size": 131072,
+          "crc32": "e79bb689",
+          "md5": "08b81aa6be18b92daef1b875deecf824",
+          "sha1": "aa92ae576ca670b00855e278378d89e9f85e0351",
+          "sha256": "13c0639cc037167f53e6151dbdea013758c3d09a76b064a894bf15c39c0a3897",
+          "preferred": true,
+          "provenance": {
+            "db": "Master EverDrive pack 2022-05-04 and EverDrive GG pack 2020-12-21",
+            "dat_version": "extracted 2026-10-27"
+          }
+        }
+      ]
+    },
+    "boot-bios-sega-game-gear-usa-majesco-gg": {
+      "required": false,
+      "purpose": "A boot program the package declares under artifacts, extracted from its pack so conformance.boot can read it as a file.",
+      "usedBy": ["conformance/boot.py"],
+      "canonical_form": {
+        "container": "raw",
+        "header": "none",
+        "notes": "The member extracted byte for byte from the pack that ships it; the same SHA-256 the artifacts mapping declares."
+      },
+      "accepted": [
+        {
+          "label": "[BIOS] Sega Game Gear (USA) (Majesco)",
+          "path": "boot/[BIOS] Sega Game Gear (USA) (Majesco).gg",
+          "common_filename": "[BIOS] Sega Game Gear (USA) (Majesco).gg",
+          "size": 1024,
+          "crc32": "0ebea9d4",
+          "md5": "672e104c3be3a238301aceffc3b23fd6",
+          "sha1": "914aa165e3d879f060be77870d345b60cfeb4ede",
+          "sha256": "8c8a21335038285cfa03dc076100c1f0bfadf3e4ff70796f11f3dfaaab60eee2",
+          "preferred": true,
+          "provenance": {
+            "db": "Master EverDrive pack 2022-05-04 and EverDrive GG pack 2020-12-21",
+            "dat_version": "extracted 2026-10-27"
+          }
+        }
+      ]
+    },
+    "boot-bios-sega-master-system-europe-v2-0-sms": {
+      "required": false,
+      "purpose": "A boot program the package declares under artifacts, extracted from its pack so conformance.boot can read it as a file.",
+      "usedBy": ["conformance/boot.py"],
+      "canonical_form": {
+        "container": "raw",
+        "header": "none",
+        "notes": "The member extracted byte for byte from the pack that ships it; the same SHA-256 the artifacts mapping declares."
+      },
+      "accepted": [
+        {
+          "label": "[BIOS] Sega Master System (Europe) (v2.0)",
+          "path": "boot/[BIOS] Sega Master System (Europe) (v2.0).sms",
+          "common_filename": "[BIOS] Sega Master System (Europe) (v2.0).sms",
+          "size": 8192,
+          "crc32": "b3d854f8",
+          "md5": "bdb34f2c471e5d0c358eeec621f9d029",
+          "sha1": "fc7eb9141f38c92bf98d9134816f64b45e811112",
+          "sha256": "1eb16fc06ceaf05651d7cfd69d1713e6ddccc4349a511f6fd17e037d71f9d85b",
+          "preferred": true,
+          "provenance": {
+            "db": "Master EverDrive pack 2022-05-04 and EverDrive GG pack 2020-12-21",
+            "dat_version": "extracted 2026-10-27"
+          }
+        }
+      ]
+    },
+    "boot-bios-sega-master-system-japan-v2-1-sms": {
+      "required": false,
+      "purpose": "A boot program the package declares under artifacts, extracted from its pack so conformance.boot can read it as a file.",
+      "usedBy": ["conformance/boot.py"],
+      "canonical_form": {
+        "container": "raw",
+        "header": "none",
+        "notes": "The member extracted byte for byte from the pack that ships it; the same SHA-256 the artifacts mapping declares."
+      },
+      "accepted": [
+        {
+          "label": "[BIOS] Sega Master System (Japan) (v2.1)",
+          "path": "boot/[BIOS] Sega Master System (Japan) (v2.1).sms",
+          "common_filename": "[BIOS] Sega Master System (Japan) (v2.1).sms",
+          "size": 8192,
+          "crc32": "48d44a13",
+          "md5": "24a519c53f67b00640d0048ef7089105",
+          "sha1": "a8c1b39a2e41137835eda6a5de6d46dd9fadbaf2",
+          "sha256": "67846e26764bd862f19179294347f7353a4166b62ac4198a5ec32933b7da486e",
+          "preferred": true,
+          "provenance": {
+            "db": "Master EverDrive pack 2022-05-04 and EverDrive GG pack 2020-12-21",
+            "dat_version": "extracted 2026-10-27"
+          }
+        }
+      ]
+    },
+    "boot-bios-sega-master-system-usa-m404-proto-sms": {
+      "required": false,
+      "purpose": "A boot program the package declares under artifacts, extracted from its pack so conformance.boot can read it as a file.",
+      "usedBy": ["conformance/boot.py"],
+      "canonical_form": {
+        "container": "raw",
+        "header": "none",
+        "notes": "The member extracted byte for byte from the pack that ships it; the same SHA-256 the artifacts mapping declares."
+      },
+      "accepted": [
+        {
+          "label": "[BIOS] Sega Master System (USA) (M404) (Proto)",
+          "path": "boot/[BIOS] Sega Master System (USA) (M404) (Proto).sms",
+          "common_filename": "[BIOS] Sega Master System (USA) (M404) (Proto).sms",
+          "size": 8192,
+          "crc32": "1a15dfcc",
+          "md5": "3153447d155fb8bfc66a4d1c41e399b9",
+          "sha1": "4a06c8e66261611dce0305217c42138b71331701",
+          "sha256": "2a4371fadb9da65037ccd622adb77fc4c6e9a993ed2034e0e08bc320b4e9b41f",
+          "preferred": true,
+          "provenance": {
+            "db": "Master EverDrive pack 2022-05-04 and EverDrive GG pack 2020-12-21",
+            "dat_version": "extracted 2026-10-27"
+          }
+        }
+      ]
+    },
+    "boot-bios-sega-master-system-usa-store-display-unit-sms": {
+      "required": false,
+      "purpose": "A boot program the package declares under artifacts, extracted from its pack so conformance.boot can read it as a file.",
+      "usedBy": ["conformance/boot.py"],
+      "canonical_form": {
+        "container": "raw",
+        "header": "none",
+        "notes": "The member extracted byte for byte from the pack that ships it; the same SHA-256 the artifacts mapping declares."
+      },
+      "accepted": [
+        {
+          "label": "[BIOS] Sega Master System (USA) (Store Display Unit)",
+          "path": "boot/[BIOS] Sega Master System (USA) (Store Display Unit).sms",
+          "common_filename": "[BIOS] Sega Master System (USA) (Store Display Unit).sms",
+          "size": 16384,
+          "crc32": "ee2c29ba",
+          "md5": "b264bef9bda264ffe83afcebac21b81f",
+          "sha1": "fc465122134d95363112eb51b9ab71db3576cefd",
+          "sha256": "6f4e6de10f1d07bda695c629c67457bb0248eeb8ffa0c61a2742b8529274de30",
+          "preferred": true,
+          "provenance": {
+            "db": "Master EverDrive pack 2022-05-04 and EverDrive GG pack 2020-12-21",
+            "dat_version": "extracted 2026-10-27"
+          }
+        }
+      ]
+    },
+    "boot-bios-sega-master-system-usa-v1-0-proto-sms": {
+      "required": false,
+      "purpose": "A boot program the package declares under artifacts, extracted from its pack so conformance.boot can read it as a file.",
+      "usedBy": ["conformance/boot.py"],
+      "canonical_form": {
+        "container": "raw",
+        "header": "none",
+        "notes": "The member extracted byte for byte from the pack that ships it; the same SHA-256 the artifacts mapping declares."
+      },
+      "accepted": [
+        {
+          "label": "[BIOS] Sega Master System (USA) (v1.0) (Proto)",
+          "path": "boot/[BIOS] Sega Master System (USA) (v1.0) (Proto).sms",
+          "common_filename": "[BIOS] Sega Master System (USA) (v1.0) (Proto).sms",
+          "size": 8192,
+          "crc32": "72bec693",
+          "md5": "626b3453613e43d5a47908a8944ba583",
+          "sha1": "29091ff60ef4c22b1ee17aa21e0e75bac6b36474",
+          "sha256": "cb01de3464797a77b52e82f5f9b05398540df8c1151d31128d49584028589062",
+          "preferred": true,
+          "provenance": {
+            "db": "Master EverDrive pack 2022-05-04 and EverDrive GG pack 2020-12-21",
+            "dat_version": "extracted 2026-10-27"
+          }
+        }
+      ]
+    },
+    "boot-bios-sega-master-system-usa-europe-v1-3-sms": {
+      "required": false,
+      "purpose": "A boot program the package declares under artifacts, extracted from its pack so conformance.boot can read it as a file.",
+      "usedBy": ["conformance/boot.py"],
+      "canonical_form": {
+        "container": "raw",
+        "header": "none",
+        "notes": "The member extracted byte for byte from the pack that ships it; the same SHA-256 the artifacts mapping declares."
+      },
+      "accepted": [
+        {
+          "label": "[BIOS] Sega Master System (USA, Europe) (v1.3)",
+          "path": "boot/[BIOS] Sega Master System (USA, Europe) (v1.3).sms",
+          "common_filename": "[BIOS] Sega Master System (USA, Europe) (v1.3).sms",
+          "size": 8192,
+          "crc32": "0072ed54",
+          "md5": "840481177270d5642a14ca71ee72844c",
+          "sha1": "c315672807d8ddb8d91443729405c766dd95cae7",
+          "sha256": "477617917a12a30f9f43844909dc2de6e6a617430f5c9a36306c86414a670d50",
+          "preferred": true,
+          "provenance": {
+            "db": "Master EverDrive pack 2022-05-04 and EverDrive GG pack 2020-12-21",
+            "dat_version": "extracted 2026-10-27"
+          }
+        }
+      ]
+    },
+    "boot-bios-sonic-the-hedgehog-europe-sms": {
+      "required": false,
+      "purpose": "A boot program the package declares under artifacts, extracted from its pack so conformance.boot can read it as a file.",
+      "usedBy": ["conformance/boot.py"],
+      "canonical_form": {
+        "container": "raw",
+        "header": "none",
+        "notes": "The member extracted byte for byte from the pack that ships it; the same SHA-256 the artifacts mapping declares."
+      },
+      "accepted": [
+        {
+          "label": "[BIOS] Sonic The Hedgehog (Europe)",
+          "path": "boot/[BIOS] Sonic The Hedgehog (Europe).sms",
+          "common_filename": "[BIOS] Sonic The Hedgehog (Europe).sms",
+          "size": 262144,
+          "crc32": "81c3476b",
+          "md5": "4187d96beaf36385e681a3cf3bd1663d",
+          "sha1": "6aca0e3dffe461ba1cb11a86cd4caf5b97e1b8df",
+          "sha256": "c51ec80b7a609c5ee3d203ceee2b602ae4dfb4479caf15dc1d030c40c0364e93",
+          "preferred": true,
+          "provenance": {
+            "db": "Master EverDrive pack 2022-05-04 and EverDrive GG pack 2020-12-21",
+            "dat_version": "extracted 2026-10-27"
+          }
+        }
+      ]
+    }
   }
 }
