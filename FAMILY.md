@@ -797,6 +797,12 @@ usually has, its size, CRC32, MD5, SHA-1 and SHA-256, and where those digests
 came from under `provenance`. Every digest is recorded so a person can find the
 file in any database by whichever value it keys on; SHA-256 alone decides.
 
+A suite or a source tree fetched with git is one entry of `kind` `checkout`
+rather than one per file: its path inside `external/`, the `repository` it
+comes from, the `commit` the member pins, and under `fetchedBy` the command
+that fetches it. Its pin is checked by reading the checkout's `HEAD`, and the
+files inside it are its own.
+
 ```bash
 python3 -m conformance.external
 python3 -m conformance.external --describe external/<file> [...]
@@ -811,10 +817,11 @@ normal state of a fresh checkout and is reported, not failed. The second prints
 the entry for a new file, every digest included, ready to paste.
 
 `conformance/family_external.test.py` fails on a member with no manifest, on
-an entry missing any digest, any of its identity or a source, on a path that
-leaves `external/`, on a reader that is not tracked, on a `.gitignore` that
-does not list the folder, and on any tracked file that points at a folder in
-the home directory.
+an entry missing any digest, any of its identity or a source, on a checkout
+with no pin, on a path that leaves `external/`, and on a reader that is not in
+the repository. `conformance/family_external_paths.test.py` fails on a
+`.gitignore` that does not list the folder and on any tracked file that points
+at a folder in the home directory.
 
 ## One constructor per kind
 
@@ -944,37 +951,38 @@ on trust.
 
 ## What every repository carries
 
-| File                                       | Holds                                                                                                                                                       |
-| :----------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `README.md`                                | The document for a person: how to run it, the whole interface, why it can be trusted, and a References section naming every source with its digest          |
-| `AGENTS.md`                                | The document for an agent. `CLAUDE.md` points at it so the two cannot drift                                                                                 |
-| `FAMILY.md`                                | This file, identical in every repository                                                                                                                    |
-| `OPEN-QUESTIONS.md`                        | Every place fidelity is still a claim, and the measurement that would close it                                                                              |
-| `conformance/speed.py`                     | A throughput floor, so the model cannot get several times slower without a failure                                                                          |
-| `conformance/readme.test.py`               | Every worked example in the README, run, with its output compared to what the README claims                                                                 |
-| `conformance/family_member.py`             | What this member answers to the family tests: its kind, its package, its interface, its interrupt lines, its tool modules and the machines it must not name |
-| `conformance/family_shared.py`             | What more than one family test reads: the record's path and a scratch folder holding one file                                                               |
-| `conformance/family_interface.test.py`     | The constructor, the calls and the counters a caller drives, and the store it hands back                                                                    |
-| `conformance/family_published.test.py`     | The names the package publishes, the catalogue of models, and each model built in the readme                                                                |
-| `conformance/family_package.test.py`       | One errors module, one definition per name, names rather than modules published, and slots                                                                  |
-| `conformance/family_imports.test.py`       | Every module reached, and nothing imported from outside the standard library                                                                                |
-| `conformance/family_record.test.py`        | The record's documents, its authority ladder and its divergences                                                                                            |
-| `conformance/family_printed_facts.test.py` | Every quote checkable, and every printed fact held by a named test or marked unreachable                                                                    |
-| `conformance/family_end_to_end.test.py`    | Every test driving the package through what it exports                                                                                                      |
-| `conformance/family_tools.test.py`         | The advertised test count, tools run as modules, the throughput floor, and the release stamps                                                               |
-| `conformance/family_documents.test.py`     | Links that resolve, the files this table names, and the agents file                                                                                         |
-| `conformance/family_carried.test.py`       | Nothing carried that is somebody else's, and no machine named that this part outlived                                                                       |
-| `conformance/family_writing.test.py`       | The readme's sections, no comment or docstring, tests named as sentences, and strict checkers                                                               |
-| `conformance/testroms.json`                | Every test cartridge that exercises what this member models, and whether it runs, is read, or waits on a member                                             |
-| `artifacts.manifest.json`                  | Every file the member reads and may not ship, kept under `external/`, identified by size, CRC32, MD5, SHA-1 and SHA-256                                     |
-| `conformance/external.py`                  | Which of those files are here, verified, missing or wrong, and which files in `external/` no entry names                                                    |
-| `conformance/family_external.test.py`      | The manifest complete, `external/` ignored, and no tracked file pointing outside the repository                                                             |
-| `conformance/family_test_roms.test.py`     | The test cartridges recorded, each run, read or waiting on a named member                                                                                   |
-| `conformance/family_sizes.test.py`         | No tracked source over 500 lines unless `LONG_FILES` in `family_member.py` says why                                                                         |
-| `conformance/family_translations.test.py`  | The four readmes, kept in step with the English                                                                                                             |
-| `CITATION.cff`                             | How to cite the work, stamped with the released version by the same script that stamps the package                                                          |
-| `SECURITY.md`                              | Where to report a security problem, and what counts as one here                                                                                             |
-| `.github/ISSUE_TEMPLATE/bug_report.yml`    | What a report has to carry to be actionable, with the doctor's output first                                                                                 |
+| File                                        | Holds                                                                                                                                                       |
+| :------------------------------------------ | :---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `README.md`                                 | The document for a person: how to run it, the whole interface, why it can be trusted, and a References section naming every source with its digest          |
+| `AGENTS.md`                                 | The document for an agent. `CLAUDE.md` points at it so the two cannot drift                                                                                 |
+| `FAMILY.md`                                 | This file, identical in every repository                                                                                                                    |
+| `OPEN-QUESTIONS.md`                         | Every place fidelity is still a claim, and the measurement that would close it                                                                              |
+| `conformance/speed.py`                      | A throughput floor, so the model cannot get several times slower without a failure                                                                          |
+| `conformance/readme.test.py`                | Every worked example in the README, run, with its output compared to what the README claims                                                                 |
+| `conformance/family_member.py`              | What this member answers to the family tests: its kind, its package, its interface, its interrupt lines, its tool modules and the machines it must not name |
+| `conformance/family_shared.py`              | What more than one family test reads: the record's path and a scratch folder holding one file                                                               |
+| `conformance/family_interface.test.py`      | The constructor, the calls and the counters a caller drives, and the store it hands back                                                                    |
+| `conformance/family_published.test.py`      | The names the package publishes, the catalogue of models, and each model built in the readme                                                                |
+| `conformance/family_package.test.py`        | One errors module, one definition per name, names rather than modules published, and slots                                                                  |
+| `conformance/family_imports.test.py`        | Every module reached, and nothing imported from outside the standard library                                                                                |
+| `conformance/family_record.test.py`         | The record's documents, its authority ladder and its divergences                                                                                            |
+| `conformance/family_printed_facts.test.py`  | Every quote checkable, and every printed fact held by a named test or marked unreachable                                                                    |
+| `conformance/family_end_to_end.test.py`     | Every test driving the package through what it exports                                                                                                      |
+| `conformance/family_tools.test.py`          | The advertised test count, tools run as modules, the throughput floor, and the release stamps                                                               |
+| `conformance/family_documents.test.py`      | Links that resolve, the files this table names, and the agents file                                                                                         |
+| `conformance/family_carried.test.py`        | Nothing carried that is somebody else's, and no machine named that this part outlived                                                                       |
+| `conformance/family_writing.test.py`        | The readme's sections, no comment or docstring, tests named as sentences, and strict checkers                                                               |
+| `conformance/testroms.json`                 | Every test cartridge that exercises what this member models, and whether it runs, is read, or waits on a member                                             |
+| `artifacts.manifest.json`                   | Every file the member reads and may not ship, kept under `external/`, identified by size, CRC32, MD5, SHA-1 and SHA-256                                     |
+| `conformance/external.py`                   | Which of those files are here, verified, missing or wrong, and which files in `external/` no entry names                                                    |
+| `conformance/family_external.test.py`       | The manifest complete: every file by every digest, every checkout by its pin, every path inside `external/`                                                 |
+| `conformance/family_external_paths.test.py` | `external/` ignored, and no tracked file pointing outside the repository                                                                                    |
+| `conformance/family_test_roms.test.py`      | The test cartridges recorded, each run, read or waiting on a named member                                                                                   |
+| `conformance/family_sizes.test.py`          | No tracked source over 500 lines unless `LONG_FILES` in `family_member.py` says why                                                                         |
+| `conformance/family_translations.test.py`   | The four readmes, kept in step with the English                                                                                                             |
+| `CITATION.cff`                              | How to cite the work, stamped with the released version by the same script that stamps the package                                                          |
+| `SECURITY.md`                               | Where to report a security problem, and what counts as one here                                                                                             |
+| `.github/ISSUE_TEMPLATE/bug_report.yml`     | What a report has to carry to be actionable, with the doctor's output first                                                                                 |
 
 A tool under `conformance/` is run as a module, `python3 -m conformance.name`,
 and imports its siblings through the package. Run as a script, its own directory

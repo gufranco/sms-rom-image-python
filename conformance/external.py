@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import subprocess
 import sys
 import zlib
 from collections.abc import Mapping, Sequence
@@ -27,6 +28,10 @@ VERIFIED = "verified"
 MISSING = "missing"
 
 WRONG = "wrong"
+
+UNMODIFIED = "use an unmodified copy"
+
+CHECKOUT = "checkout"
 
 
 def kept(path: Path | str | None = None) -> dict[str, dict[str, Any]]:
@@ -58,11 +63,36 @@ def diagnosis(
         if bad.get("sha256") == found["sha256"]:
             return f"{seen}, a known bad copy: {bad['reason']}"
     if found["size"] == entry["size"]:
-        return f"{seen}: the right size with other bytes, so altered or patched; use an unmodified copy"
-    return f"{seen}, where {entry['common_filename']} is {entry['size']} bytes; it is another file"
+        return f"{seen}: the right size with other bytes, so altered or patched; {UNMODIFIED}"
+    expected = f"{entry['common_filename']} is {entry['size']} bytes"
+    return f"{seen}, where {expected}; it is another file"
+
+
+def head(where: Path) -> str:
+    done = subprocess.run(
+        ["git", "-C", str(where), "rev-parse", "HEAD"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    return done.stdout.strip() if done.returncode == 0 else "no commit"
+
+
+def examine_checkout(name: str, artifact: Mapping[str, Any], folder: Path) -> tuple[str, str]:
+    where = folder / artifact["path"]
+    again = f"fetch it with {artifact['fetchedBy']}"
+    if not where.is_dir():
+        return MISSING, f"{name}: {artifact['path']} is not in {folder.name}/; {again}"
+    found = head(where)
+    if found != artifact["commit"]:
+        pinned = artifact["commit"]
+        return WRONG, f"{name}: {artifact['path']} is at {found}, pinned at {pinned}; {again}"
+    return VERIFIED, f"{name}: {artifact['path']} at {found[:12]}"
 
 
 def examine(name: str, artifact: Mapping[str, Any], folder: Path) -> tuple[str, str]:
+    if artifact.get("kind") == CHECKOUT:
+        return examine_checkout(name, artifact, folder)
     present = [entry for entry in artifact["accepted"] if (folder / entry["path"]).is_file()]
     if not present:
         wanted = ", ".join(entry["path"] for entry in artifact["accepted"])
@@ -77,7 +107,9 @@ def examine(name: str, artifact: Mapping[str, Any], folder: Path) -> tuple[str, 
 
 
 def unlisted(held: Mapping[str, Mapping[str, Any]], folder: Path) -> list[str]:
-    named = {entry["path"] for artifact in held.values() for entry in artifact["accepted"]}
+    files = [one for one in held.values() if one.get("kind") != CHECKOUT]
+    named = {entry["path"] for artifact in files for entry in artifact["accepted"]}
+    trees = tuple(f"{one['path']}/" for one in held.values() if one.get("kind") == CHECKOUT)
     if not folder.is_dir():
         return []
     return sorted(
@@ -86,7 +118,12 @@ def unlisted(held: Mapping[str, Mapping[str, Any]], folder: Path) -> list[str]:
         if path.is_file()
         and path.name not in IGNORED
         and (rel := path.relative_to(folder).as_posix()) not in named
+        and not rel.startswith(trees)
     )
+
+
+def say(line: str) -> None:
+    sys.stdout.write(line + "\n")
 
 
 def described(path: Path, folder: Path) -> dict[str, Any]:
@@ -100,10 +137,10 @@ def describe(paths: Sequence[str], folder: Path) -> int:
     for given in paths:
         path = Path(given).resolve()
         if not path.is_file():
-            print(f"REFUSED {given} is not a file")
+            say(f"REFUSED {given} is not a file")
             refused += 1
             continue
-        print(json.dumps(described(path, folder.resolve()), indent=2))
+        say(json.dumps(described(path, folder.resolve()), indent=2))
     return 1 if refused else 0
 
 
@@ -113,12 +150,12 @@ def report(held: Mapping[str, Mapping[str, Any]], folder: Path) -> int:
     for name, artifact in held.items():
         state, line = examine(name, artifact, folder)
         counts[state] += 1
-        print(f"{'ok' if state == VERIFIED else state.upper()} {line}")
+        say(f"{'ok' if state == VERIFIED else state.upper()} {line}")
         failed = failed or state == WRONG or (state == MISSING and bool(artifact.get("required")))
     extra = unlisted(held, folder)
     for rel in extra:
-        print(f"UNLISTED {rel} is in {folder.name}/ and in no manifest entry")
-    print(
+        say(f"UNLISTED {rel} is in {folder.name}/ and in no manifest entry")
+    say(
         f"{counts[VERIFIED]} of {len(held)} verified, {counts[MISSING]} missing, "
         f"{counts[WRONG]} wrong, {len(extra)} unlisted"
     )

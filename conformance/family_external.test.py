@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import json
 import re
-import subprocess
 import sys
 import tempfile
 import unittest
@@ -23,7 +22,9 @@ DIGESTS = {"crc32": 8, "md5": 32, "sha1": 40, "sha256": 64}
 
 TEXT_FIELDS = ("label", "path", "common_filename")
 
-HOME = re.compile("(?:^|[\\s\"'`(=])(?:" + "~" + "/|\\$" + "HOME/|/" + "Users/)")
+CHECKOUT = "checkout"
+
+COMMIT = re.compile("[0-9a-f]{40}")
 
 
 def hex_of(width: int) -> re.Pattern[str]:
@@ -63,33 +64,57 @@ def accepted_problems(name: str, entry: Any) -> list[str]:
     return problems
 
 
-def artifact_problems(name: str, artifact: Any, tracked: set[str]) -> list[str]:
-    if not isinstance(artifact, dict):
-        return [f"{name}: not an object"]
+def checkout_problems(name: str, artifact: dict[str, Any]) -> list[str]:
+    problems = []
+    if (problem := path_problem(artifact.get("path"))) is not None:
+        problems.append(f"{name}: {problem}")
+    if not str(artifact.get("repository", "")).startswith("https://"):
+        problems.append(f"{name}: the repository is not an https address")
+    if not COMMIT.fullmatch(str(artifact.get("commit", ""))):
+        problems.append(f"{name}: the commit is not 40 lowercase hex digits")
+    if not str(artifact.get("fetchedBy", "")).strip():
+        problems.append(f"{name}: nothing says how to fetch it")
+    return problems
+
+
+def common_problems(name: str, artifact: dict[str, Any], where: Path) -> list[str]:
     problems = []
     if not str(artifact.get("purpose", "")).strip():
         problems.append(f"{name}: no purpose")
     if not isinstance(artifact.get("required"), bool):
         problems.append(f"{name}: required is not true or false")
-    if not isinstance(artifact.get("canonical_form"), dict):
-        problems.append(f"{name}: no canonical form")
     used = artifact.get("usedBy")
     if not isinstance(used, list) or not used:
         problems.append(f"{name}: used by nothing")
     else:
-        problems += [f"{name}: used by {one}, not tracked" for one in used if one not in tracked]
+        problems += [
+            f"{name}: used by {one}, which is not here"
+            for one in used
+            if not (where / str(one)).is_file()
+        ]
+    return problems
+
+
+def artifact_problems(name: str, artifact: Any, where: Path) -> list[str]:
+    if not isinstance(artifact, dict):
+        return [f"{name}: not an object"]
+    problems = common_problems(name, artifact, where)
+    if artifact.get("kind") == CHECKOUT:
+        return problems + checkout_problems(name, artifact)
+    if not isinstance(artifact.get("canonical_form"), dict):
+        problems.append(f"{name}: no canonical form")
     accepted = artifact.get("accepted")
     if not isinstance(accepted, list) or not accepted:
         return [*problems, f"{name}: accepts nothing"]
     return problems + [one for entry in accepted for one in accepted_problems(name, entry)]
 
 
-def manifest_problems(manifest: Any, tracked: set[str]) -> list[str]:
+def manifest_problems(manifest: Any, where: Path) -> list[str]:
     held = manifest.get(SECTION) if isinstance(manifest, dict) else None
     if not isinstance(held, dict):
         return [f"the manifest has no {SECTION} mapping"]
     problems = [
-        one for name, artifact in held.items() for one in artifact_problems(name, artifact, tracked)
+        one for name, artifact in held.items() for one in artifact_problems(name, artifact, where)
     ]
     paths = [
         entry.get("path")
@@ -103,53 +128,10 @@ def manifest_problems(manifest: Any, tracked: set[str]) -> list[str]:
     return problems
 
 
-def tracked_files(where: Path, run: Any = None) -> list[str]:
-    runner = subprocess.run if run is None else run
-    listed = runner(
-        ["git", "-c", "submodule.recurse=false", "ls-files"],
-        cwd=where,
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    if listed.returncode != 0:
-        raise RuntimeError(listed.stderr.strip() or "git ls-files failed")
-    return [rel for rel in listed.stdout.split("\n") if rel]
-
-
-def naming_a_home_folder(where: Path, listed: list[str]) -> list[str]:
-    found = []
-    for rel in listed:
-        path = where / rel
-        if not path.is_file():
-            continue
-        try:
-            text = path.read_text()
-        except UnicodeDecodeError:
-            continue
-        found += [
-            f"{rel}:{number}"
-            for number, line in enumerate(text.splitlines(), 1)
-            if HOME.search(line)
-        ]
-    return found
-
-
-def ignores_the_folder(gitignore: Path) -> bool:
-    if not gitignore.is_file():
-        return False
-    lines = {line.strip() for line in gitignore.read_text().splitlines()}
-    return bool(lines & {f"{FOLDER}/", f"/{FOLDER}/"})
-
-
-def a_folder_holding(files: dict[str, str | bytes]) -> Path:
+def a_folder_holding(files: dict[str, str]) -> Path:
     where = Path(tempfile.mkdtemp())
     for rel, body in files.items():
-        path = where / rel
-        if isinstance(body, bytes):
-            path.write_bytes(body)
-        else:
-            path.write_text(body)
+        (where / rel).write_text(body)
     return where
 
 
@@ -179,7 +161,21 @@ def an_artifact(**fields: Any) -> dict[str, Any]:
     }
 
 
-TRACKED = {"tool.py"}
+def a_checkout(**fields: Any) -> dict[str, Any]:
+    return {
+        "kind": "checkout",
+        "required": False,
+        "purpose": "the suite the processor is held to",
+        "usedBy": ["tool.py"],
+        "path": "suites/z80",
+        "repository": "https://example.org/suites.git",
+        "commit": "c" * 40,
+        "fetchedBy": "python3 -m conformance.fetch external/suites",
+        **fields,
+    }
+
+
+READERS = a_folder_holding({"tool.py": ""})
 
 
 class EveryMemberDeclaresWhatItReadsTest(unittest.TestCase):
@@ -198,30 +194,10 @@ class EveryMemberDeclaresWhatItReadsTest(unittest.TestCase):
         manifest = json.loads(MANIFEST.read_text())
 
         # Act
-        problems = manifest_problems(manifest, set(tracked_files(ROOT)))
+        problems = manifest_problems(manifest, ROOT)
 
         # Assert
         self.assertEqual(problems, [])
-
-    def test_git_ignores_the_folder_the_artifacts_live_in(self) -> None:
-        # Arrange
-        gitignore = ROOT / ".gitignore"
-
-        # Act
-        ignored = ignores_the_folder(gitignore)
-
-        # Assert
-        self.assertTrue(ignored)
-
-    def test_no_tracked_file_points_at_a_folder_outside_the_repository(self) -> None:
-        # Arrange
-        listed = tracked_files(ROOT)
-
-        # Act
-        found = naming_a_home_folder(ROOT, listed)
-
-        # Assert
-        self.assertEqual(found, [])
 
 
 class TheManifestReaderTest(unittest.TestCase):
@@ -230,7 +206,7 @@ class TheManifestReaderTest(unittest.TestCase):
         manifest = {"artifacts": {"boot": {}}, "external": {"abc": an_artifact()}}
 
         # Act
-        problems = manifest_problems(manifest, TRACKED)
+        problems = manifest_problems(manifest, READERS)
 
         # Assert
         self.assertEqual(problems, [])
@@ -240,7 +216,7 @@ class TheManifestReaderTest(unittest.TestCase):
         manifest = ["not", "an", "object"]
 
         # Act
-        problems = manifest_problems(manifest, TRACKED)
+        problems = manifest_problems(manifest, READERS)
 
         # Assert
         self.assertEqual(problems, ["the manifest has no external mapping"])
@@ -250,7 +226,7 @@ class TheManifestReaderTest(unittest.TestCase):
         manifest = {"external": {"abc": "text"}}
 
         # Act
-        problems = manifest_problems(manifest, TRACKED)
+        problems = manifest_problems(manifest, READERS)
 
         # Assert
         self.assertEqual(problems, ["abc: not an object"])
@@ -260,7 +236,7 @@ class TheManifestReaderTest(unittest.TestCase):
         artifact = an_artifact(purpose="", required="no", canonical_form=None, usedBy=[])
 
         # Act
-        problems = manifest_problems({"external": {"abc": artifact}}, TRACKED)
+        problems = manifest_problems({"external": {"abc": artifact}}, READERS)
 
         # Assert
         self.assertEqual(
@@ -268,27 +244,27 @@ class TheManifestReaderTest(unittest.TestCase):
             [
                 "abc: no purpose",
                 "abc: required is not true or false",
-                "abc: no canonical form",
                 "abc: used by nothing",
+                "abc: no canonical form",
             ],
         )
 
-    def test_a_reader_that_is_not_tracked_is_refused(self) -> None:
+    def test_a_reader_that_is_not_in_the_repository_is_refused(self) -> None:
         # Arrange
         artifact = an_artifact(usedBy=["gone.py"])
 
         # Act
-        problems = manifest_problems({"external": {"abc": artifact}}, TRACKED)
+        problems = manifest_problems({"external": {"abc": artifact}}, READERS)
 
         # Assert
-        self.assertEqual(problems, ["abc: used by gone.py, not tracked"])
+        self.assertEqual(problems, ["abc: used by gone.py, which is not here"])
 
     def test_an_artifact_that_accepts_nothing_is_refused(self) -> None:
         # Arrange
         artifact = an_artifact(accepted=[])
 
         # Act
-        problems = manifest_problems({"external": {"abc": artifact}}, TRACKED)
+        problems = manifest_problems({"external": {"abc": artifact}}, READERS)
 
         # Assert
         self.assertEqual(problems, ["abc: accepts nothing"])
@@ -298,7 +274,7 @@ class TheManifestReaderTest(unittest.TestCase):
         artifact = an_artifact(accepted=["abc.bin"])
 
         # Act
-        problems = manifest_problems({"external": {"abc": artifact}}, TRACKED)
+        problems = manifest_problems({"external": {"abc": artifact}}, READERS)
 
         # Assert
         self.assertEqual(problems, ["abc: an accepted entry is not an object"])
@@ -309,7 +285,7 @@ class TheManifestReaderTest(unittest.TestCase):
         del entry["path"]
 
         # Act
-        problems = manifest_problems({"external": {"abc": an_artifact(accepted=[entry])}}, TRACKED)
+        problems = manifest_problems({"external": {"abc": an_artifact(accepted=[entry])}}, READERS)
 
         # Assert
         self.assertEqual(
@@ -330,7 +306,7 @@ class TheManifestReaderTest(unittest.TestCase):
         entries = [an_entry(path="../abc.bin"), an_entry(path="/abc.bin"), an_entry(path="a\\b")]
 
         # Act
-        problems = manifest_problems({"external": {"abc": an_artifact(accepted=entries)}}, TRACKED)
+        problems = manifest_problems({"external": {"abc": an_artifact(accepted=entries)}}, READERS)
 
         # Assert
         self.assertEqual(
@@ -347,106 +323,38 @@ class TheManifestReaderTest(unittest.TestCase):
         manifest = {"external": {"abc": an_artifact(), "abd": an_artifact()}}
 
         # Act
-        problems = manifest_problems(manifest, TRACKED)
+        problems = manifest_problems(manifest, READERS)
 
         # Assert
         self.assertEqual(problems, ["a path is listed twice"])
 
-
-class TheGitignoreReaderTest(unittest.TestCase):
-    def test_a_gitignore_naming_the_folder_from_the_root_passes(self) -> None:
+    def test_a_complete_checkout_passes(self) -> None:
         # Arrange
-        where = a_folder_holding({".gitignore": "build/\n/external/\n"})
+        manifest = {"external": {"z80": a_checkout()}}
 
         # Act
-        ignored = ignores_the_folder(where / ".gitignore")
+        problems = manifest_problems(manifest, READERS)
 
         # Assert
-        self.assertTrue(ignored)
+        self.assertEqual(problems, [])
 
-    def test_a_gitignore_that_never_names_the_folder_fails(self) -> None:
+    def test_a_checkout_missing_its_pin_is_refused_on_each_field(self) -> None:
         # Arrange
-        where = a_folder_holding({".gitignore": "build/\n"})
+        checkout = a_checkout(path="../z80", repository="git@x:y", commit="c" * 12, fetchedBy="")
 
         # Act
-        ignored = ignores_the_folder(where / ".gitignore")
+        problems = manifest_problems({"external": {"z80": checkout}}, READERS)
 
         # Assert
-        self.assertFalse(ignored)
-
-    def test_a_repository_with_no_gitignore_fails(self) -> None:
-        # Arrange
-        where = a_folder_holding({})
-
-        # Act
-        ignored = ignores_the_folder(where / ".gitignore")
-
-        # Assert
-        self.assertFalse(ignored)
-
-
-class TheHomeFolderSweepTest(unittest.TestCase):
-    def test_each_way_of_naming_a_home_folder_is_found_by_line(self) -> None:
-        # Arrange
-        lines = ["ok", "cat ~" + "/lib", "cd $" + "HOME/lib", 'p = "/' + 'Users/me"', "a~/b"]
-        where = a_folder_holding({"notes.md": "\n".join(lines)})
-
-        # Act
-        found = naming_a_home_folder(where, ["notes.md"])
-
-        # Assert
-        self.assertEqual(found, ["notes.md:2", "notes.md:3", "notes.md:4"])
-
-    def test_a_binary_file_and_a_listed_file_that_is_gone_are_passed_over(self) -> None:
-        # Arrange
-        where = a_folder_holding({"image.bin": b"\xff\xfe~/x"})
-
-        # Act
-        found = naming_a_home_folder(where, ["image.bin", "gone.md"])
-
-        # Assert
-        self.assertEqual(found, [])
-
-
-class Listed:
-    def __init__(self, code: int, out: str, err: str) -> None:
-        self.returncode = code
-        self.stdout = out
-        self.stderr = err
-
-
-class TheTrackedFileListTest(unittest.TestCase):
-    def test_the_listing_is_split_into_paths(self) -> None:
-        # Arrange
-        run = lambda *_args, **_kwargs: Listed(0, "a.py\nb.md\n", "")  # noqa: E731
-
-        # Act
-        listed = tracked_files(ROOT, run)
-
-        # Assert
-        self.assertEqual(listed, ["a.py", "b.md"])
-
-    def test_a_listing_that_fails_raises_what_git_said(self) -> None:
-        # Arrange
-        run = lambda *_args, **_kwargs: Listed(128, "", "not a repository")  # noqa: E731
-
-        # Act
-        with self.assertRaises(RuntimeError) as raised:
-            tracked_files(ROOT, run)
-
-        # Assert
-        self.assertEqual(str(raised.exception), "not a repository")
-
-    def test_a_listing_that_fails_silently_still_raises(self) -> None:
-        # Arrange
-        run = lambda *_args, **_kwargs: Listed(1, "", "")  # noqa: E731
-
-        # Act
-        with self.assertRaises(RuntimeError) as raised:
-            tracked_files(ROOT, run)
-
-        # Assert
-        self.assertEqual(str(raised.exception), "git ls-files failed")
+        self.assertEqual(
+            problems,
+            [
+                "z80: ../z80 is not a plain path inside external/",
+                "z80: the repository is not an https address",
+                "z80: the commit is not 40 lowercase hex digits",
+                "z80: nothing says how to fetch it",
+            ],
+        )
 
 
 if __name__ == "__main__":

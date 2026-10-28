@@ -1,6 +1,8 @@
 import contextlib
+import importlib
 import io
 import json
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -10,9 +12,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from conformance import external as _external  # noqa: E402
-
-external: Any = _external
+external: Any = importlib.import_module("conformance.external")
 
 ABC = {
     "size": 3,
@@ -52,6 +52,29 @@ def a_manifest(artifact: dict[str, Any]) -> Path:
     path = Path(tempfile.mkdtemp()) / "artifacts.manifest.json"
     path.write_text(json.dumps({"artifacts": {"boot": {}}, "external": {"abc": artifact}}))
     return path
+
+
+def a_repository(where: Path) -> str:
+    where.mkdir(parents=True)
+    (where / "case.json").write_text("[]")
+    identity = ["-c", "user.name=a", "-c", "user.email=a@b.c", "-c", "commit.gpgsign=false"]
+    for step in (["init", "-q"], ["add", "."], [*identity, "commit", "-q", "-m", "one"]):
+        subprocess.run(["git", "-C", str(where), *step], check=True, capture_output=True)
+    done = subprocess.run(
+        ["git", "-C", str(where), "rev-parse", "HEAD"], check=True, capture_output=True, text=True
+    )
+    return done.stdout.strip()
+
+
+def a_checkout(commit: str) -> dict[str, Any]:
+    return {
+        "kind": "checkout",
+        "required": False,
+        "path": "suites/z80",
+        "repository": "https://example.org/suites.git",
+        "commit": commit,
+        "fetchedBy": "python3 -m conformance.fetch external/suites",
+    }
 
 
 def printed(call: Any) -> tuple[Any, str]:
@@ -175,6 +198,64 @@ class ExamineTest(unittest.TestCase):
 
         # Assert
         self.assertEqual((state, line), ("verified", "abc: two/abc.bin, the revision"))
+
+
+class CheckoutTest(unittest.TestCase):
+    def test_a_checkout_at_its_pinned_commit_is_verified(self) -> None:
+        # Arrange
+        folder = a_folder({})
+        commit = a_repository(folder / "suites/z80")
+
+        # Act
+        state, line = external.examine("z80", a_checkout(commit), folder)
+
+        # Assert
+        self.assertEqual((state, line), ("verified", f"z80: suites/z80 at {commit[:12]}"))
+
+    def test_a_checkout_that_is_not_there_is_missing_and_says_how_to_fetch_it(self) -> None:
+        # Arrange
+        folder = a_folder({})
+
+        # Act
+        state, line = external.examine("z80", a_checkout("c" * 40), folder)
+
+        # Assert
+        self.assertEqual(state, "missing")
+        self.assertIn("fetch it with python3 -m conformance.fetch external/suites", line)
+
+    def test_a_checkout_at_another_commit_is_wrong(self) -> None:
+        # Arrange
+        folder = a_folder({})
+        commit = a_repository(folder / "suites/z80")
+
+        # Act
+        state, line = external.examine("z80", a_checkout("c" * 40), folder)
+
+        # Assert
+        self.assertEqual(state, "wrong")
+        self.assertIn(f"is at {commit}, pinned at {'c' * 40}", line)
+
+    def test_a_folder_that_is_no_repository_is_wrong(self) -> None:
+        # Arrange
+        folder = a_folder({"suites/z80/case.json": b"[]"})
+
+        # Act
+        state, line = external.examine("z80", a_checkout("c" * 40), folder)
+
+        # Assert
+        self.assertEqual(state, "wrong")
+        self.assertIn("is at no commit", line)
+
+    def test_the_files_inside_a_checkout_are_not_called_unlisted(self) -> None:
+        # Arrange
+        folder = a_folder({"set/abc.bin": b"abc", "suites/z80/case.json": b"[]"})
+        held = {"abc": an_artifact(), "z80": a_checkout("c" * 40)}
+
+        # Act
+        extra = external.unlisted(held, folder)
+
+        # Assert
+        self.assertEqual(extra, [])
 
 
 class UnlistedTest(unittest.TestCase):
