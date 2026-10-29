@@ -4,9 +4,11 @@ A Sega Master System, Game Gear or SG-1000 cartridge image read as a file, held 
 
 English | [日本語](README.ja.md) | [简体中文](README.zh-Hans.md) | [繁體中文（香港）](README.zh-HK.md)
 
-[![CI](https://github.com/gufranco/sms-rom-image-python/actions/workflows/ci.yml/badge.svg)](https://github.com/gufranco/sms-rom-image-python/actions/workflows/ci.yml)
-[![Release](https://img.shields.io/github/v/release/gufranco/sms-rom-image-python)](https://github.com/gufranco/sms-rom-image-python/releases)
-[![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+[![ci](https://img.shields.io/github/actions/workflow/status/gufranco/sms-rom-image-python/ci.yml?branch=main&style=flat-square&label=ci)](https://github.com/gufranco/sms-rom-image-python/actions/workflows/ci.yml)
+[![release](https://img.shields.io/github/v/release/gufranco/sms-rom-image-python?style=flat-square&label=release)](https://github.com/gufranco/sms-rom-image-python/releases/latest)
+[![coverage](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square)](https://github.com/gufranco/sms-rom-image-python/actions/workflows/ci.yml)
+[![openssf scorecard](https://img.shields.io/ossf-scorecard/github.com/gufranco/sms-rom-image-python?style=flat-square&label=openssf%20scorecard)](https://scorecard.dev/viewer/?uri=github.com/gufranco/sms-rom-image-python)
+[![license](https://img.shields.io/github/license/gufranco/sms-rom-image-python?style=flat-square&label=license)](LICENSE)
 
 **2,922** distinct images measured from **5,425** archive entries, **0** property failures, the header read at `0x7FF0` on **2,453** of them, the stored checksum reproduced on **370** of **393** retail Master System cartridges, **14** boot programs declared by digest, **844** tests, **100%** statement and branch coverage, no dependencies
 

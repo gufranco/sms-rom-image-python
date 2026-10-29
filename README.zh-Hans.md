@@ -4,9 +4,11 @@
 
 [English](README.md) | [日本語](README.ja.md) | 简体中文 | [繁體中文（香港）](README.zh-HK.md)
 
-[![CI](https://github.com/gufranco/sms-rom-image-python/actions/workflows/ci.yml/badge.svg)](https://github.com/gufranco/sms-rom-image-python/actions/workflows/ci.yml)
-[![Release](https://img.shields.io/github/v/release/gufranco/sms-rom-image-python)](https://github.com/gufranco/sms-rom-image-python/releases)
-[![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+[![ci](https://img.shields.io/github/actions/workflow/status/gufranco/sms-rom-image-python/ci.yml?branch=main&style=flat-square&label=ci)](https://github.com/gufranco/sms-rom-image-python/actions/workflows/ci.yml)
+[![release](https://img.shields.io/github/v/release/gufranco/sms-rom-image-python?style=flat-square&label=release)](https://github.com/gufranco/sms-rom-image-python/releases/latest)
+[![coverage](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square)](https://github.com/gufranco/sms-rom-image-python/actions/workflows/ci.yml)
+[![openssf scorecard](https://img.shields.io/ossf-scorecard/github.com/gufranco/sms-rom-image-python?style=flat-square&label=openssf%20scorecard)](https://scorecard.dev/viewer/?uri=github.com/gufranco/sms-rom-image-python)
+[![license](https://img.shields.io/github/license/gufranco/sms-rom-image-python?style=flat-square&label=license)](LICENSE)
 
 从 **5,425** 个归档条目中测量出 **2,922** 个不同镜像，属性失败 **0** 次，其中 **2,453** 个在 `0x7FF0` 读到文件头，**393** 个零售版 Master System 卡带中有 **370** 个复现了存储的校验和，**14** 个启动程序按摘要声明，**844** 个测试，**100%** 语句和分支覆盖率，无依赖
 
