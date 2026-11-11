@@ -10,7 +10,7 @@
 [![openssf scorecard](https://img.shields.io/ossf-scorecard/github.com/gufranco/sms-rom-image-python?style=flat-square&label=openssf%20scorecard)](https://scorecard.dev/viewer/?uri=github.com/gufranco/sms-rom-image-python)
 [![license](https://img.shields.io/github/license/gufranco/sms-rom-image-python?style=flat-square&label=license)](LICENSE)
 
-**2,922** 個不同的映像檔，量度自 **5,425** 個壓縮檔項目，**0** 個屬性失敗，其中 **2,453** 個在 `0x7FF0` 讀到檔頭，**393** 個零售版 Master System 卡帶中有 **370** 個重現了儲存的校驗和，**14** 個開機程式以摘要值聲明，**844** 個測試，**100%** 語句及分支覆蓋率，沒有依賴項
+**2,922** 個不同的映像檔，量度自 **5,425** 個壓縮檔項目，**0** 個屬性失敗，其中 **2,453** 個在 `0x7FF0` 讀到檔頭，**393** 個零售版 Master System 卡帶中有 **370** 個重現了儲存的校驗和，**14** 個開機程式以摘要值聲明，**845** 個測試，**100%** 語句及分支覆蓋率，沒有依賴項
 
 ```python
 from smsimage import dump, header

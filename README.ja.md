@@ -10,7 +10,7 @@
 [![openssf scorecard](https://img.shields.io/ossf-scorecard/github.com/gufranco/sms-rom-image-python?style=flat-square&label=openssf%20scorecard)](https://scorecard.dev/viewer/?uri=github.com/gufranco/sms-rom-image-python)
 [![license](https://img.shields.io/github/license/gufranco/sms-rom-image-python?style=flat-square&label=license)](LICENSE)
 
-**5,425**件のアーカイブエントリから測定した**2,922**本の異なるイメージ、性質の不成立**0**件、そのうち**2,453**本で`0x7FF0`のヘッダーを読み取り、市販マスターシステムカートリッジ**393**本中**370**本で格納済みチェックサムを再現、ダイジェストで宣言したブートプログラム**14**本、テスト**844**件、ステートメントカバレッジとブランチカバレッジ**100%**、依存関係なし
+**5,425**件のアーカイブエントリから測定した**2,922**本の異なるイメージ、性質の不成立**0**件、そのうち**2,453**本で`0x7FF0`のヘッダーを読み取り、市販マスターシステムカートリッジ**393**本中**370**本で格納済みチェックサムを再現、ダイジェストで宣言したブートプログラム**14**本、テスト**845**件、ステートメントカバレッジとブランチカバレッジ**100%**、依存関係なし
 
 ```python
 from smsimage import dump, header
